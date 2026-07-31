@@ -3,8 +3,16 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>AnkVed — आपका व्यक्तिगत अंक ज्योतिष ब्लूप्रिंट</title>
+<title>NumVeda — आपका व्यक्तिगत अंक ज्योतिष ब्लूप्रिंट</title>
 <meta name="description" content="अपनी जन्मतिथि और नाम से 10-पेज का व्यक्तिगत अंकज्योतिष रिपोर्ट पाएं।"/>
+
+<link rel="icon" type="image/png" href="/favicon.png"/>
+<meta property="og:title" content="NumVeda — आपका व्यक्तिगत अंक ज्योतिष ब्लूप्रिंट"/>
+<meta property="og:description" content="अपनी जन्मतिथि और नाम से 10-पेज का व्यक्तिगत अंकज्योतिष रिपोर्ट पाएं।"/>
+<meta property="og:image" content="/og_banner.png"/>
+<meta property="og:url" content="https://numveda.com/"/>
+<meta name="twitter:card" content="summary_large_image"/>
+
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Devanagari:wght@300;400;500;600;700&family=Mukta:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
 <style>
@@ -575,8 +583,43 @@ img{max-width:100%;height:auto}
   .site-footer, .legal-modal { display: none !important; }
 }
 
+
+/* RETRY MODAL */
+.retry-modal { position:fixed; inset:0; background:rgba(12,11,20,0.85); backdrop-filter:blur(5px); z-index:9999; display:none; align-items:center; justify-content:center; padding:20px; }
+.retry-modal.show { display:flex; animation: fadeIn 0.3s ease forwards; }
+.retry-content { background:var(--ink2); border:1px solid var(--border-g); border-radius:16px; max-width:400px; width:100%; padding:30px 24px; text-align:center; position:relative; box-shadow:0 10px 40px rgba(212,175,100,0.15); transform:scale(0.95); animation: popIn 0.3s ease forwards; }
+@keyframes popIn { to { transform:scale(1); } }
+.retry-close { position:absolute; top:12px; right:12px; width:30px; height:30px; border-radius:50%; background:var(--ink3); color:var(--text-d); border:1px solid var(--border); font-size:1.1rem; display:flex; align-items:center; justify-content:center; transition:all 0.2s; }
+.retry-close:hover { color:var(--gold); border-color:var(--border-g); }
+.retry-icon { font-size:3rem; margin-bottom:15px; display:inline-block; animation: floatIcon 2s ease-in-out infinite; }
+@keyframes floatIcon { 0%, 100% { transform:translateY(0); } 50% { transform:translateY(-8px); } }
+.retry-title { font-family:var(--serif); font-size:1.6rem; color:var(--text); margin-bottom:12px; font-weight:700; }
+.retry-title em { color:var(--gold); font-style:normal; }
+.retry-desc { font-size:0.95rem; color:var(--text-d); line-height:1.6; margin-bottom:24px; }
+.retry-btn { display:flex; align-items:center; justify-content:center; gap:8px; width:100%; padding:14px; background:linear-gradient(135deg, var(--gold2), var(--gold)); color:var(--ink); font-weight:800; font-size:1.05rem; border-radius:12px; transition:transform 0.2s, box-shadow 0.2s; box-shadow:0 6px 20px rgba(212,175,100,0.2); margin-bottom:12px; }
+.retry-btn:hover { transform:translateY(-2px); box-shadow:0 10px 25px rgba(212,175,100,0.3); }
+.retry-cancel { background:none; border:none; color:var(--text-m); font-size:0.85rem; text-decoration:underline; cursor:pointer; }
+.retry-cancel:hover { color:var(--text-d); }
+
 </style>
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+let retryIsPro = false;
+function showRetryModal(isPro) {
+  retryIsPro = isPro;
+  const m = document.getElementById('retry-modal');
+  m.classList.add('show');
+  
+  const btn = document.getElementById('retry-btn-act');
+  btn.onclick = function() {
+    closeRetryModal();
+    if(retryIsPro) { buyProReport(); } else { processPayment(); }
+  };
+}
+function closeRetryModal() {
+  document.getElementById('retry-modal').classList.remove('show');
+}
+</script>
 </head>
 <body>
 
@@ -584,7 +627,7 @@ img{max-width:100%;height:auto}
 <div id="landing">
   <div class="land-bg"></div>
   <div class="particles" id="particles"></div>
-  <div class="land-logo">✦ AnkVed ✦</div>
+  <div class="land-logo">✦ NumVeda ✦</div>
   <div class="land-badge"><div class="badge-dot"></div>1,47,000+ प्रीमियम रीडिंग</div>
   <h1 class="land-h1">आपके अंक बोलते हैं।<br>क्या आप <em>सुनने के लिए</em> तैयार हैं?</h1>
   <p class="land-sub">आपकी जन्मतिथि में एक पूरी कहानी छिपी है।</p>
@@ -669,7 +712,7 @@ img{max-width:100%;height:auto}
 
 <!-- CHECKOUT -->
 <div id="checkout">
-  <div class="chk-header"><div class="chk-logo">✦ AnkVed</div><div class="chk-secure">🔒 100% सुरक्षित</div></div>
+  <div class="chk-header"><div class="chk-logo">✦ NumVeda</div><div class="chk-secure">🔒 100% सुरक्षित</div></div>
   <div class="chk-body">
     <div class="chk-unlock-bar"><div class="user-name" id="chk-name-disp">—</div><div class="tagline">आपकी व्यक्तिगत मास्टर रिपोर्ट तैयार है</div></div>
     <div class="urgency-bar">⚡ <span>यह ऑफर सिर्फ <strong id="timer">09:47</strong> और उपलब्ध है</span></div>
@@ -723,7 +766,7 @@ img{max-width:100%;height:auto}
 <!-- BASIC REPORT -->
 <div id="report">
   <header class="r-header">
-    <div class="r-header-left"><div class="r-logo">✦ AnkVed <span style="font-weight:300;font-size:.78rem;font-family:var(--sans)">Master Report</span></div></div>
+    <div class="r-header-left"><div class="r-logo">✦ NumVeda <span style="font-weight:300;font-size:.78rem;font-family:var(--sans)">Master Report</span></div></div>
     <div class="r-header-right">
       <button class="r-pdf-btn" onclick="printReport('report')">⬇ PDF</button>
       <div class="r-verified">Premium</div>
@@ -766,7 +809,7 @@ img{max-width:100%;height:auto}
       <p style="font-size:.7rem;color:rgba(255,255,255,.4);margin-top:10px">यह ऑफर सिर्फ आज के लिए है</p>
     </div>
   </div>
-  <div class="r-footer"><p>AnkVed Premium Report © 2026 — Confidential</p><p style="margin-top:4px">Prepared Exclusively For <span id="r-footer-name"></span></p></div>
+  <div class="r-footer"><p>NumVeda Premium Report © 2026 — Confidential</p><p style="margin-top:4px">Prepared Exclusively For <span id="r-footer-name"></span></p></div>
 </div>
 
 <!-- UPSELL BAR -->
@@ -775,7 +818,7 @@ img{max-width:100%;height:auto}
 <!-- PRO REPORT -->
 <div id="report-pro">
   <header class="pro-header">
-    <div class="pro-header-left"><div class="pro-logo">✦ AnkVed <span style="font-weight:300;font-size:.77rem">Ultimate Blueprint</span></div></div>
+    <div class="pro-header-left"><div class="pro-logo">✦ NumVeda <span style="font-weight:300;font-size:.77rem">Ultimate Blueprint</span></div></div>
     <div class="pro-header-right">
       <button class="pro-pdf-btn" onclick="printReport('report-pro')">⬇ PDF</button>
       <div class="pro-badge-top">Ultimate</div>
@@ -807,11 +850,11 @@ img{max-width:100%;height:auto}
     <div class="pro-card page-break" id="p-sec22"><h2 class="pro-sec-title"><span class="pic">✨</span> 22 — आपके एंजेल नंबर्स (Angel Numbers)</h2><div id="pro-angel"></div></div>
     <div class="pro-card warn page-break" id="p-sec23"><h2 class="pro-sec-title"><span class="pic">🌟</span> 23 — आपकी आत्मा का मिशन (Soul Mission)</h2><div id="pro-soul"></div></div>
   </div>
-  <div class="pro-footer"><p>AnkVed Ultimate Blueprint © 2026</p><p style="margin-top:4px">Prepared Exclusively For <span id="pro-footer-name"></span> — 25 Page Premium Report</p></div>
+  <div class="pro-footer"><p>NumVeda Ultimate Blueprint © 2026</p><p style="margin-top:4px">Prepared Exclusively For <span id="pro-footer-name"></span> — 25 Page Premium Report</p></div>
 </div>
 
 <footer class="site-footer">
-  <p style="margin-bottom:8px">© 2026 AnkVed. All rights reserved.</p>
+  <p style="margin-bottom:8px">© 2026 NumVeda. All rights reserved.</p>
   <p>
     <a onclick="openLegal('terms')">Terms & Conditions</a>
     <a onclick="openLegal('privacy')">Privacy Policy</a>
@@ -840,6 +883,27 @@ const FLOWS={
 };
 const MONTHS=['जनवरी','फ़रवरी','मार्च','अप्रैल','मई','जून','जुलाई','अगस्त','सितंबर','अक्टूबर','नवंबर','दिसंबर'];
 
+function setRoute(path) {
+  window.history.pushState({path: path}, '', path);
+  const titles = {
+    '/': 'NumVeda — अंक ज्योतिष ब्लूप्रिंट',
+    '/quiz': 'NumVeda — आपके अंक डिकोड हो रहे हैं...',
+    '/analysis': 'NumVeda — ब्रह्मांडीय विश्लेषण',
+    '/checkout': 'Secure Checkout — NumVeda',
+    '/report': 'Your Blueprint — NumVeda',
+    '/pro-report': 'Ultimate Blueprint — NumVeda'
+  };
+  document.title = titles[path] || 'NumVeda';
+}
+
+window.addEventListener('popstate', (e) => {
+  window.location.href = '/';
+});
+
+if(window.location.pathname !== '/' && window.location.pathname !== '/api/create-order') {
+  window.location.replace('/');
+}
+
 document.addEventListener('DOMContentLoaded',()=>{buildParticles();buildDayGrid();buildMonthGrid();buildYearSel();startTimer();});
 
 function buildParticles(){const c=document.getElementById('particles');for(let i=0;i<14;i++){const d=document.createElement('div'),sz=2+Math.random()*3;d.className='particle';d.style.cssText='width:'+sz+'px;height:'+sz+'px;background:rgba(212,175,100,.4);left:'+(Math.random()*100)+'%;top:'+(20+Math.random()*80)+'%;animation-duration:'+(10+Math.random()*10)+'s;animation-delay:'+(Math.random()*6)+'s;';c.appendChild(d);}}
@@ -849,7 +913,7 @@ function buildYearSel(){const s=document.getElementById('year-select');for(let y
 function startTimer(){let sec=587;const el=document.getElementById('timer');if(!el)return;const t=setInterval(()=>{if(sec<=0){clearInterval(t);if(el)el.textContent='00:00';return;}sec--;const m=Math.floor(sec/60),s=sec%60;if(el)el.textContent=(m<10?'0':'')+m+':'+(s<10?'0':'')+s;},1000);}
 function toggleFaq(id){const item=document.getElementById(id),ans=document.getElementById(id+'-a'),isOpen=item.classList.contains('open');document.querySelectorAll('.faq-item').forEach(i=>i.classList.remove('open'));document.querySelectorAll('.faq-a').forEach(a=>a.classList.remove('open'));if(!isOpen){item.classList.add('open');ans.classList.add('open');}}
 
-function startQuiz(){document.getElementById('quiz-overlay').classList.add('show');document.body.style.overflow='hidden';updateUI();}
+function startQuiz(){ setRoute("/quiz"); document.getElementById('quiz-overlay').classList.add('show');document.body.style.overflow='hidden';updateUI();}
 function updateUI(){const tot=S.flow.length||10;const pct=S.flow.length?(S.step/tot*100):0;document.getElementById('q-progress').style.width=pct+'%';document.getElementById('q-count').textContent=(S.step+1)+'/'+tot;document.getElementById('back-btn').style.visibility=S.step>0?'visible':'hidden';}
 function goTo(newStep){const curId=S.flow[S.step]||'q_cat';fwd=newStep>S.step;const curEl=document.getElementById(curId);if(curEl)curEl.className='q-card '+(fwd?'exit-left':'exit-right');S.step=newStep;updateUI();setTimeout(()=>{if(curEl)curEl.className='q-card';const nId=S.flow[S.step];if(!nId)return;const nEl=document.getElementById(nId);if(!nEl)return;nEl.className='q-card '+(fwd?'enter-right':'enter-left');nEl.addEventListener('animationend',function h(){nEl.className='q-card active';nEl.removeEventListener('animationend',h);});},310);}
 function nextQ(){if(S.step<S.flow.length-1)goTo(S.step+1);}
@@ -862,7 +926,7 @@ function selGender(btn){document.querySelectorAll('.gender-btn').forEach(b=>b.cl
 function checkPhone(){const i=document.getElementById('inp-phone');i.value=i.value.replace(/\D/g,'');S.phone=i.value;document.getElementById('phone-cont').disabled=S.phone.length!==10;}
 function submitForm(){if(S.phone.length===10)showAnalysis();}
 
-function showAnalysis(){
+function showAnalysis(){ setRoute("/analysis"); 
   document.getElementById('quiz-overlay').classList.remove('show');
   document.getElementById('analysis').classList.add('show');
   const ids=['as1','as2','as3','as4','as5'],bar=document.getElementById('anl-bar');
@@ -997,7 +1061,7 @@ const PERS_DESC={
   5:'लोग आपको एक मजेदार, रोमांचक और थोड़ी अस्थिर ऊर्जा वाला मानते हैं।',6:'लोग आपको एक माता/पिता के समान, ज़िम्मेदार और प्यार करने वाला मानते हैं।',
   7:'लोग आपको बहुत ही रहस्यमयी, ज्ञानी और थोड़ा रिज़र्व मानते हैं।',8:'लोग आपको एक सफल, ताकतवर और बिज़नेस-माइंडेड इंसान मानते हैं।',
   9:'लोग आपको एक दयालु, आकर्षक और दूसरों की मदद करने वाला मानते हैं।'
-};function showCheckout(){
+};function showCheckout(){ setRoute("/checkout"); 
   document.getElementById('analysis').classList.remove('show');
   document.getElementById('checkout').classList.add('show');
   document.body.style.overflow='';
@@ -1008,20 +1072,77 @@ const PERS_DESC={
 
 async function processPayment(){
   const sb=document.querySelector('.spb-btn');
-  if(sb){sb.textContent='लोड हो रहा है…';sb.style.pointerEvents='none';sb.style.opacity='.7';}
+  const origText=sb?sb.innerHTML:'';
+  if(sb){sb.innerHTML='लोड हो रहा है…';sb.style.pointerEvents='none';sb.style.opacity='.7';}
   
-  // BYPASS PAYMENT FOR TESTING
-  document.getElementById('checkout').classList.remove('show');
-  document.getElementById('sticky-pay-bar').classList.remove('show');
-  document.getElementById('post-pay').classList.add('show');
-  setTimeout(()=>{document.getElementById('post-pay').classList.remove('show');buildReport();},1500);
+  try {
+    // Step 1: Create order on backend
+    const orderRes = await fetch('/api/create-order', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ amount: 49, currency: 'INR', receipt: 'receipt_' + Date.now() })
+    });
+    const orderData = await orderRes.json();
+    
+    if(!orderData.success) throw new Error('Order creation failed');
+
+    // Step 2: Open Razorpay checkout
+    const options = {
+      key: orderData.key_id,
+      amount: orderData.order.amount,
+      currency: 'INR',
+      name: 'NumVeda',
+      description: 'NumVeda Master Report',
+      order_id: orderData.order.id,
+      prefill: { name: S.name, contact: '+91' + S.phone },
+      theme: { color: '#d4af37' },
+      handler: async function(response) {
+        // Step 3: Verify payment on backend
+        const verifyRes = await fetch('/api/verify-payment', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({
+            razorpay_order_id: response.razorpay_order_id,
+            razorpay_payment_id: response.razorpay_payment_id,
+            razorpay_signature: response.razorpay_signature
+          })
+        });
+        const verifyData = await verifyRes.json();
+        
+        if(verifyData.success) {
+          // Payment verified — show report
+          document.getElementById('checkout').classList.remove('show');
+          document.getElementById('sticky-pay-bar').classList.remove('show');
+          document.getElementById('post-pay').classList.add('show');
+          setTimeout(()=>{document.getElementById('post-pay').classList.remove('show');buildReport();},1500);
+        } else {
+          alert('भुगतान सत्यापन विफल। कृपया हमसे संपर्क करें: numvedasupport@gmail.com');
+          resetPayBtns(sb, origText);
+        }
+      },
+      modal: {
+        ondismiss: function() { resetPayBtns(sb, origText); showRetryModal(false); }
+      }
+    };
+    const rzp = new Razorpay(options);
+    rzp.on('payment.failed', function(resp){
+      alert('भुगतान विफल: ' + resp.error.description);
+      resetPayBtns(sb, origText);
+      showRetryModal(false);
+    });
+    rzp.open();
+  } catch(err) {
+    console.error(err);
+    alert('कुछ गड़बड़ी हुई। कृपया दोबारा कोशिश करें।');
+    resetPayBtns(sb, origText);
+  }
 }
 
 function resetPayBtns(sb, txt) {
-  if(sb){sb.textContent=txt; sb.style.pointerEvents=''; sb.style.opacity='1';}
+  if(sb){sb.innerHTML=txt; sb.style.pointerEvents=''; sb.style.opacity='1';}
 }
 
-function buildReport(){
+function buildReport(){ setRoute("/report"); 
   document.getElementById('landing').style.display='none';
   ['quiz-overlay','analysis','checkout','post-pay'].forEach(id=>document.getElementById(id).classList.remove('show'));
   document.getElementById('report').classList.add('show');
@@ -1032,59 +1153,189 @@ function buildReport(){
   const lp=calcLP(),dest=calcDest(),soul=calcSoul(),pers=calcPers(),py=calcPY(lp);
   const loshu=calcLoShu(),pins=calcPins(),karmic=calcKarmic();
   const lpD=LP[lp]||LP[9],focD=FOCUS[S.cat]||FOCUS['purpose'];
+  const firstName=S.name.split(' ')[0]||S.name;
+  const aap=firstName+' जी';
+  const isFemale=S.gender==='female';
 
   document.getElementById('r-name-top').textContent=S.name.toUpperCase();
   document.getElementById('r-dob-top').textContent='जन्म: '+S.day+' '+MONTHS[S.month-1]+' '+S.year;
   document.getElementById('r-footer-name').textContent=S.name.toUpperCase();
 
-  // Sec 1: Core
-  const coreData=[{l:'जीवन पथ',n:lp,s:lpD.arch,e:'Life Path'},{l:'भाग्य',n:dest,s:(LP[dest]||LP[9]).arch,e:'Destiny'},{l:'आत्मा',n:soul,s:'आंतरिक इच्छा',e:"Soul Urge"},{l:'व्यक्तित्व',n:pers,s:'बाहरी आवरण',e:'Personality'}];
-  document.getElementById('r-core').innerHTML='<div class="core-grid">'+coreData.map(c=>'<div class="core-box"><h4>'+c.l+'</h4><div class="core-num">'+c.n+'</div><div class="core-label">'+c.s+'</div><div class="core-en">'+c.e+'</div></div>').join('')+'</div>';
-  document.getElementById('r-lp-analysis').innerHTML='<div class="r-highlight"><strong>'+S.name+' जी — आपका जीवन पथ '+lp+': '+lpD.arch+' ('+lpD.en+')</strong></div><p class="r-para">'+lpD.desc+'</p><p class="r-para"><strong>आपकी छाया:</strong> '+lpD.shadow+'</p><p class="r-para"><strong>आपका उपहार:</strong> '+lpD.gift+'</p><p class="r-para"><strong>आपका मिशन:</strong> '+lpD.mission+'</p><p class="r-para">आपका <strong>भाग्य अंक '+dest+'</strong> बताता है कि आप अपने जीवन में क्या हासिल करने आए हैं — यह आपका कर्म-पथ है। आपका <strong>आत्मा अंक '+soul+'</strong> वह है जो आपकी आत्मा सच में चाहती है, चाहे आप उसे स्वीकार करें या नहीं। आपका <strong>व्यक्तित्व अंक '+pers+'</strong> यह दर्शाता है कि दुनिया आपको कैसे देखती है।</p>';
+  // Famous personalities by LP
+  const FAMOUS={1:'महात्मा गाँधी, Steve Jobs, अमिताभ बच्चन',2:'बराक ओबामा, Sachin Tendulkar',3:'Robin Williams, Shilpa Shetty',4:'Bill Gates, Narendra Modi, Oprah Winfrey',5:'Angelina Jolie, Hrithik Roshan',6:'Michael Jackson, John Lennon',7:'Shah Rukh Khan, Nikola Tesla',8:'Deepika Padukone, Pablo Picasso',9:'Mother Teresa, Lata Mangeshkar',11:'Albert Einstein',22:'Dalai Lama'};
 
-  // Sec 2: Lo Shu
+  // Lucky details by LP
+  const LUCKY={1:{num:'1, 10, 19',day:'रविवार',col:'लाल, सुनहरा'},2:{num:'2, 11, 20',day:'सोमवार',col:'सफेद, चाँदी'},3:{num:'3, 12, 21',day:'गुरुवार',col:'पीला, सोना'},4:{num:'4, 13, 22',day:'शनिवार',col:'नीला, ग्रे'},5:{num:'5, 14, 23',day:'बुधवार',col:'हरा, तोसिया'},6:{num:'6, 15, 24',day:'शुक्रवार',col:'गुलाबी, क्रीम'},7:{num:'7, 16, 25',day:'सोमवार',col:'बैंगनी, नीला'},8:{num:'8, 17, 26',day:'शनिवार',col:'काला, नेवी'},9:{num:'9, 18, 27',day:'मंगलवार',col:'लाल, नारंगी'},11:{num:'11, 2, 29',day:'सोमवार',col:'सफेद, सिल्वर'},22:{num:'22, 4, 31',day:'शनिवार',col:'नीला, सोना'}};
+
+  // Compatibility by LP
+  const COMPAT={1:{best:'1, 5, 9',good:'2, 3',avoid:'4, 6'},2:{best:'2, 4, 8',good:'1, 3',avoid:'5, 7'},3:{best:'3, 6, 9',good:'1, 2',avoid:'4'},4:{best:'2, 4, 8',good:'1, 7',avoid:'3, 5'},5:{best:'1, 5, 7',good:'3, 9',avoid:'2, 4'},6:{best:'3, 6, 9',good:'5, 8',avoid:'1, 2'},7:{best:'1, 5, 7',good:'3, 4',avoid:'2, 6'},8:{best:'2, 4, 8',good:'6',avoid:'1, 9'},9:{best:'3, 6, 9',good:'1, 2',avoid:'4, 5'},11:{best:'2, 11, 22',good:'1, 6',avoid:'4, 8'},22:{best:'4, 22, 8',good:'2, 6',avoid:'3, 5'}};
+
+  const lky=LUCKY[lp]||LUCKY[9];
+  const cmp=COMPAT[lp]||COMPAT[9];
+  const fam=FAMOUS[lp]||'';
+
+  const catContext={love:'प्रेम और रिश्तों में',money:'आर्थिक जीवन में',health:'स्वास्थ्य और ऊर्जा में',mental:'मानसिक शांति में',purpose:'जीवन के उद्देश्य में'};
+  const catStr=catContext[S.cat]||'जीवन में';
+  const missingStr=loshu.missing.length?loshu.missing.join(', '):'कोई नहीं';
+
+  const lpDays=['रविवार','सोमवार','गुरुवार','शनिवार','बुधवार','शुक्रवार','शनिवार','शनिवार','मंगलवार'];
+  const lpDir=['पूर्व','उत्तर','उत्तर-पूर्व','दक्षिण','उत्तर','दक्षिण-पश्चिम','उत्तर-पश्चिम','उत्तर','दक्षिण'];
+  const lpCol=['लाल','सफेद','पीला','हरा','नीला','गुलाबी','बैंगनी','काला/नेवी','नारंगी'];
+  const lpDonate=['गेहूं','चावल','पीली दाल','हरी सब्जी','हरी दाल','मिठाई','तिल','तिल तेल','मसूर'];
+
+  // SEC 1: Core Numbers
+  const destD=LP[dest]||LP[9];
+  const coreData=[{l:'जीवन पथ',n:lp,s:lpD.arch,e:'Life Path'},{l:'भाग्य',n:dest,s:destD.arch,e:'Destiny'},{l:'आत्मा',n:soul,s:'आंतरिक इच्छा',e:'Soul Urge'},{l:'व्यक्तित्व',n:pers,s:'बाहरी आवरण',e:'Personality'}];
+  document.getElementById('r-core').innerHTML='<div class="core-grid">'+coreData.map(c=>'<div class="core-box"><h4>'+c.l+'</h4><div class="core-num">'+c.n+'</div><div class="core-label">'+c.s+'</div><div class="core-en">'+c.e+'</div></div>').join('')+'</div>';
+
+  document.getElementById('r-lp-analysis').innerHTML=
+    '<div class="r-highlight"><strong>'+aap+' — आपका जीवन पथ '+lp+': '+lpD.arch+' ('+lpD.en+')</strong></div>'+
+    '<p class="r-para">'+aap+', '+lpD.desc+'</p>'+
+    '<p class="r-para">'+catStr+' आपकी सबसे बड़ी चुनौती: '+lpD.shadow+'. यह आपकी कमज़ोरी नहीं — यह वह पाठ है जो आपकी आत्मा इस जन्म में सीखने आई है।</p>'+
+    '<p class="r-para"><strong>आपका उपहार:</strong> '+lpD.gift+'</p>'+
+    '<p class="r-para"><strong>आपका मिशन:</strong> '+lpD.mission+'</p>'+
+    (fam?'<div class="r-highlight" style="margin-top:12px">✦ <strong>आपके जैसी ऊर्जा वाली महान हस्तियाँ:</strong> '+fam+'</div>':'')+
+    '<p class="r-para" style="margin-top:14px"><strong>भाग्य अंक '+dest+'</strong> — '+(DEST_DESC[dest]||'')+' <strong>आत्मा अंक '+soul+'</strong> — '+(SOUL_DESC[soul]||'')+' <strong>व्यक्तित्व अंक '+pers+'</strong> — '+(PERS_DESC[pers]||'')+'</p>'+
+    '<div class="r-highlight"><strong>अनुकूल अंक:</strong> '+cmp.best+' &nbsp;|&nbsp; <strong>मित्र अंक:</strong> '+cmp.good+' &nbsp;|&nbsp; <strong>सावधानी:</strong> '+cmp.avoid+'</div>';
+
+  // SEC 2: Lo Shu Grid
   const loPos=[4,9,2,3,5,7,8,1,6];
   const loshuGrid='<div class="loshu-grid">'+loPos.map(n=>{const c=loshu.cnt[n];if(c===0)return'<div class="loshu-cell empty">·</div>';return'<div class="loshu-cell '+(c>1?'has-rep':'')+'">'+String(n).repeat(c)+'</div>';}).join('')+'</div>';
-  const missingText=loshu.missing.length?'आपके ग्रिड में <strong>'+loshu.missing.join(', ')+'</strong> गायब हैं।':'सभी अंक मौजूद हैं — अत्यंत दुर्लभ!';
-  document.getElementById('r-loshu-content').innerHTML='<p class="r-para">प्राचीन चीनी लोशु प्रणाली के अनुसार, आपकी जन्मतिथि के अंकों को एक 3×3 ग्रिड में रखा जाता है। <strong>जो अंक गायब हैं, वहाँ जीवन में सबसे अधिक संघर्ष होता है।</strong></p><div class="loshu-wrap"><div class="loshu-grid-cont">'+loshuGrid+'<div style="font-size:.72rem;color:var(--rtl);margin-top:4px">Lo Shu Grid</div></div><div class="loshu-info"><h4 style="font-size:.85rem;font-weight:700;color:var(--rp);margin-bottom:7px">आपके गायब अंक (Karmic Voids):</h4><div class="missing-pills">'+( loshu.missing.length?loshu.missing.map(m=>'<span class="miss-pill">'+m+'</span>').join(''):'<span class="miss-pill">कोई नहीं ✓</span>')+'</div><p class="r-para" style="margin-top:10px;font-size:.83rem">'+missingText+'</p></div></div>';
+  const missingText=loshu.missing.length?aap+' के ग्रिड में <strong>'+loshu.missing.join(', ')+'</strong> गायब हैं — यही '+catStr+' संघर्ष का मूल कारण है।':'वाह! '+aap+' के ग्रिड में सभी अंक मौजूद हैं — यह अत्यंत दुर्लभ और शुभ स्थिति है।';
+  document.getElementById('r-loshu-content').innerHTML=
+    '<p class="r-para">प्राचीन चीनी लोशु प्रणाली के अनुसार, आपकी जन्मतिथि '+S.day+'/'+S.month+'/'+S.year+' के अंकों को एक 3×3 ग्रिड में रखा जाता है। <strong>जो अंक गायब हैं, वहाँ जीवन में सबसे अधिक संघर्ष होता है।</strong></p>'+
+    '<div class="loshu-wrap"><div class="loshu-grid-cont">'+loshuGrid+'<div style="font-size:.72rem;color:var(--rtl);margin-top:4px">Lo Shu Grid</div></div>'+
+    '<div class="loshu-info"><h4 style="font-size:.85rem;font-weight:700;color:var(--rp);margin-bottom:7px">'+aap+' के गायब अंक:</h4>'+
+    '<div class="missing-pills">'+(loshu.missing.length?loshu.missing.map(m=>'<span class="miss-pill">'+m+'</span>').join(''):'<span class="miss-pill">कोई नहीं ✓</span>')+'</div>'+
+    '<p class="r-para" style="margin-top:10px;font-size:.83rem">'+missingText+'</p></div></div>';
 
-  // Sec 3: Missing Detail
+  // SEC 3: Missing Numbers Detail
   let missDet='';
   if(loshu.missing.length){
-    loshu.missing.forEach(n=>{const md=MISSING[n];if(md)missDet+='<div class="miss-card"><div class="mc-num">'+n+'</div><div class="mc-title">'+md.title+'</div><div class="mc-desc">'+md.effect+'<br><strong>उपाय:</strong> '+md.upay+'</div></div>';});
-  } else {missDet='<div class="karmic-good"><div style="font-weight:700;color:#2f855a;margin-bottom:6px">✅ आपका ग्रिड संपूर्ण है</div><p style="font-size:.88rem;color:#276749;line-height:1.55">आपकी जन्मतिथि में सभी अंक मौजूद हैं — यह एक बहुत दुर्लभ और शुभ स्थिति है। आपकी ऊर्जा संतुलित है।</p></div>';}
-  document.getElementById('r-missing-detail').innerHTML='<p class="r-para">प्रत्येक गायब अंक जीवन के एक विशेष क्षेत्र में चुनौती का संकेत देता है। <strong>यह समझना आपको उपाय करने का मार्ग दिखाता है।</strong></p><div class="missing-detail">'+missDet+'</div>';
+    loshu.missing.forEach(n=>{
+      const md=MISSING[n];if(!md)return;
+      const isMainCat=(S.cat==='love'&&(n===2||n===6))||(S.cat==='money'&&(n===8||n===4))||(S.cat==='health'&&(n===6||n===2))||(S.cat==='mental'&&(n===7||n===5));
+      missDet+='<div class="miss-card">'+(isMainCat?'<div style="font-size:.68rem;color:#e53e3e;font-weight:700;margin-bottom:4px">⚠️ यही आपकी मुख्य समस्या का कारण</div>':'')+
+        '<div class="mc-num">'+n+'</div><div class="mc-title">'+md.title+'</div>'+
+        '<div class="mc-desc">'+md.effect+'<br><br><strong>'+aap+' के लिए विशेष उपाय:</strong> '+md.upay+'</div></div>';
+    });
+  } else {
+    missDet='<div class="karmic-good"><div style="font-weight:700;color:#2f855a;margin-bottom:6px">✅ '+aap+' का ग्रिड संपूर्ण है</div><p style="font-size:.88rem;color:#276749;line-height:1.55">आपकी जन्मतिथि में सभी अंक मौजूद हैं। '+catStr+' आपके पास सभी आवश्यक गुण उपस्थित हैं।</p></div>';
+  }
+  document.getElementById('r-missing-detail').innerHTML=
+    '<p class="r-para">'+aap+', '+catStr+' जो तकलीफ आप झेल रहे हैं, उसका सीधा संबंध इन गायब अंकों से है।</p>'+
+    '<div class="missing-detail">'+missDet+'</div>';
 
-  // Sec 4: Karmic
-  if(karmic){const kdt={13:'पिछले जन्म में अपने कर्तव्यों की उपेक्षा और आलस्य। शॉर्टकट और चालाकी से काम करने की प्रवृत्ति थी। इस जन्म में — हर सफलता के लिए कठिन परिश्रम अनिवार्य है। जो आसानी से मिलता है, वह टिकता नहीं।',14:'स्वतंत्रता के अत्यधिक दुरुपयोग का कर्म। इंद्रियों के अधीन रहे। इस जन्म में — जीवन में बार-बार अचानक और अप्रत्याशित बदलाव आएंगे। आत्म-नियंत्रण ही मुक्ति का मार्ग है।',16:'"Tower Moment" — अहंकार और गुप्त जीवन का कर्म। इस जन्म में — एक बार सब ढह जाएगा ताकि आप शुद्ध होकर पुनर्जन्म ले सकें। यह दंड नहीं, आत्मा की सफाई है।',19:'शक्ति और प्रभुत्व के दुरुपयोग का ऋण। इस जन्म में — अनेक संघर्ष अकेले करने होंगे। कोई सहायक नहीं मिलेगा ताकि आप पूर्णतः स्वावलंबी बनें।'};
-  document.getElementById('r-karmic').innerHTML='<div class="karmic-box"><div class="karmic-title">⚠️ कार्मिक ऋण '+karmic+' सक्रिय है</div><p style="font-size:.88rem;color:#742a2a;line-height:1.65">'+kdt[karmic]+'</p></div><p class="r-para">यह जानकारी आपको डराने के लिए नहीं — जगाने के लिए है। <strong>जिन लोगों पर कार्मिक ऋण होता है, वे जीवन की सबसे गहरी शिक्षाएं पाते हैं और अंततः सबसे महान बनते हैं।</strong></p><p class="r-para">कार्मिक ऋण '+karmic+' का उपाय: पूर्ण ईमानदारी से जीएं। जो कठिन लगे, उसे टालें नहीं — उसका सामना करें। हर सप्ताह किसी जरूरतमंद की मदद करें।</p>';
-  } else {document.getElementById('r-sec4').className='r-card green';document.getElementById('r-karmic').innerHTML='<div class="karmic-good"><div style="font-weight:700;color:#2f855a;margin-bottom:6px">✅ कोई भारी कार्मिक ऋण नहीं</div><p style="font-size:.88rem;color:#276749;line-height:1.55">आपकी जन्मतिथि में कोई प्रमुख कार्मिक ऋण नहीं है। आपकी चुनौतियाँ मुख्यतः लोशु ग्रिड के असंतुलन और जीवन पथ की ऊर्जा के अनुसार जीने में कमी से हैं।</p></div><p class="r-para">यह एक शुभ संकेत है। आपका आत्मिक बोझ अपेक्षाकृत हल्का है। इसका अर्थ है कि आप सही दिशा में प्रयास करके बहुत जल्दी परिणाम पा सकते हैं।</p>';}
+  // SEC 4: Karmic Debt
+  if(karmic){
+    const kdt={
+      13:'पिछले जन्म में '+aap+' ने अपने कर्तव्यों की उपेक्षा की। शॉर्टकट और आलस्य की प्रवृत्ति थी। इस जन्म में हर सफलता के लिए कठिन परिश्रम अनिवार्य है। लेकिन जब आप पूरी मेहनत से काम करते हैं, तो सफलता भी असाधारण होती है।',
+      14:aap+' की आत्मा पर स्वतंत्रता के दुरुपयोग का कर्म है। इस जन्म में बार-बार अचानक बदलाव आएंगे। आत्म-नियंत्रण ही मुक्ति का मार्ग है।',
+      16:'"Tower Moment" — '+aap+' पर अहंकार का कर्म है। एक बड़ा झटका आएगा — जो बनाया था वह टूटेगा। यह दंड नहीं, आत्मा की सफाई है। उसके बाद जो बनेगा, वह अटूट होगा।',
+      19:'शक्ति के दुरुपयोग का ऋण '+aap+' पर है। अनेक संघर्ष अकेले करने होंगे — लेकिन यही आपको पूर्णतः स्वावलंबी बनाता है।'
+    };
+    document.getElementById('r-karmic').innerHTML=
+      '<div class="karmic-box"><div class="karmic-title">⚠️ '+aap+' पर कार्मिक ऋण '+karmic+' सक्रिय है</div>'+
+      '<p style="font-size:.88rem;color:#742a2a;line-height:1.65">'+kdt[karmic]+'</p></div>'+
+      '<p class="r-para"><strong>जिन लोगों पर कार्मिक ऋण होता है, वे जीवन की सबसे गहरी शिक्षाएं पाते हैं और अंततः सबसे महान बनते हैं।</strong></p>'+
+      '<p class="r-para"><strong>'+aap+' का उपाय:</strong> पूर्ण ईमानदारी से जीएं। जो कठिन लगे, टालें नहीं। हर सप्ताह किसी की मदद करें।</p>';
+  } else {
+    document.getElementById('r-sec4').className='r-card green';
+    document.getElementById('r-karmic').innerHTML=
+      '<div class="karmic-good"><div style="font-weight:700;color:#2f855a;margin-bottom:6px">✅ '+aap+' पर कोई भारी कार्मिक ऋण नहीं</div>'+
+      '<p style="font-size:.88rem;color:#276749;line-height:1.55">आपकी चुनौतियाँ मुख्यतः लोशु ग्रिड के असंतुलन से हैं।</p></div>'+
+      '<p class="r-para">'+aap+', '+catStr+' सही दिशा में प्रयास करके आप बहुत जल्दी परिणाम पा सकते हैं। <strong>सिर्फ दिशा और ऊर्जा सही करनी है।</strong></p>';
+  }
 
-  // Sec 5: Pinnacles
-  document.getElementById('r-pins').innerHTML=pins.map((p,i)=>'<div class="pin-item'+(p.cur?' current':'')+'"><div class="pin-age">शिखर '+(i+1)+' — '+p.age+(p.cur?'<span class="pin-now">← आप अभी यहाँ हैं</span>':'')+'</div><div class="pin-num">अंक '+p.num+(p.cur?' (सक्रिय)':'')+'</div><div class="pin-desc">'+(PIN_D[p.num]||'विशेष ऊर्जा का समय।')+'</div>'+(p.cur?'<div class="pin-focus">अभी आपका ध्यान: '+(['love','money','health','mental','purpose'].map(k=>({love:'प्रेम और रिश्ते',money:'आर्थिक सफलता',health:'स्वास्थ्य',mental:'मानसिक शांति',purpose:'जीवन उद्देश्य'}[k]))[['love','money','health','mental','purpose'].indexOf(S.cat)||0])+' पर केंद्रित करें।</div>':'')+'</div>').join('');
+  // SEC 5: Pinnacles
+  const catFocusStr={love:'प्रेम और वैवाहिक जीवन',money:'आर्थिक सफलता और करियर',health:'स्वास्थ्य और शारीरिक ऊर्जा',mental:'मानसिक शांति',purpose:'जीवन के उद्देश्य की खोज'};
+  document.getElementById('r-pins').innerHTML=pins.map((p,i)=>{
+    const pinLP=LP[p.num]||LP[9];
+    return '<div class="pin-item'+(p.cur?' current':'')+'">'+
+      '<div class="pin-age">शिखर '+(i+1)+' — '+p.age+(p.cur?'<span class="pin-now">← आप अभी यहाँ हैं</span>':'')+
+      '</div><div class="pin-num">अंक '+p.num+(p.cur?' (सक्रिय)':'')+'</div>'+
+      '<div class="pin-desc">'+(PIN_D[p.num]||'विशेष ऊर्जा का समय।')+'</div>'+
+      (p.cur?'<div class="pin-focus">'+aap+', इस शिखर पर <strong>'+(catFocusStr[S.cat||'purpose'])+'</strong> के लिए: '+pinLP.short+'. '+pinLP.mission+'</div>':'')+
+      '</div>';
+  }).join('');
 
-  // Sec 6: Focus
-  document.getElementById('r-focus-content').innerHTML='<p class="r-sec-sub">आपने जो समस्या बताई है, उसका अंकशास्त्रीय कारण यहाँ दिया गया है।</p>'+focD.bars.map(b=>'<div class="ebar-wrap"><div class="ebar-head"><span>'+b.l+'</span><span class="ebar-pct">'+b.p+'%</span></div><div class="ebar-track"><div class="ebar-fill '+b.c+'" style="width:'+b.p+'%"></div></div></div>').join('')+'<p class="r-para" style="margin-top:14px">'+focD.analysis+'</p><p class="r-para">आपके जीवन पथ '+lp+' और गायब अंकों ('+( loshu.missing.join(', ')||'कोई नहीं')+') के बीच सीधा संबंध है। जब तक ग्रिड के शून्य नहीं भरते, यह समस्या बनी रहेगी।</p>';
+  // SEC 6: Focus Analysis
+  document.getElementById('r-focus-content').innerHTML=
+    '<p class="r-sec-sub">'+aap+', आपने जो समस्या बताई — '+catStr+' — उसका अंकशास्त्रीय कारण:</p>'+
+    focD.bars.map(b=>'<div class="ebar-wrap"><div class="ebar-head"><span>'+b.l+'</span><span class="ebar-pct">'+b.p+'%</span></div><div class="ebar-track"><div class="ebar-fill '+b.c+'" style="width:'+b.p+'%"></div></div></div>').join('')+
+    '<p class="r-para" style="margin-top:14px">'+focD.analysis+'</p>'+
+    '<p class="r-para"><strong>'+aap+' के जीवन पथ '+lp+' और गायब अंकों ('+missingStr+') का संबंध:</strong> '+
+    (loshu.missing.length?'आपके ग्रिड में '+loshu.missing.join(' और ')+' की अनुपस्थिति '+catStr+' सबसे अधिक बाधा डाल रही है।':'आपका ग्रिड संपूर्ण है — समस्या जीवन पथ ऊर्जा के विरुद्ध जीने में है।')+'</p>';
 
-  // Sec 7: Name Analysis
-  const nTotal=S.name.toLowerCase().split('').reduce((s,c)=>s+(PYT[c]||0),0);
-  const nVowel=S.name.toLowerCase().split('').reduce((s,c)=>s+(VOWELS.has(c)?(PYT[c]||0):0),0);
-  document.getElementById('r-name-analysis').innerHTML='<p class="r-para">पाइथागोरस अंकशास्त्र में हर अक्षर का एक अंक होता है: A=1, B=2, C=3... यह कैलकुलेशन बताती है कि आपका नाम किस ऊर्जा को आकर्षित करता है।</p><div class="r-highlight"><strong>'+S.name+'</strong> का विश्लेषण:<br>• भाग्य अंक (Destiny): <strong>'+dest+'</strong> — यह आपके जीवन का कर्म-मार्ग है।<br>• आत्मा अंक (Soul Urge): <strong>'+soul+'</strong> — यह आपकी गहरी आंतरिक इच्छा है।<br>• व्यक्तित्व अंक (Personality): <strong>'+pers+'</strong> — दुनिया आपको इस ऊर्जा से पहचानती है।</div><p class="r-para">आपके नाम की ऊर्जा और जन्म तिथि (जीवन पथ '+lp+') '+(Math.abs(dest-lp)<=2?'में <strong>अच्छा संतुलन</strong> है। यह शुभ संकेत है।':'में <strong>कुछ असंतुलन</strong> है। इसे सरल नाम-उपाय से ठीक किया जा सकता है।')+'</p>';
+  // SEC 7: Name Analysis
+  const chalDest = typeof calcChaldean==='function' ? calcChaldean(S.name) : dest;
+  const nameRel = typeof getChaldeanRelation==='function' ? getChaldeanRelation(lp, chalDest) : 'neutral';
+  const nameRelText={friend:'बेहद अनुकूल — आपका नाम आपकी जन्म-ऊर्जा को amplify करता है। यह बहुत शुभ है।',neutral:'सामान्य संबंध — नाम और जन्म-ऊर्जा में कोई बड़ा संघर्ष नहीं।',enemy:'असंतुलन — आपके नाम की ऊर्जा और जन्म-ऊर्जा में संघर्ष है। '+catStr+' यह एक कारण हो सकता है।'};
+  document.getElementById('r-name-analysis').innerHTML=
+    '<p class="r-para">'+aap+', आपका नाम <strong>"'+S.name+'"</strong> एक विशेष ऊर्जा-हस्ताक्षर है।</p>'+
+    '<div class="r-highlight"><strong>"'+S.name+'" का विश्लेषण:</strong><br>'+
+    '• भाग्य अंक: <strong>'+dest+'</strong> — '+(DEST_DESC[dest]||'')+'<br>'+
+    '• आत्मा अंक: <strong>'+soul+'</strong> — '+(SOUL_DESC[soul]||'')+'<br>'+
+    '• व्यक्तित्व अंक: <strong>'+pers+'</strong> — '+(PERS_DESC[pers]||'')+'</div>'+
+    '<p class="r-para"><strong>नाम और जन्म-ऊर्जा का संबंध:</strong> '+nameRelText[nameRel]+'</p>'+
+    '<p class="r-para"><strong>शुभ अंक '+lky.num+':</strong> अपने मोबाइल, मकान या गाड़ी नंबर में ये अंक आने की कोशिश करें।</p>';
 
-  // Sec 8: 2026 Year
+  // SEC 8: 2026 Year Forecast
   const pyI=PY_D[py]||PY_D[9];
   const mE=Array.from({length:12},(_,i)=>red1(lp+(i+1)));
-  document.getElementById('r-year-content').innerHTML='<p class="r-para"><strong>'+S.name+' जी, 2026 आपका व्यक्तिगत वर्ष '+py+' है।</strong> '+pyI+'</p><table class="month-table"><thead><tr><th>माह</th><th>अंक</th><th>ऊर्जा</th><th>मुख्य संकेत</th></tr></thead><tbody>'+MONTHS.map((m,i)=>{const e=mE[i];const cls=[8,1,3].includes(e)?'mb-high':[4,7].includes(e)?'mb-low':'mb-mid';const lbl=[8,1,3].includes(e)?'अनुकूल':[4,7].includes(e)?'सावधानी':'सामान्य';const hint={1:'नई शुरुआत करें',2:'सहयोग लें',3:'रचनात्मक रहें',4:'कड़ी मेहनत',5:'बदलाव स्वीकारें',6:'परिवार पर ध्यान',7:'ध्यान करें',8:'निवेश करें',9:'पुराना छोड़ें'};return'<tr><td><strong>'+m+'</strong></td><td>'+e+'</td><td><span class="month-badge '+cls+'">'+lbl+'</span></td><td style="font-size:.77rem">'+( hint[e]||'-')+'</td></tr>';}).join('')+'</tbody></table>';
+  const defaultHint={1:'नई शुरुआत करें',2:'सहयोग लें',3:'रचनात्मक रहें',4:'कड़ी मेहनत',5:'बदलाव स्वीकारें',6:'परिवार पर ध्यान',7:'ध्यान करें',8:'निवेश करें',9:'पुराना छोड़ें'};
+  const catHint={love:{8:'प्रेम में बड़ी सफलता का समय',1:'नए रिश्ते की शुरुआत',4:'धैर्य रखें'},money:{8:'निवेश के लिए सबसे शुभ',1:'नई आय का स्रोत बनाएं',4:'मेहनत का फल मिलेगा'},health:{6:'स्वास्थ्य अच्छा रहेगा',3:'व्यायाम शुरू करें',4:'आराम लें'},mental:{7:'आध्यात्मिक अभ्यास से शांति',2:'भावनात्मक संतुलन',9:'पुराना दर्द जाने दें'},purpose:{1:'जीवन उद्देश्य की नई शुरुआत',3:'रचनात्मक काम शुरू करें',5:'नए क्षेत्र में कदम'}};
+  const cHint=catHint[S.cat]||{};
+  document.getElementById('r-year-content').innerHTML=
+    '<p class="r-para"><strong>'+aap+', 2026 आपका व्यक्तिगत वर्ष '+py+' है।</strong> '+pyI+'</p>'+
+    '<table class="month-table"><thead><tr><th>माह</th><th>अंक</th><th>ऊर्जा</th><th>'+catStr+' में संकेत</th></tr></thead><tbody>'+
+    MONTHS.map((m,i)=>{
+      const e=mE[i];
+      const cls=[8,1,3].includes(e)?'mb-high':[4,7].includes(e)?'mb-low':'mb-mid';
+      const lbl=[8,1,3].includes(e)?'अनुकूल':[4,7].includes(e)?'सावधानी':'सामान्य';
+      const hint=cHint[e]||defaultHint[e]||'-';
+      return'<tr><td><strong>'+m+'</strong></td><td>'+e+'</td><td><span class="month-badge '+cls+'">'+lbl+'</span></td><td style="font-size:.77rem">'+hint+'</td></tr>';
+    }).join('')+
+    '</tbody></table>';
 
-  // Sec 9: Remedies
+  // SEC 9: Remedies
   const gem=REMEDY_GEMS[lp]||'नवरत्न';
-  document.getElementById('r-remedies').innerHTML='<p class="r-para">'+focD.remedy+'</p><div class="remedy-box"><div class="remedy-title">🌿 आपके समग्र उपाय (LP '+lp+')</div><ul class="remedy-list"><li><strong>रत्न उपाय:</strong> '+gem+' — अनामिका उँगली में, '+(['सोमवार','शुक्रवार','गुरुवार','शनिवार','बुधवार','शुक्रवार','शनिवार','शनिवार','मंगलवार','सोमवार'][lp-1]||'गुरुवार')+' को धारण करें।</li><li><strong>दिशा उपाय:</strong> प्रतिदिन सुबह '+(['पूर्व','उत्तर','उत्तर-पूर्व','दक्षिण','उत्तर','दक्षिण-पश्चिम','उत्तर-पश्चिम','उत्तर','दक्षिण'][lp-1]||'पूर्व')+' दिशा में बैठकर ध्यान करें।</li><li><strong>रंग उपाय:</strong> '+(['लाल','सफेद','पीला','हरा','नीला','गुलाबी','बैंगनी','काला/नेवी','नारंगी'][lp-1]||'सफेद')+' रंग के कपड़े अधिक पहनें।</li><li><strong>संख्या उपाय:</strong> फोन में सुबह '+lp+' बजे का अलार्म लगाएं, उस समय अपना लक्ष्य 11 बार दोहराएं।</li><li><strong>दान उपाय:</strong> '+(['रविवार','सोमवार','बृहस्पतिवार','बुधवार','बुधवार','शुक्रवार','शनिवार','शनिवार','मंगलवार'][lp-1]||'गुरुवार')+' को किसी जरूरतमंद को '+(['गेहूं','चावल','पीली दाल','हरी सब्जी','हरी दाल','मिठाई','तिल','तिल तेल','मसूर'][lp-1]||'भोजन')+' का दान करें।</li></ul></div>';
+  document.getElementById('r-remedies').innerHTML=
+    '<p class="r-para"><strong>'+aap+', '+catStr+' सुधार के लिए विशेष उपाय:</strong></p>'+
+    '<p class="r-para">'+focD.remedy+'</p>'+
+    '<div class="remedy-box"><div class="remedy-title">🌿 '+aap+' के समग्र उपाय (जीवन पथ '+lp+')</div>'+
+    '<ul class="remedy-list">'+
+    '<li><strong>रत्न उपाय:</strong> '+gem+' — अनामिका उँगली में, '+(lpDays[lp-1]||'गुरुवार')+' को धारण करें।</li>'+
+    '<li><strong>दिशा उपाय:</strong> प्रतिदिन सुबह '+(lpDir[lp-1]||'पूर्व')+' दिशा में 10 मिनट ध्यान करें।</li>'+
+    '<li><strong>रंग उपाय:</strong> '+(lpCol[lp-1]||'सफेद')+' रंग के कपड़े अधिक पहनें।</li>'+
+    '<li><strong>शुभ दिन:</strong> '+lky.day+' को कोई भी महत्वपूर्ण निर्णय या शुरुआत करें।</li>'+
+    '<li><strong>संख्या उपाय:</strong> फोन में सुबह '+lp+' बजे का अलार्म लगाएं। '+catStr+' अपना लक्ष्य 11 बार बोलें।</li>'+
+    '<li><strong>दान उपाय:</strong> '+(lpDays[lp-1]||'गुरुवार')+' को '+(lpDonate[lp-1]||'भोजन')+' का दान करें।</li>'+
+    '</ul></div>'+
+    (loshu.missing.length?'<p class="r-para" style="margin-top:14px"><strong>गायब अंकों ('+missingStr+') के विशेष उपाय ऊपर सेक्शन 3 में दिए गए हैं।</strong></p>':'');
 
-  // Sec 10: Affirmations
-  const affs={1:['मैं एक शक्तिशाली नेता हूँ और अपनी शर्तों पर जीता हूँ।','मैं हर नई शुरुआत में साहस और विश्वास लेकर चलता हूँ।','मेरी स्वतंत्रता मेरी सबसे बड़ी ताकत है।'],2:['मैं अपनी भावनाओं का सम्मान करता हूँ।','मैं प्रेम देने और पाने का पात्र हूँ।','मैं "ना" कहना सीख रहा हूँ और यह मेरी ताकत है।'],3:['मेरी रचनात्मकता दुनिया को खूबसूरत बनाती है।','मैं खुलकर अपने आप को व्यक्त करता हूँ।','खुशी मेरा जन्मसिद्ध अधिकार है।'],4:['मेरी मेहनत का फल ज़रूर मिलेगा।','मैं धैर्य और अनुशासन से अपनी नींव मजबूत कर रहा हूँ।','स्थिरता और सुरक्षा मेरी ओर आ रही है।'],5:['मैं परिवर्तन का स्वागत करता हूँ।','हर नया अनुभव मुझे समृद्ध बनाता है।','मैं स्वतंत्र हूँ और अपना जीवन अपनी शर्तों पर जीता हूँ।']};
-  const defaultAffs=['मैं ब्रह्मांड की ऊर्जा से जुड़ा हुआ हूँ।','हर दिन मैं बेहतर होता जा रहा हूँ।','जो मेरे लिए है, वह मुझ तक ज़रूर आएगा।'];
-  const myAffs=affs[lp]||defaultAffs;
-  document.getElementById('r-affirmations').innerHTML='<p class="r-para">अंकशास्त्र के अनुसार, शब्दों में असाधारण शक्ति होती है। आपके जीवन पथ '+lp+' के लिए ये पुष्टि-मंत्र सुबह उठकर और रात को सोने से पहले 11 बार बोलें:</p><div class="affirmation-box"><ul class="aff-list">'+myAffs.map(a=>'<li>'+a+'</li>').join('')+'</ul></div><p class="r-para" style="margin-top:14px"><strong>ध्यान मंत्र:</strong> "ॐ '+( lpD.en.split(' ')[1]||'शक्ति')+'  नमः" — हर सुबह 108 बार जाप करें।</p><p class="r-para">अपने कमरे में एक छोटी नोटबुक रखें। हर सुबह उठकर तीन चीज़ें लिखें जिनके लिए आप कृतज्ञ हैं। 21 दिन में आपकी ऊर्जा में बदलाव महसूस होगा।</p>';
+  // SEC 10: Affirmations
+  const affs={
+    1:[firstName+', मैं एक शक्तिशाली नेता हूँ और अपनी शर्तों पर जीता/जीती हूँ।','मैं हर नई शुरुआत में साहस और विश्वास लेकर चलता/चलती हूँ।','मेरी स्वतंत्रता मेरी सबसे बड़ी ताकत है।'],
+    2:[firstName+', मैं अपनी भावनाओं का सम्मान करता/करती हूँ।','मैं प्रेम देने और पाने का पात्र/पात्री हूँ।','"ना" कहना मेरी ताकत है।'],
+    3:['मेरी रचनात्मकता दुनिया को खूबसूरत बनाती है।','मैं खुलकर खुद को व्यक्त करता/करती हूँ।','खुशी '+firstName+' का जन्मसिद्ध अधिकार है।'],
+    4:[firstName+', मेरी मेहनत का फल ज़रूर मिलेगा।','मैं धैर्य और अनुशासन से अपनी नींव मजबूत कर रहा/रही हूँ।','स्थिरता मेरी ओर आ रही है।'],
+    5:[firstName+', मैं परिवर्तन का स्वागत करता/करती हूँ।','हर नया अनुभव मुझे समृद्ध बनाता है।','मैं स्वतंत्र हूँ और अपनी शर्तों पर जीता/जीती हूँ।'],
+    6:['मैं पहले खुद से प्यार करता/करती हूँ।','मेरे प्रेम में असाधारण शक्ति है।',firstName+', मेरे रिश्ते दिन-ब-दिन बेहतर होते जा रहे हैं।'],
+    7:[firstName+', मैं ज्ञान की शक्ति से संचालित हूँ।','मेरा अंतर्ज्ञान मुझे सही दिशा दिखाता है।','एकांत में मुझे शक्ति मिलती है।'],
+    8:[firstName+', मैं सफलता और समृद्धि का पात्र/पात्री हूँ।','पैसा और सम्मान मेरी ओर आकर्षित होते हैं।','मैं नैतिकता के साथ बड़ी सफलता बनाता/बनाती हूँ।'],
+    9:['मैं दुनिया को बेहतर बनाने के लिए यहाँ हूँ।','क्षमा करना '+firstName+' की ताकत है।','मेरी करुणा मेरा सबसे बड़ा उपहार है।']
+  };
+  const catAffs={love:'मेरे जीवन में सच्चा और स्थायी प्यार आ रहा है।',money:'धन और समृद्धि मेरी ओर बढ़ रही है।',health:'मेरा शरीर और मन प्रतिदिन स्वस्थ होते जा रहे हैं।',mental:'मेरा मन शांत, स्थिर और केंद्रित है।',purpose:'मेरे जीवन का उद्देश्य स्पष्ट है और मैं उसकी ओर बढ़ रहा/रही हूँ।'};
+  const myAffs=affs[lp]||['मैं ब्रह्मांड की ऊर्जा से जुड़ा/जुड़ी हूँ।','हर दिन '+firstName+' बेहतर होता/होती जा रहा/रही है।','जो मेरे लिए है, वह मुझ तक ज़रूर आएगा।'];
+  document.getElementById('r-affirmations').innerHTML=
+    '<p class="r-para">'+aap+', आपके जीवन पथ '+lp+' के लिए ये पुष्टि-मंत्र सुबह और रात को 11 बार ज़ोर से बोलें:</p>'+
+    '<div class="affirmation-box"><ul class="aff-list">'+
+    myAffs.map(a=>'<li>'+a+'</li>').join('')+
+    '<li style="color:#d4af64;font-weight:700">'+(catAffs[S.cat]||catAffs['purpose'])+'</li>'+
+    '</ul></div>'+
+    '<p class="r-para" style="margin-top:14px"><strong>'+aap+' का विशेष मंत्र:</strong> "ॐ '+(lpD.en.split(' ')[1]||'शक्ति')+' नमः" — '+(lpDir[lp-1]||'पूर्व')+' दिशा में 108 बार जाप करें।</p>'+
+    '<p class="r-para">हर रात सोने से पहले डायरी में लिखें: '+catStr+' आज क्या अच्छा हुआ। <strong>21 दिन में आपकी ऊर्जा में स्पष्ट बदलाव महसूस होगा।</strong></p>';
 }
 
 /* PDF PRINT */
@@ -1107,13 +1358,64 @@ async function buyProReport(){
   if(usBtn){usBtn.textContent='लोड हो रहा है…';usBtn.style.pointerEvents='none';}
   if(ubBtn){ubBtn.textContent='प्रोसेसिंग…';ubBtn.style.pointerEvents='none';}
   
-  // BYPASS PAYMENT FOR TESTING
-  document.getElementById('upsell-bar').classList.remove('show');
-  document.getElementById('report').classList.remove('show');
-  document.getElementById('pp-title').textContent='Ultimate Blueprint अनलॉक हो रहा है ✦';
-  document.getElementById('pp-sub').textContent='चाल्डियन गणनाएँ प्रोसेस की जा रही हैं…';
-  document.getElementById('post-pay').classList.add('show');
-  setTimeout(()=>{document.getElementById('post-pay').classList.remove('show');buildProReport();},1500);
+  try {
+    const orderRes = await fetch('/api/create-order', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ amount: 249, currency: 'INR', receipt: 'receipt_pro_' + Date.now() })
+    });
+    const orderData = await orderRes.json();
+    if(!orderData.success) throw new Error('Order creation failed');
+
+    const options = {
+      key: orderData.key_id,
+      amount: orderData.order.amount,
+      currency: 'INR',
+      name: 'NumVeda',
+      description: 'Ultimate Blueprint Upgrade',
+      order_id: orderData.order.id,
+      prefill: { name: S.name, contact: '+91' + S.phone },
+      theme: { color: '#d4af37' },
+      handler: async function(response) {
+        const verifyRes = await fetch('/api/verify-payment', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({
+            razorpay_order_id: response.razorpay_order_id,
+            razorpay_payment_id: response.razorpay_payment_id,
+            razorpay_signature: response.razorpay_signature
+          })
+        });
+        const verifyData = await verifyRes.json();
+        
+        if(verifyData.success) {
+          document.getElementById('upsell-bar').classList.remove('show');
+          document.getElementById('report').classList.remove('show');
+          document.getElementById('pp-title').textContent='Ultimate Blueprint अनलॉक हो रहा है ✦';
+          document.getElementById('pp-sub').textContent='चाल्डियन गणनाएँ प्रोसेस की जा रही हैं…';
+          document.getElementById('post-pay').classList.add('show');
+          setTimeout(()=>{document.getElementById('post-pay').classList.remove('show');buildProReport();},1500);
+        } else {
+          alert('भुगतान सत्यापन विफल। कृपया हमसे संपर्क करें: numvedasupport@gmail.com');
+          resetProBtns(usBtn, ubBtn);
+        }
+      },
+      modal: {
+        ondismiss: function() { resetProBtns(usBtn, ubBtn); showRetryModal(true); }
+      }
+    };
+    const rzp = new Razorpay(options);
+    rzp.on('payment.failed', function(resp){
+      alert('भुगतान विफल: ' + resp.error.description);
+      resetProBtns(usBtn, ubBtn);
+      showRetryModal(true);
+    });
+    rzp.open();
+  } catch(err) {
+    console.error(err);
+    alert('कुछ गड़बड़ी हुई। कृपया दोबारा कोशिश करें।');
+    resetProBtns(usBtn, ubBtn);
+  }
 }
 
 function resetProBtns(usBtn, ubBtn) {
@@ -1122,7 +1424,7 @@ function resetProBtns(usBtn, ubBtn) {
 }
 
 
-function buildProReport(){
+function buildProReport(){ setRoute("/pro-report"); 
   document.getElementById('report-pro').classList.add('show');
   document.body.style.overflow='hidden';
   document.getElementById('report-pro').scrollTop=0;
@@ -1250,19 +1552,19 @@ function buildProReport(){
 }
 const LEGAL = {
   terms: `<h3>Terms & Conditions</h3>
-  <p>By using AnkVed, you agree to our terms. Our numerology reports are generated based on ancient mathematical algorithms and are provided strictly for <strong>entertainment, self-reflection, and educational purposes only.</strong></p>
+  <p>By using NumVeda, you agree to our terms. Our numerology reports are generated based on ancient mathematical algorithms and are provided strictly for <strong>entertainment, self-reflection, and educational purposes only.</strong></p>
   <p>Our reports are not a substitute for professional medical, psychiatric, financial, or legal advice. Any life decisions made based on these reports are solely your responsibility.</p>
   <p>We reserve the right to modify these terms at any time.</p>`,
   privacy: `<h3>Privacy Policy</h3>
   <p>We respect your privacy. We collect your name, date of birth, and phone number solely for the purpose of generating your accurate numerology calculations.</p>
   <p>We do not sell, rent, or share your personal data with third parties. Your payment information is securely processed via Razorpay and is not stored on our servers.</p>`,
   refund: `<h3>Refund Policy (Strictly Non-Refundable)</h3>
-  <p>Because AnkVed delivers digital, personalized PDF reports that are generated and delivered instantly upon payment, <strong>we do not offer any refunds once the report has been successfully generated and shown/delivered to you.</strong></p>
+  <p>Because NumVeda delivers digital, personalized PDF reports that are generated and delivered instantly upon payment, <strong>we do not offer any refunds once the report has been successfully generated and shown/delivered to you.</strong></p>
   <p>By completing your purchase, you acknowledge and agree that this is a digital good and all sales are final.</p>
   <p><strong>Exception:</strong> If your payment was deducted but the report failed to generate or download due to a technical error, you will not lose your money. Please use the Contact Us form, and our team will manually generate and send your report to your WhatsApp/Email within 24 hours.</p>`,
   contact: `<h3>Contact Us</h3>
   <p>If you face any issues, especially related to payment deductions without report delivery, we are here to help!</p>
-  <p><strong>Email:</strong> ankvedsupport@gmail.com</p>
+  <p><strong>Email:</strong> numvedasupport@gmail.com</p>
   <p>Please include your Payment ID or the Phone Number you entered so we can track your report quickly.</p>`
 };
 function openLegal(type) {
@@ -1273,5 +1575,18 @@ function closeLegal() {
   document.getElementById('legal-modal').classList.remove('show');
 }
 </script>
+
+<!-- RETRY MODAL -->
+<div class="retry-modal" id="retry-modal">
+  <div class="retry-content">
+    <button class="retry-close" onclick="closeRetryModal()">✕</button>
+    <div class="retry-icon">⏳</div>
+    <div class="retry-title">रुकिए! आपकी <em>Report</em> तैयार है...</div>
+    <div class="retry-desc">आपकी जन्मतिथि और नाम की गहन गणनाएँ पूरी हो चुकी हैं। केवल पेमेंट बाकी है। क्या आप अपने भविष्य के रहस्य जानने का यह अवसर खोना चाहते हैं?</div>
+    <button class="retry-btn" id="retry-btn-act">हाँ, पेमेंट पूरी करें ✦</button>
+    <button class="retry-cancel" onclick="closeRetryModal()">नहीं, मुझे अपने भाग्य पर छोड़ दें</button>
+  </div>
+</div>
+
 </body>
 </html>

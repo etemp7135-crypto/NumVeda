@@ -5,7 +5,16 @@ const crypto = require('crypto');
 const path = require('path');
 require('dotenv').config();
 
+const rateLimit = require('express-rate-limit');
 const app = express();
+
+// Rate limiting for API to prevent spam
+const apiLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 10, // Limit each IP to 10 requests per windowMs
+  message: { success: false, message: 'Too many requests, please try again later.' }
+});
+app.use('/api/', apiLimiter);
 const PORT = process.env.PORT || 3000;
 
 // Middleware
@@ -68,8 +77,8 @@ app.post('/api/verify-payment', (req, res) => {
   }
 });
 
-// Serve index.html for root route
-app.get('/', (req, res) => {
+// Serve index.html for root route and all other unmatched routes (SPA fallback)
+app.use((req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
 
