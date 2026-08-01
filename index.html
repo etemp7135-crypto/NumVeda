@@ -4455,6 +4455,10 @@
             const verifyData = await verifyRes.json();
 
             if (verifyData.success) {
+              // Meta Pixel — fire Purchase event after server verification
+              if (typeof fbq === 'function') {
+                fbq('track', 'Purchase', { value: 49.00, currency: 'INR' });
+              }
               // Payment verified — show report
               document.getElementById('checkout').classList.remove('show');
               document.getElementById('sticky-pay-bar').classList.remove('show');
@@ -4735,6 +4739,10 @@
             const verifyData = await verifyRes.json();
 
             if (verifyData.success) {
+              // Meta Pixel — fire Purchase event after server verification
+              if (typeof fbq === 'function') {
+                fbq('track', 'Purchase', { value: 249.00, currency: 'INR' });
+              }
               document.getElementById('upsell-bar').classList.remove('show');
               document.getElementById('report').classList.remove('show');
               document.getElementById('pp-title').textContent = 'Ultimate Blueprint अनलॉक हो रहा है ✦';
