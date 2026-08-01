@@ -3123,6 +3123,21 @@
     }
 
     /* ═══ RESPONSIVE MOBILE ═══════════════════════════════ */
+
+    /* Fix 1: Tables must not overflow on mobile — wrap them */
+    .month-table,
+    .chal-table,
+    .wealth-table {
+      display: block;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    /* Fix 2: Upsell bar missing safe-area inset (iPhone home bar) */
+    #upsell-bar {
+      padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+    }
+
     @media(max-width:480px) {
       .r-sec-title {
         font-size: 1.05rem
@@ -3136,6 +3151,18 @@
         width: 138px
       }
 
+      /* Fix 3: lo-shu info must not enforce min-width that breaks layout */
+      .loshu-info {
+        min-width: 0;
+        width: 100%
+      }
+
+      /* Fix 4: loshu-wrap goes vertical on small screens */
+      .loshu-wrap {
+        flex-direction: column;
+        align-items: center
+      }
+
       .month-table {
         font-size: .76rem
       }
@@ -3146,7 +3173,7 @@
       }
 
       .chk-body {
-        padding: 16px 12px 90px
+        padding: 16px 12px 100px
       }
 
       .chk-title {
@@ -3172,7 +3199,7 @@
       }
 
       .pro-wrap {
-        padding: 18px 10px 60px
+        padding: 18px 10px 70px
       }
 
       .pro-sec-title {
@@ -3182,7 +3209,79 @@
       .health-body-map {
         grid-template-columns: 1fr
       }
+
+      /* Fix 5: Option text too large on small screens */
+      .opt-text {
+        font-size: 1rem
+      }
+
+      /* Fix 6: Pro hero watermark "ULTIMATE" should not overflow */
+      .pro-hero::before {
+        font-size: 3rem
+      }
+
+      /* Fix 7: Sticky pay bar wraps gracefully on tiny phones */
+      .sticky-pay-bar {
+        flex-wrap: wrap;
+        gap: 10px
+      }
+
+      .spb-btn {
+        width: 100%;
+        justify-content: center;
+        padding: 13px 20px;
+        font-size: .95rem
+      }
+
+      .spb-left {
+        width: 100%
+      }
+
+      /* Fix 8: Upsell bar stacks on very small phones */
+      #upsell-bar {
+        flex-wrap: wrap;
+        gap: 8px
+      }
+
+      .ub-btn {
+        flex: 1;
+        justify-content: center;
+        text-align: center
+      }
     }
+
+    /* Fix 9: Extra small phones (≤360px) */
+    @media(max-width:360px) {
+      .land-h1 {
+        font-size: 1.6rem
+      }
+
+      .what-grid {
+        grid-template-columns: 1fr
+      }
+
+      .trust-strip {
+        grid-template-columns: 1fr
+      }
+
+      .q-title {
+        font-size: 1.4rem
+      }
+
+      .opt-btn {
+        padding: 14px 16px;
+        gap: 10px
+      }
+
+      .spb-price {
+        font-size: 1.4rem
+      }
+
+      .chk-price-row.discount span:last-child {
+        font-size: 1.3rem
+      }
+    }
+
 
     .site-footer {
       text-align: center;
