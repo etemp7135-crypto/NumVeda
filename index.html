@@ -2332,14 +2332,15 @@
       left: 0;
       right: 0;
       z-index: 950;
-      background: var(--rp);
+      background: #0d1425;
       color: #fff;
       padding: 12px 16px;
+      padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px));
       display: none;
       align-items: center;
       gap: 10px;
-      box-shadow: 0 -8px 32px rgba(0, 0, 0, .25);
-      border-top: 3px solid var(--rg);
+      box-shadow: 0 -2px 0 rgba(212,175,100,0.3), 0 -12px 40px rgba(0,0,0,0.7);
+      border-top: 2px solid rgba(212,175,100,0.4);
     }
 
     #upsell-bar.show {
@@ -2398,132 +2399,228 @@
       touch-action: manipulation;
     }
 
+
+    /* Upsell Section — redesigned */
     .upsell-section {
-      background: linear-gradient(135deg, var(--rp), #2d4a7a);
-      border-radius: 14px;
-      padding: 24px 18px;
+      background: linear-gradient(145deg, #1a0a2e, #0f1f3d);
+      border: 1px solid rgba(212,175,100,0.3);
+      border-radius: 16px;
+      padding: 28px 18px 22px;
       margin: 24px 0;
       color: #fff;
       text-align: center;
       position: relative;
       overflow: hidden;
+      box-shadow: 0 0 60px rgba(212,175,100,0.08), 0 20px 40px rgba(0,0,0,0.4);
     }
-
     .upsell-section::before {
       content: '';
       position: absolute;
-      top: -40px;
-      right: -40px;
-      width: 120px;
-      height: 120px;
-      background: var(--rg);
-      border-radius: 50%;
-      opacity: .07;
+      inset: 0;
+      background: radial-gradient(ellipse at top right, rgba(212,175,100,0.07), transparent 60%);
+      pointer-events: none;
     }
-
+    .us-timer-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: rgba(239,68,68,0.12);
+      border: 1px solid rgba(239,68,68,0.3);
+      border-radius: 8px;
+      padding: 8px 14px;
+      margin-bottom: 16px;
+      font-size: .8rem;
+      color: #fca5a5;
+      flex-wrap: wrap;
+    }
+    .us-timer-label { font-weight: 600; }
+    #us-countdown { font-weight: 800; font-size: .95rem; color: #f87171; font-variant-numeric: tabular-nums; }
     .us-badge {
       display: inline-block;
-      background: var(--rg);
+      background: linear-gradient(135deg, #ef4444, #b91c1c);
       color: #fff;
-      font-size: .66rem;
+      font-size: .65rem;
       font-weight: 800;
-      padding: 3px 9px;
+      padding: 4px 12px;
       border-radius: 100px;
       text-transform: uppercase;
-      letter-spacing: .07em;
-      margin-bottom: 10px
+      letter-spacing: .08em;
+      margin-bottom: 12px;
+      animation: pulse-badge 2s infinite;
     }
-
+    @keyframes pulse-badge {
+      0%,100% { box-shadow: 0 0 0 0 rgba(239,68,68,.4); }
+      50% { box-shadow: 0 0 0 6px rgba(239,68,68,0); }
+    }
     .us-title {
       font-family: var(--serif);
-      font-size: 1.45rem;
-      font-weight: 600;
-      line-height: 1.2;
-      margin-bottom: 7px
+      font-size: 1.35rem;
+      font-weight: 700;
+      line-height: 1.25;
+      margin-bottom: 8px;
+      color: #fff;
     }
-
     .us-sub {
       font-size: .84rem;
-      color: rgba(255, 255, 255, .7);
-      line-height: 1.55;
-      margin-bottom: 16px;
+      color: rgba(255,255,255,.75);
+      line-height: 1.6;
+      margin-bottom: 18px;
       max-width: 380px;
       margin-left: auto;
       margin-right: auto;
     }
-
+    .us-testimonials {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 16px;
+      text-align: left;
+    }
+    .us-testi {
+      background: rgba(255,255,255,0.05);
+      border-left: 3px solid var(--rg);
+      border-radius: 8px;
+      padding: 10px 12px;
+      font-size: .78rem;
+      color: rgba(255,255,255,.85);
+      line-height: 1.5;
+    }
+    .us-testi-name {
+      font-size: .7rem;
+      color: var(--rg);
+      font-weight: 700;
+      margin-top: 5px;
+    }
+    .us-social-proof {
+      font-size: .72rem;
+      color: rgba(255,255,255,.5);
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+    .us-social-dot { width:7px; height:7px; background:#22c55e; border-radius:50%; animation: pulse-dot 1.5s infinite; flex-shrink:0; }
     .us-features {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 7px;
+      gap: 8px;
       margin-bottom: 18px;
       text-align: left;
     }
-
-    @media(max-width:440px) {
-      .us-features {
-        grid-template-columns: 1fr
-      }
-    }
-
+    @media(max-width:440px) { .us-features { grid-template-columns: 1fr } }
     .us-feature {
       display: flex;
       align-items: flex-start;
       gap: 7px;
-      font-size: .77rem;
-      color: rgba(255, 255, 255, .8);
-      line-height: 1.4
+      font-size: .78rem;
+      color: rgba(255,255,255,.85);
+      line-height: 1.45;
     }
-
-    .us-feature::before {
-      content: "✦";
-      color: var(--rg);
-      font-size: .7rem;
-      flex-shrink: 0;
-      margin-top: 1px
-    }
-
+    .us-feature::before { content: "✦"; color: var(--rg); font-size: .65rem; flex-shrink: 0; margin-top: 2px; }
     .us-price-row {
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 11px;
-      margin-bottom: 13px
+      gap: 12px;
+      margin-bottom: 5px;
     }
-
-    .us-orig {
-      color: rgba(255, 255, 255, .5);
-      text-decoration: line-through;
-      font-size: .88rem
-    }
-
-    .us-now {
-      color: var(--rg);
-      font-size: 1.9rem;
-      font-weight: 800;
-      font-family: var(--serif)
-    }
-
+    .us-orig { color: rgba(255,255,255,.4); text-decoration: line-through; font-size: .9rem; }
+    .us-now { color: #fbbf24; font-size: 2rem; font-weight: 800; font-family: var(--serif); }
+    .us-daily-price { font-size: .72rem; color: rgba(255,255,255,.45); margin-bottom: 16px; }
     .us-btn {
-      display: inline-flex;
+      display: flex;
       align-items: center;
-      gap: 7px;
-      padding: 14px 28px;
+      justify-content: center;
+      gap: 8px;
+      padding: 15px 30px;
       border-radius: 100px;
-      background: linear-gradient(135deg, var(--gold2), var(--gold));
-      color: var(--ink);
+      background: linear-gradient(135deg, #fbbf24, #d4af37);
+      color: #0a0a0a;
       font-weight: 800;
       font-size: .9rem;
       border: none;
       cursor: pointer;
-      box-shadow: 0 8px 24px rgba(212, 175, 100, .3);
-      transition: transform .2s var(--spring);
+      box-shadow: 0 8px 28px rgba(212,175,100,.45);
+      transition: transform .2s, box-shadow .2s;
       touch-action: manipulation;
+      width: 100%;
     }
+    .us-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 36px rgba(212,175,100,.55); }
+    .us-no-thanks { font-size: .68rem; color: rgba(255,255,255,.3); margin-top: 10px; cursor: pointer; text-decoration: underline; display: block; }
+    /* Locked preview teaser sections */
+    .locked-preview {
+      background: var(--rc);
+      border: 1px solid var(--rbr);
+      border-radius: 10px;
+      padding: 16px 14px 52px;
+      margin: 10px 0 0;
+      position: relative;
+      overflow: hidden;
+    }
+    .locked-preview::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, transparent 0%, var(--rc) 55%);
+      pointer-events: none;
+    }
+    .locked-preview-blur { filter: blur(4px); user-select: none; pointer-events: none; font-size: .82rem; color: var(--rtl); line-height: 1.7; }
+    .locked-preview-badge {
+      position: absolute;
+      bottom: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 2;
+      background: linear-gradient(135deg, #1a0a2e, #0f1f3d);
+      border: 1px solid rgba(212,175,100,0.4);
+      color: #fbbf24;
+      font-size: .74rem;
+      font-weight: 700;
+      padding: 7px 16px;
+      border-radius: 100px;
+      white-space: nowrap;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.5);
+    }
+    /* Exit intent modal */
+    #exit-intent-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 2000;
+      background: rgba(0,0,0,0.8);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      display: none;
+      align-items: flex-end;
+      justify-content: center;
+    }
+    #exit-intent-modal.show { display: flex; }
+    .eim-sheet {
+      background: linear-gradient(145deg, #1a0a2e, #0d1b2e);
+      border: 1px solid rgba(212,175,100,0.3);
+      border-radius: 20px 20px 0 0;
+      padding: 24px 20px 36px;
+      width: 100%;
+      max-width: 480px;
+      text-align: center;
+      animation: slideUpEim .35s cubic-bezier(0.16,1,0.3,1);
+    }
+    @keyframes slideUpEim { from { transform: translateY(100%); opacity:0; } to { transform: translateY(0); opacity:1; } }
+    .eim-emoji { font-size: 2.2rem; margin-bottom: 10px; }
+    .eim-title { font-family: var(--serif); font-size: 1.25rem; font-weight: 700; color: #fff; margin-bottom: 8px; line-height: 1.3; }
+    .eim-sub { font-size: .81rem; color: rgba(255,255,255,.6); margin-bottom: 16px; line-height: 1.55; }
+    .eim-price { font-size: 1.7rem; font-weight: 800; color: #fbbf24; margin-bottom: 3px; font-family: var(--serif); }
+    .eim-orig-price { font-size: .78rem; color: rgba(255,255,255,.35); text-decoration: line-through; margin-bottom: 18px; }
+    .eim-btn { width: 100%; padding: 15px; background: linear-gradient(135deg, #fbbf24, #d4af37); color: #0a0a0a; font-weight: 800; font-size: .95rem; border: none; border-radius: 100px; cursor: pointer; margin-bottom: 12px; box-shadow: 0 8px 24px rgba(212,175,100,.4); touch-action: manipulation; }
+    .eim-close { font-size: .74rem; color: rgba(255,255,255,.3); cursor: pointer; text-decoration: underline; }
+    .ub-timer { font-size:.7rem; color:#f87171; font-weight:700; margin-left: 4px; }
 
-    .us-btn:hover {
-      transform: translateY(-2px)
-    }
+
 
     .r-footer {
       text-align: center;
@@ -4317,25 +4414,47 @@
         <h2 class="r-sec-title"><span class="ic">🌟</span> खंड 10 — व्यक्तिगत पुष्टि-मंत्र और ध्यान</h2>
         <div id="r-affirmations"></div>
       </div>
-      <!-- UPSELL -->
-      <div class="upsell-section" id="upsell-in-report">
-        <div class="us-badge">🔥 अपग्रेड ऑफर</div>
-        <h2 class="us-title">अभी तो बस झलक देखी है —<br>Ultimate Blueprint 25 पेज का है।</h2>
-        <p class="us-sub">₹49 की रिपोर्ट सिर्फ शुरुआत है। <strong style="color:var(--rg)">Ultimate Blueprint</strong>
-          में 10 अतिरिक्त गहरे विश्लेषण हैं।</p>
-        <div class="us-features">
-          <div class="us-feature">चाल्डियन प्रणाली — 4000 वर्ष पुरानी बेबीलोनियन विश्लेषण</div>
-          <div class="us-feature">2026–2030 पाँच वर्षीय भविष्यवाणी</div>
-          <div class="us-feature">संबंध अनुकूलता — हर अंक से आपका मेल</div>
-          <div class="us-feature">करियर और व्यापार के शुभ Timing Windows</div>
-          <div class="us-feature">नाम सुधार विश्लेषण — क्या नाम आपके खिलाफ है?</div>
-          <div class="us-feature">21-दिन का व्यक्तिगत कर्म सुधार प्लान</div>
-          <div class="us-feature">स्वास्थ्य भेद्यता का Body Map</div>
-          <div class="us-feature">धन प्रकटन की शुभ तारीखें + रत्न चिकित्सा</div>
+      <!-- LOCKED PREVIEW TEASER 1 -->
+      <div class="r-card page-break">
+        <h2 class="r-sec-title"><span class="ic">🔮</span> खंड 11 — 2026–2030 आपकी पाँच वर्षीय भविष्यवाणी</h2>
+        <div class="locked-preview">
+          <div class="locked-preview-blur">आपके जीवन काल 2026 में एक बड़ा परिवर्तन आने वाला है। यह काल आपके लिए नई शुरुआत का संकेत है। आपके अंक का प्रभाव इस वर्ष सर्वाधिक रहेगा। 2027 में धन योग बनेगा लेकिन आपको सावधान रहना होगा। 2028 आपके संबंधों के लिए अत्यंत महत्वपूर्ण वर्ष है और 2029–2030 में बड़ा अवसर...</div>
+          <div class="locked-preview-badge" onclick="buyProReport()">🔒 Ultimate Blueprint में अनलॉक करें → ₹249</div>
         </div>
-        <div class="us-price-row"><span class="us-orig">₹2,999</span><span class="us-now">₹249</span></div>
-        <button class="us-btn" onclick="buyProReport()">Ultimate Blueprint अनलॉक करें ✦</button>
-        <p style="font-size:.7rem;color:rgba(255,255,255,.4);margin-top:10px">यह ऑफर सिर्फ आज के लिए है</p>
+      </div>
+      <!-- LOCKED PREVIEW TEASER 2 -->
+      <div class="r-card page-break">
+        <h2 class="r-sec-title"><span class="ic">💰</span> खंड 12 — धन प्रकटन की शुभ तारीखें + रत्न चिकित्सा</h2>
+        <div class="locked-preview">
+          <div class="locked-preview-blur">आपके लिए इस वर्ष के सबसे शुभ मुहूर्त: 14 फरवरी, 23 मार्च, 7 अप्रैल, 19 मई... इन तारीखों पर नया व्यापार शुरू करना, निवेश करना या बड़े फैसले लेना अत्यंत फलदायी रहेगा। रत्न चिकित्सा: आपके अंक के अनुसार पुखराज धारण करने से तत्काल लाभ होगा। पहनने की विधि...</div>
+          <div class="locked-preview-badge" onclick="buyProReport()">🔒 Ultimate Blueprint में अनलॉक करें → ₹249</div>
+        </div>
+      </div>
+      <!-- UPSELL CARD — redesigned -->
+      <div class="upsell-section" id="upsell-in-report">
+        <!-- Countdown Timer -->
+        <div class="us-timer-row">
+          ⏳ <span class="us-timer-label">यह ऑफर समाप्त होगा:</span>
+          <span id="us-countdown">10:00</span>
+          <span style="font-size:.7rem;color:rgba(255,200,200,.6)">(बाद में ₹399)</span>
+        </div>
+        <div class="us-badge" id="us-badge-text">🔥 एक बार का ऑफर — सिर्फ इस सत्र के लिए</div>
+        <h2 class="us-title" id="us-title">आपका पैसा क्यों नहीं रुकता?<br><span style="color:#fbbf24">जवाब आपके अंकों में छिपा है।</span></h2>
+        <p class="us-sub" id="us-sub">₹49 की रिपोर्ट में हमने <em>समस्या</em> दिखाई। <strong>Ultimate Blueprint</strong> में आपको मिलेगा <em>पूरा समाधान</em> — 25 पेज, 10 गहरे विश्लेषण, 5 साल का रोडमैप।</p>
+        <!-- Testimonials — injected by JS -->
+        <div class="us-testimonials" id="us-testimonials"></div>
+        <!-- Social proof counter -->
+        <div class="us-social-proof">
+          <div class="us-social-dot"></div>
+          <span id="us-upgraders">47 लोगों ने आज अपग्रेड किया</span>
+        </div>
+        <!-- Features — injected by JS -->
+        <div class="us-features" id="us-features"></div>
+        <!-- Price with daily framing -->
+        <div class="us-price-row"><span class="us-orig">₹2,999</span><span class="us-now" id="us-price-display">₹249</span></div>
+        <p class="us-daily-price">मात्र ₹0.68/दिन — एक चाय से भी सस्ता ☕</p>
+        <button class="us-btn" onclick="buyProReport()" id="us-cta-btn">हाँ! मेरा Ultimate Blueprint अनलॉक करें ✦</button>
+        <span class="us-no-thanks" onclick="document.getElementById('upsell-in-report').style.opacity='.4'">नहीं धन्यवाद, मुझे अपनी ज़िन्दगी ऐसे ही चलानी है</span>
       </div>
     </div>
     <div class="r-footer">
@@ -4344,14 +4463,28 @@
     </div>
   </div>
 
+  <!-- EXIT INTENT MODAL -->
+  <div id="exit-intent-modal">
+    <div class="eim-sheet">
+      <div class="eim-emoji">⚠️</div>
+      <h3 class="eim-title">रुकिए! यह ऑफर इसी सत्र तक सीमित है</h3>
+      <p class="eim-sub">एक बार यह पेज बंद करने के बाद Ultimate Blueprint ₹249 में नहीं मिलेगा।<br>अभी पाएं और 5 साल की भविष्यवाणी + नाम विश्लेषण जानें।</p>
+      <div class="eim-price">₹249</div>
+      <div class="eim-orig-price">सामान्य मूल्य: ₹2,999</div>
+      <button class="eim-btn" onclick="buyProReport(); document.getElementById('exit-intent-modal').classList.remove('show')">हाँ, ₹249 में अभी पाएं ✦</button>
+      <div class="eim-close" onclick="document.getElementById('exit-intent-modal').classList.remove('show')">नहीं धन्यवाद, मुझे नहीं चाहिए</div>
+    </div>
+  </div>
+
   <!-- UPSELL BAR -->
   <div id="upsell-bar">
     <div class="ub-text">
-      <div class="ub-title">Ultimate Blueprint — ₹249</div>
-      <div class="ub-sub">25 पेज · चाल्डियन · 5 वर्षीय भविष्यवाणी · 21-दिन प्लान</div>
+      <div class="ub-title">Ultimate Blueprint — <span id="ub-price">₹249</span><span class="ub-timer" id="ub-countdown"></span></div>
+      <div class="ub-sub">25 पेज · भविष्यवाणी · नाम विश्लेषण · 21-दिन प्लान</div>
     </div><button class="ub-btn" onclick="buyProReport()">अभी पाएं →</button><button class="ub-close"
       onclick="document.getElementById('upsell-bar').classList.remove('show')">✕</button>
   </div>
+
 
   <!-- PRO REPORT -->
   <div id="report-pro">
@@ -4945,12 +5078,15 @@
 
     function buildReport() {
       setRoute("/report");
-      document.getElementById('landing').style.display = 'none';
+      const landingEl = document.getElementById('landing'); if (landingEl) landingEl.style.display = 'none';
       ['quiz-overlay', 'analysis', 'checkout', 'post-pay'].forEach(id => document.getElementById(id).classList.remove('show'));
       document.getElementById('report').classList.add('show');
       document.body.style.overflow = 'hidden';
       document.getElementById('report').scrollTop = 0;
-      setTimeout(() => { document.getElementById('upsell-bar').classList.add('show'); }, 15000);
+      setTimeout(() => { document.getElementById('upsell-bar').classList.add('show'); }, 3000);
+      startUpsellCountdown();
+      personaliseUpsell();
+      initExitIntent();
 
       const lp = calcLP(), dest = calcDest(), soul = calcSoul(), pers = calcPers(), py = calcPY(lp);
       const loshu = calcLoShu(), pins = calcPins(), karmic = calcKarmic();
@@ -5229,6 +5365,201 @@
       if (ubBtn) { ubBtn.textContent = 'हाँ, मेरी रिपोर्ट अपग्रेड करें'; ubBtn.style.pointerEvents = ''; }
     }
 
+    // ─── UPSELL COUNTDOWN TIMER ──────────────────────────
+    let _upsellTimerInterval = null;
+    // ─── PERSONALISED UPSELL COPY ────────────────────────
+    function personaliseUpsell() {
+      const UPSELL_COPY = {
+        love: {
+          title: 'हमेशा धोखा क्यों मिलता है?<br><span style="color:#fbbf24">जवाब आपके अंकों में छिपा है।</span>',
+          sub: 'आपके प्यार की समस्या किस्मत नहीं, <strong>अंकशास्त्र</strong> है। Ultimate Blueprint में जानें — <em>कौन साथी शुभ है, कौन नुकसानदेह।</em>',
+          features: [
+            'जानें आपका प्रेम अंक किसे आकर्षित करता है — और किसे दूर रखता है',
+            'कौन साथी जन्मतिथि से आपके लिए सबसे शुभ है — अनुकूलता विश्लेषण',
+            'क्या आपका नाम रिश्तों में रुकावट है? — नाम सुधार गाइड',
+            '2026–2030 प्रेम भविष्यवाणी — शादी, मिलन और अलगाव के वर्ष',
+            'रिश्ते में विश्वास बनाने के लिए 21-दिन कर्म सुधार प्लान',
+            'शुभ विवाह तारीखें + रत्न चिकित्सा'
+          ],
+          testimonials: [
+            { text: '"उन्होंने बताया कि मेरा 6 अंक 8 अंक वाले से कभी नहीं बनेगा। तीन रिश्ते टूटने के बाद समझ आया। अब सही साथी मिला।"', name: '— सोनाली मेहता, मुंबई ⭐⭐⭐⭐⭐' },
+            { text: '"शादी के लिए शुभ तारीख इस रिपोर्ट से निकाली। आज 2 साल की शादी में कभी झगड़ा नहीं हुआ।"', name: '— अर्जुन सिंह, जयपुर ⭐⭐⭐⭐⭐' }
+          ]
+        },
+        money: {
+          title: 'पैसा आता है, फिर भाग जाता है — क्यों?<br><span style="color:#fbbf24">आपके अंक बताते हैं असली कारण।</span>',
+          sub: '₹49 की रिपोर्ट में समस्या दिखाई। <strong>Ultimate Blueprint</strong> में मिलेगा — <em>धन रोकने का, कमाने का, और बढ़ाने का पूरा अंकशास्त्रीय नक्शा।</em>',
+          features: [
+            'जानें क्यों पैसा रुकता नहीं — आपके अंक में क्या रुकावट है',
+            'धन प्रकटन की शुभ तारीखें — कब निवेश करें, कब नहीं',
+            'करियर और व्यापार के शुभ Timing Windows 2026–2030',
+            'क्या आपका नाम कमाई में रुकावट है? — नाम सुधार विश्लेषण',
+            'रत्न चिकित्सा — कौन सा रत्न आर्थिक समृद्धि लाएगा',
+            '21-दिन धन आकर्षण कर्म सुधार प्लान'
+          ],
+          testimonials: [
+            { text: '"इस रिपोर्ट ने बताया कि मेरा नाम मेरे खिलाफ काम कर रहा था। नाम ठीक करने के 3 महीने बाद नौकरी मिली।"', name: '— रोहन वर्मा, दिल्ली ⭐⭐⭐⭐⭐' },
+            { text: '"धन की शुभ तारीखों पर बिज़नेस शुरू किया। पहले ही महीने ₹80,000 का मुनाफा हुआ।"', name: '— किरण पटेल, सूरत ⭐⭐⭐⭐⭐' }
+          ]
+        },
+        health: {
+          title: 'थकान, बीमारी और नींद न आना — इसका राज़ आपके अंकों में है।<br><span style="color:#fbbf24">जानें अपने शरीर का अंकशास्त्र।</span>',
+          sub: 'आपकी स्वास्थ्य समस्याएं दुर्भाग्य नहीं हैं — आपके <strong>अंकों का असंतुलन</strong> है। Ultimate Blueprint में मिलेगा <em>आपके शरीर का पूरा Energy Blueprint।</em>',
+          features: [
+            'आपकी स्वास्थ्य भेद्यता का Body Map — कौन से अंग कमज़ोर हैं',
+            '2026–2030 स्वास्थ्य चेतावनी — किस वर्ष सावधान रहें',
+            'कौन सा आहार और दिनचर्या आपके अंक के अनुसार सही है',
+            'नींद, ऊर्जा और मानसिक स्वास्थ्य का अंकशास्त्रीय विश्लेषण',
+            'रत्न और रंग चिकित्सा — शरीर की ऊर्जा बैलेंस करने के उपाय',
+            '21-दिन स्वास्थ्य कर्म सुधार प्लान'
+          ],
+          testimonials: [
+            { text: '"मुझे 3 साल से अनिद्रा थी। रिपोर्ट में बताए रत्न और उपाय शुरू किए — 2 हफ्ते में फर्क आया।"', name: '— प्रमिला शर्मा, लखनऊ ⭐⭐⭐⭐⭐' },
+            { text: '"अंक 4 वाले लोगों में जोड़ों का दर्द आम है — यह मुझे पहले किसी ने नहीं बताया था। उपाय से राहत मिली।"', name: '— विनोद गुप्ता, भोपाल ⭐⭐⭐⭐⭐' }
+          ]
+        },
+        mental: {
+          title: 'चिंता, डर और बेचैनी हमेशा क्यों रहती है?<br><span style="color:#fbbf24">आपके अंक में इसका जवाब है।</span>',
+          sub: 'मानसिक अशांति की जड़ अक्सर आपके <strong>अंकों का असंतुलन</strong> होती है। Ultimate Blueprint में मिलेगा — <em>मन की शांति का अंकशास्त्रीय रोडमैप।</em>',
+          features: [
+            'आपकी मानसिक शक्ति और कमज़ोरी का विस्तृत विश्लेषण',
+            'चिंता के मूल अंकीय कारण और उनके समाधान',
+            'कौन से लोग आपकी ऊर्जा खींचते हैं — नकारात्मक संबंध पहचानें',
+            '2026–2030 मानसिक चुनौतियों की भविष्यवाणी',
+            'ध्यान, मंत्र और रत्न — मन की शांति के लिए अंकशास्त्रीय उपाय',
+            '21-दिन मानसिक शांति कर्म सुधार प्लान'
+          ],
+          testimonials: [
+            { text: '"पैनिक अटैक की समस्या थी। रिपोर्ट में बताया कि मेरा अंक 7 है और एकांत में शक्ति मिलती है। जीवन बदल गया।"', name: '— निधि जोशी, पुणे ⭐⭐⭐⭐⭐' },
+            { text: '"3 साल की डिप्रेशन से बाहर आने में इस रिपोर्ट ने बड़ी भूमिका निभाई। अपने अंकों को समझा तो सब साफ हुआ।"', name: '— अमित राठोड़, अहमदाबाद ⭐⭐⭐⭐⭐' }
+          ]
+        },
+        purpose: {
+          title: 'जीवन का उद्देश्य क्यों नहीं मिल रहा?<br><span style="color:#fbbf24">आपके अंक आपको रास्ता दिखाते हैं।</span>',
+          sub: 'दिशाहीन महसूस करना कमज़ोरी नहीं — <strong>आपके जीवन-पथ अंक</strong> से disconnection है। Ultimate Blueprint में मिलेगा <em>आपकी असली नियति का पूरा नक्शा।</em>',
+          features: [
+            'आपका सच्चा जीवन-उद्देश्य — कौन से क्षेत्र में आप शिखर पर हो सकते हैं',
+            'आत्मा-अंक विश्लेषण — आप असल में क्या चाहते हैं अंदर से',
+            'कर्म संख्या — पिछले जन्म की कौन सी बाधा आज रोक रही है',
+            '2026–2030 भविष्यवाणी — कब मिलेगी असली दिशा',
+            'करियर और व्यापार का अंकशास्त्रीय मार्गदर्शन',
+            '21-दिन जीवन-उद्देश्य खोज कर्म सुधार प्लान'
+          ],
+          testimonials: [
+            { text: '"10 साल नौकरी करने के बाद समझा कि मेरा अंक 3 है और creativity मेरा असली काम है। अब खुश हूं।"', name: '— आकाश तिवारी, इंदौर ⭐⭐⭐⭐⭐' },
+            { text: '"रिपोर्ट ने बताया कि 2027 मेरा transformation वर्ष है। उसकी तैयारी 2 साल पहले से शुरू कर दी।"', name: '— दिव्या नायर, बेंगलुरु ⭐⭐⭐⭐⭐' }
+          ]
+        }
+      };
+
+      const cat = S.cat || 'money';
+      const copy = UPSELL_COPY[cat] || UPSELL_COPY.money;
+      const firstName = S.name ? S.name.split(' ')[0] : '';
+
+      // Inject title
+      const titleEl = document.getElementById('us-title');
+      if (titleEl) titleEl.innerHTML = copy.title;
+
+      // Inject sub
+      const subEl = document.getElementById('us-sub');
+      if (subEl) subEl.innerHTML = (firstName ? firstName + ' जी, ' : '') + copy.sub;
+
+      // Inject testimonials
+      const testiEl = document.getElementById('us-testimonials');
+      if (testiEl) {
+        testiEl.innerHTML = copy.testimonials.map(t =>
+          `<div class="us-testi">${t.text}<div class="us-testi-name">${t.name}</div></div>`
+        ).join('');
+      }
+
+      // Inject features
+      const featEl = document.getElementById('us-features');
+      if (featEl) {
+        featEl.innerHTML = copy.features.map(f =>
+          `<div class="us-feature">${f}</div>`
+        ).join('');
+      }
+
+      // Update locked teasers based on category
+      const lockedBlurs = document.querySelectorAll('.locked-preview-blur');
+      if (cat === 'love' && lockedBlurs[0]) {
+        lockedBlurs[0].textContent = 'आपके प्रेम अंक के अनुसार 2026 में एक बड़ा मिलन योग बन रहा है। मार्च–अप्रैल 2027 में रिश्ते की परीक्षा होगी। 2028 में विवाह का शुभ योग है — तारीख और साथी की अनुकूलता Ultimate Blueprint में...';
+      } else if (cat === 'health' && lockedBlurs[0]) {
+        lockedBlurs[0].textContent = 'आपके अंक के अनुसार 2026 में स्वास्थ्य सावधानी ज़रूरी है। मार्च और अगस्त में ऊर्जा सबसे कम रहेगी। 2027 में रिकवरी का शुभ काल आएगा। आपके लिए विशेष आहार और व्यायाम की सलाह...';
+      } else if (cat === 'mental' && lockedBlurs[0]) {
+        lockedBlurs[0].textContent = 'आपके मन की शांति के लिए 2026 महत्वपूर्ण वर्ष है। जून–जुलाई में मानसिक दबाव सबसे अधिक रहेगा। नवंबर से एक नई शांति का दौर शुरू होगा। आपके अंक के अनुसार...';
+      } else if (cat === 'purpose' && lockedBlurs[0]) {
+        lockedBlurs[0].textContent = 'आपके जीवन-उद्देश्य के लिए 2027 बहुत महत्वपूर्ण वर्ष है — एक बड़ा अवसर आएगा। 2026 में तैयारी का समय है। आपका असली क्षेत्र कौन सा है, यह आपके Soul Number से...';
+      }
+    }
+
+    function startUpsellCountdown() {
+
+      if (_upsellTimerInterval) clearInterval(_upsellTimerInterval);
+      const DURATION = 10 * 60; // 10 minutes in seconds
+      let remaining = DURATION;
+      const elCard = document.getElementById('us-countdown');
+      const elBar = document.getElementById('ub-countdown');
+      const elPrice = document.getElementById('us-price-display');
+      const elUbPrice = document.getElementById('ub-price');
+
+      function fmt(s) {
+        const m = Math.floor(s / 60), sec = s % 60;
+        return m + ':' + (sec < 10 ? '0' : '') + sec;
+      }
+
+      function tick() {
+        if (remaining <= 0) {
+          clearInterval(_upsellTimerInterval);
+          // Raise price to ₹399 after timer expires
+          if (elPrice) elPrice.textContent = '₹399';
+          if (elUbPrice) elUbPrice.textContent = '₹399';
+          if (elCard) elCard.textContent = 'समाप्त!';
+          if (elBar) elBar.textContent = ' · अब ₹399';
+          return;
+        }
+        if (elCard) elCard.textContent = fmt(remaining);
+        if (elBar) elBar.textContent = ' · ' + fmt(remaining);
+        remaining--;
+      }
+
+      tick();
+      _upsellTimerInterval = setInterval(tick, 1000);
+
+      // Rotate the upgrader count every 45 seconds
+      const counts = [47, 53, 61, 58, 44, 66, 72, 49];
+      let ci = 0;
+      const elUpg = document.getElementById('us-upgraders');
+      setInterval(() => {
+        ci = (ci + 1) % counts.length;
+        if (elUpg) elUpg.textContent = counts[ci] + ' लोगों ने आज अपग्रेड किया';
+      }, 45000);
+    }
+
+    // ─── EXIT INTENT POPUP ───────────────────────────────
+    let _exitIntentShown = false;
+    function initExitIntent() {
+      _exitIntentShown = false;
+      // Mobile: fire on scroll-up above the top 10% of the page
+      let lastScrollTop = 0;
+      const reportEl = document.getElementById('report');
+      if (!reportEl) return;
+      reportEl.addEventListener('scroll', function() {
+        const st = reportEl.scrollTop;
+        if (!_exitIntentShown && st < lastScrollTop && st < 60 && lastScrollTop > 200) {
+          _exitIntentShown = true;
+          document.getElementById('exit-intent-modal').classList.add('show');
+        }
+        lastScrollTop = st;
+      }, { passive: true });
+      // Desktop: fire on mouse leaving the viewport upwards
+      document.addEventListener('mouseleave', function(e) {
+        if (!_exitIntentShown && e.clientY <= 5) {
+          _exitIntentShown = true;
+          document.getElementById('exit-intent-modal').classList.add('show');
+        }
+      });
+    }
 
     function buildProReport() {
       setRoute("/pro-report");
