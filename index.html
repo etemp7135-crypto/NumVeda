@@ -323,7 +323,7 @@
       inset: 0;
       background: var(--ink);
       z-index: 500;
-      display: none;
+      display: flex;
       flex-direction: column
     }
 
@@ -3704,32 +3704,9 @@
 
 <body>
 
-  <!-- LANDING -->
-  <div id="landing">
-    <div class="land-bg"></div>
-    <div class="particles" id="particles"></div>
-    <div class="land-logo">✦ NumVeda ✦</div>
-    <div class="land-badge">
-      <div class="badge-dot"></div>1,47,000+ प्रीमियम रीडिंग
-    </div>
-    <h1 class="land-h1">आपके अंक बोलते हैं।<br>क्या आप <em>सुनने के लिए</em> तैयार हैं?</h1>
-    <p class="land-sub">आपकी जन्मतिथि में एक पूरी कहानी छिपी है।</p>
-    <p class="land-body">हर इंसान एक अनोखी संख्यात्मक ऊर्जा के साथ जन्म लेता है। यह ऊर्जा आपके रिश्तों, करियर, स्वास्थ्य
-      और भाग्य को चुपचाप आकार देती है।</p>
-    <button class="btn-gold" onclick="startQuiz()">मेरे अंक डिकोड करें <svg width="14" height="14" viewBox="0 0 16 16"
-        fill="none">
-        <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-      </svg></button>
-    <p class="land-trust">2 मिनट में पूरा &nbsp;·&nbsp; <span>बिलकुल निजी</span> &nbsp;·&nbsp; 100% सुरक्षित</p>
-    <div class="proof-pills">
-      <div class="proof-pill"><strong>4.9★</strong>&nbsp; 29,000+ रेटिंग</div>
-      <div class="proof-pill">🔒 SSL सुरक्षित</div>
-      <div class="proof-pill">✦ प्राचीन वैदिक विज्ञान</div>
-    </div>
-  </div>
-
   <!-- QUIZ -->
   <div id="quiz-overlay">
+    <div class="particles" id="particles"></div>
     <div class="quiz-top">
       <button class="back-btn" id="back-btn" onclick="goBack()"><svg width="13" height="13" viewBox="0 0 16 16"
           fill="none">
@@ -4541,11 +4518,15 @@
       window.location.href = '/';
     });
 
-    if (window.location.pathname !== '/' && window.location.pathname !== '/api/create-order') {
+    if (window.location.pathname !== '/' && window.location.pathname !== '/quiz' && window.location.pathname !== '/api/create-order') {
       window.location.replace('/');
     }
 
-    document.addEventListener('DOMContentLoaded', () => { buildParticles(); buildDayGrid(); buildMonthGrid(); buildYearSel(); startTimer(); startSocialTicker(); });
+    document.addEventListener('DOMContentLoaded', () => { 
+      buildParticles(); buildDayGrid(); buildMonthGrid(); buildYearSel(); startTimer(); startSocialTicker(); 
+      updateUI();
+      document.body.style.overflow = 'hidden';
+    });
 
     function buildParticles() { const c = document.getElementById('particles'); for (let i = 0; i < 14; i++) { const d = document.createElement('div'), sz = 2 + Math.random() * 3; d.className = 'particle'; d.style.cssText = 'width:' + sz + 'px;height:' + sz + 'px;background:rgba(212,175,100,.4);left:' + (Math.random() * 100) + '%;top:' + (20 + Math.random() * 80) + '%;animation-duration:' + (10 + Math.random() * 10) + 's;animation-delay:' + (Math.random() * 6) + 's;'; c.appendChild(d); } }
     function buildDayGrid() { const g = document.getElementById('day-grid'); for (let i = 1; i <= 31; i++) { const b = document.createElement('button'); b.className = 'day-btn'; b.textContent = i; b.onclick = () => { document.querySelectorAll('#day-grid .day-btn').forEach(x => x.classList.remove('selected')); b.classList.add('selected'); S.day = i; setTimeout(nextQ, 260); }; g.appendChild(b); } }
