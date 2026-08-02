@@ -64,29 +64,63 @@
     *::after {
       box-sizing: border-box;
       margin: 0;
-      padding: 0
+      padding: 0;
+      /* Safari/iOS: remove grey tap flash on every element */
+      -webkit-tap-highlight-color: transparent;
     }
 
     html {
       scroll-behavior: smooth;
-      -webkit-text-size-adjust: 100%
+      /* Prevent Safari from adjusting font sizes on orientation change */
+      -webkit-text-size-adjust: 100%;
+      text-size-adjust: 100%;
     }
 
     body {
       font-family: var(--sans);
       background: var(--ink);
       color: var(--text);
+      /* dvh fallback for older Safari/Instagram browser */
+      min-height: 100vh;
       min-height: 100dvh;
       overflow-x: hidden;
       -webkit-font-smoothing: antialiased;
+      /* Prevent rubber-band scroll on iOS at body level */
+      overscroll-behavior: none;
     }
 
-    button {
+    button,
+    select,
+    input,
+    textarea {
       font-family: var(--sans);
       cursor: pointer;
       border: none;
       background: none;
-      color: inherit
+      color: inherit;
+      /* Eliminate 300ms tap delay on ALL interactive elements */
+      touch-action: manipulation;
+    }
+
+    /* Safari: disable hover states on touch devices to prevent sticky hovers */
+    @media (hover: none) {
+      .btn-gold:hover,
+      .opt-btn:hover,
+      .chk-btn:hover,
+      .q-continue:hover:not(:disabled),
+      .spb-btn:hover,
+      .us-btn:hover,
+      .ub-btn:hover,
+      .retry-btn:hover,
+      .back-btn:hover,
+      .faq-q:hover,
+      .r-pdf-btn:hover,
+      .pro-pdf-btn:hover {
+        transform: none;
+        box-shadow: none;
+        background: initial;
+        border-color: initial;
+      }
     }
 
     img {
@@ -96,6 +130,8 @@
 
     /* ═══ LANDING ═══════════════════════════════════════ */
     #landing {
+      /* dvh fallback for Safari/Instagram browser */
+      min-height: 100vh;
       min-height: 100dvh;
       display: flex;
       flex-direction: column;
@@ -378,7 +414,10 @@
       opacity: 0;
       pointer-events: none;
       overflow-y: auto;
-      overflow-x: hidden
+      overflow-x: hidden;
+      /* iOS momentum scrolling */
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior-y: contain;
     }
 
     .q-card.enter-right {
@@ -633,7 +672,8 @@
       border: 1px solid var(--border);
       border-radius: 9px;
       color: var(--text);
-      font-size: .95rem;
+      /* CRITICAL: must be 16px+ to prevent Safari/Instagram auto-zoom on focus */
+      font-size: 16px;
       font-family: var(--sans);
       font-weight: 500;
       -webkit-appearance: none;
@@ -668,7 +708,8 @@
       border: 1px solid var(--border);
       border-radius: 9px;
       color: var(--text);
-      font-size: .92rem;
+      /* CRITICAL: 16px prevents Safari/Instagram auto-zoom on tap */
+      font-size: 16px;
       font-family: var(--sans);
       outline: none;
       transition: border-color .2s, box-shadow .2s;
@@ -760,7 +801,8 @@
       border: 1px solid var(--border);
       border-radius: 9px;
       color: var(--text);
-      font-size: .92rem;
+      /* CRITICAL: 16px prevents Safari/Instagram auto-zoom on tap */
+      font-size: 16px;
       font-family: var(--sans);
       outline: none;
       transition: border-color .2s, box-shadow .2s;
@@ -925,7 +967,10 @@
       background: var(--ink);
       z-index: 700;
       display: none;
-      overflow-y: auto
+      overflow-y: auto;
+      /* iOS momentum scroll */
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior-y: contain;
     }
 
     #checkout.show {
@@ -940,8 +985,11 @@
       align-items: center;
       background: var(--ink2);
       position: sticky;
+      position: -webkit-sticky; /* Safari */
       top: 0;
       z-index: 10;
+      -webkit-transform: translateZ(0);
+      transform: translateZ(0);
     }
 
     .chk-logo {
@@ -967,7 +1015,8 @@
     .chk-body {
       max-width: 500px;
       margin: 0 auto;
-      padding: 20px 16px 100px
+      /* Must be larger than sticky pay bar height + safe area inset */
+      padding: 20px 16px calc(160px + env(safe-area-inset-bottom, 0px))
     }
 
     .chk-unlock-bar {
@@ -1279,6 +1328,122 @@
       text-align: right
     }
 
+    /* ═══ CONVERSION BOOSTERS ═════════════════════════════ */
+    .blur-preview-wrap {
+      position: relative;
+      margin: 20px 0;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      background: var(--ink2);
+    }
+    .blur-content {
+      filter: blur(4px);
+      opacity: 0.6;
+      padding: 20px;
+      pointer-events: none;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    .blur-overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: rgba(12, 11, 20, 0.4);
+      z-index: 2;
+    }
+    .blur-lock-icon {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+      text-shadow: 0 4px 12px rgba(0,0,0,0.5);
+    }
+    .blur-cta {
+      background: linear-gradient(135deg, var(--gold2), var(--gold));
+      color: var(--ink);
+      font-weight: 800;
+      padding: 10px 20px;
+      border-radius: 100px;
+      font-size: 0.9rem;
+      box-shadow: 0 4px 15px rgba(212, 175, 100, 0.3);
+      cursor: pointer;
+    }
+    .social-toast {
+      position: fixed;
+      bottom: 90px;
+      left: 16px;
+      right: 16px;
+      max-width: 400px;
+      margin: 0 auto;
+      background: rgba(10, 18, 34, 0.96);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-left-width: 3px;
+      border-left-color: var(--gold);
+      border-radius: 10px;
+      padding: 12px 14px;
+      display: flex;
+      align-items: flex-start;
+      gap: 11px;
+      z-index: 600;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.6), 0 0 0 1px rgba(212,175,100,0.07);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      transform: translateX(-110%);
+      opacity: 0;
+      transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.45s ease;
+      pointer-events: none;
+    }
+    .social-toast.show {
+      transform: translateX(0);
+      opacity: 1;
+    }
+    /* accent colour variants */
+    .social-toast.toast-green  { border-left-color: #2ed573; }
+    .social-toast.toast-blue   { border-left-color: #70a8ff; }
+    .social-toast.toast-orange { border-left-color: #ffa502; }
+    .social-toast.toast-red    { border-left-color: #ff4757; }
+    .st-icon {
+      font-size: 1.25rem;
+      width: 34px;
+      height: 34px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      flex-shrink: 0;
+      background: rgba(255,255,255,0.07);
+    }
+    .st-body {
+      flex: 1;
+      min-width: 0;
+    }
+    .st-label {
+      font-size: 0.63rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--gold);
+      margin-bottom: 3px;
+    }
+    .social-toast.toast-green  .st-label { color: #2ed573; }
+    .social-toast.toast-blue   .st-label { color: #70a8ff; }
+    .social-toast.toast-orange .st-label { color: #ffa502; }
+    .social-toast.toast-red    .st-label { color: #ff4757; }
+    .st-text {
+      font-size: 0.76rem;
+      color: #e0e0e0;
+      line-height: 1.45;
+    }
+    .st-text strong { color: #fff; }
+    .st-time {
+      font-size: 0.6rem;
+      color: var(--text-m);
+      margin-top: 3px;
+    }
+
+
     .faq-wrap {
       margin-top: 24px
     }
@@ -1523,6 +1688,9 @@
       background: var(--rb);
       color: var(--rt);
       overflow-y: auto;
+      /* iOS momentum scroll */
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior-y: contain;
       font-family: var(--sans);
     }
 
@@ -1539,8 +1707,12 @@
       align-items: center;
       box-shadow: 0 4px 12px rgba(0, 0, 0, .1);
       position: sticky;
+      position: -webkit-sticky; /* Safari */
       top: 0;
       z-index: 100;
+      /* GPU layer — prevents sticky flicker in Safari */
+      -webkit-transform: translateZ(0);
+      transform: translateZ(0);
     }
 
     .r-header-left {
@@ -2379,6 +2551,9 @@
       background: var(--pb);
       color: var(--pt);
       overflow-y: auto;
+      /* iOS momentum scroll */
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior-y: contain;
       font-family: var(--sans);
     }
 
@@ -2395,9 +2570,13 @@
       align-items: center;
       box-shadow: 0 4px 24px rgba(0, 0, 0, .5);
       position: sticky;
+      position: -webkit-sticky; /* Safari */
       top: 0;
       z-index: 100;
       border-bottom: 1px solid rgba(201, 162, 39, .2);
+      /* GPU layer — prevents sticky flicker in Safari */
+      -webkit-transform: translateZ(0);
+      transform: translateZ(0);
     }
 
     .pro-header-left {
@@ -3173,7 +3352,8 @@
       }
 
       .chk-body {
-        padding: 16px 12px 100px
+        /* On mobile sticky bar is 2 rows tall, need more bottom clearance */
+        padding: 16px 12px calc(200px + env(safe-area-inset-bottom, 0px))
       }
 
       .chk-title {
@@ -3499,6 +3679,9 @@
       color: var(--text-d);
     }
   </style>
+  <!-- Vercel Analytics -->
+  <script defer src="/_vercel/insights/script.js"></script>
+
   <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
   <script>
     let retryIsPro = false;
@@ -3922,9 +4105,34 @@
       </div>
       <div class="urgency-bar">⚡ <span>यह ऑफर सिर्फ <strong id="timer">09:47</strong> और उपलब्ध है</span></div>
       <h1 class="chk-title">आपके ग्रिड में आपकी तकलीफ़ का <span style="color:var(--gold)">सटीक कारण</span> मिल गया</h1>
-      <p class="chk-teaser">आपका <strong>जीवन पथ अंक <span id="chk-lp">—</span></strong> है। आपके ग्रिड में कुछ
-        <strong>गायब अंक</strong> मिले हैं जो सीधे आपकी समस्या से जुड़े हैं।
+      <p class="chk-teaser">
+        आपका <strong>जीवन पथ अंक <span id="chk-lp">—</span></strong> है। आपके ग्रिड में 
+        <strong style="color:var(--gold)"><span id="chk-missing-nums">कुछ गायब अंक</span></strong> मिले हैं। 
+        <br><br>
+        <span id="chk-pain-text">यह आपके जीवन में चल रही समस्याओं का एक बड़ा कारण हो सकता है।</span>
+        <span id="chk-karmic-warning" style="display:none; color:#ff4757; font-weight:600; margin-top:8px;"></span>
       </p>
+
+      <div class="blur-preview-wrap">
+        <div class="blur-content">
+          <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap: 2px; background: rgba(255,255,255,0.1); padding: 2px; width: 200px; margin: 0 auto 15px;">
+            <div style="background:#1a2332; height:60px; display:flex; align-items:center; justify-content:center; font-size:1.5rem; font-weight:bold;">4</div>
+            <div style="background:#1a2332; height:60px; display:flex; align-items:center; justify-content:center; font-size:1.5rem; font-weight:bold;">9</div>
+            <div style="background:#1a2332; height:60px; display:flex; align-items:center; justify-content:center; font-size:1.5rem; font-weight:bold;">2</div>
+            <div style="background:#1a2332; height:60px; display:flex; align-items:center; justify-content:center; font-size:1.5rem; font-weight:bold;">3</div>
+            <div style="background:#1a2332; height:60px; display:flex; align-items:center; justify-content:center; font-size:1.5rem; font-weight:bold;">5</div>
+            <div style="background:#1a2332; height:60px; display:flex; align-items:center; justify-content:center; font-size:1.5rem; font-weight:bold;">7</div>
+            <div style="background:#1a2332; height:60px; display:flex; align-items:center; justify-content:center; font-size:1.5rem; font-weight:bold;">8</div>
+            <div style="background:#1a2332; height:60px; display:flex; align-items:center; justify-content:center; font-size:1.5rem; font-weight:bold;">1</div>
+            <div style="background:#1a2332; height:60px; display:flex; align-items:center; justify-content:center; font-size:1.5rem; font-weight:bold;">6</div>
+          </div>
+          <p style="font-size:0.8rem; text-align:center;">आपकी जन्मतिथि में महत्वपूर्ण अंक गायब हैं। इसका मतलब है कि...</p>
+        </div>
+        <div class="blur-overlay">
+          <div class="blur-lock-icon">🔒</div>
+          <button class="blur-cta" onclick="processPayment()">अनलॉक करें ₹49</button>
+        </div>
+      </div>
       <p class="what-label">10-पेज रिपोर्ट में क्या मिलेगा?</p>
       <div class="what-grid">
         <div class="what-card">
@@ -3995,6 +4203,8 @@
         <p>"कार्मिक ऋण 16/7 की जानकारी ने मेरे टॉक्सिक रिश्तों का पैटर्न समझाया। पहली बार लगा यह कर्म-पाठ था।"</p><span
           class="t-name">— नेहा विश्वकर्मा, पुणे</span>
       </div>
+
+
       <div class="faq-wrap">
         <div class="section-title" style="margin-top:8px">अक्सर पूछे जाने वाले सवाल</div>
         <div class="faq-item" id="faq1"><button class="faq-q" onclick="toggleFaq('faq1')"><span>क्या यह रिपोर्ट सच में
@@ -4335,13 +4545,149 @@
       window.location.replace('/');
     }
 
-    document.addEventListener('DOMContentLoaded', () => { buildParticles(); buildDayGrid(); buildMonthGrid(); buildYearSel(); startTimer(); });
+    document.addEventListener('DOMContentLoaded', () => { buildParticles(); buildDayGrid(); buildMonthGrid(); buildYearSel(); startTimer(); startSocialTicker(); });
 
     function buildParticles() { const c = document.getElementById('particles'); for (let i = 0; i < 14; i++) { const d = document.createElement('div'), sz = 2 + Math.random() * 3; d.className = 'particle'; d.style.cssText = 'width:' + sz + 'px;height:' + sz + 'px;background:rgba(212,175,100,.4);left:' + (Math.random() * 100) + '%;top:' + (20 + Math.random() * 80) + '%;animation-duration:' + (10 + Math.random() * 10) + 's;animation-delay:' + (Math.random() * 6) + 's;'; c.appendChild(d); } }
     function buildDayGrid() { const g = document.getElementById('day-grid'); for (let i = 1; i <= 31; i++) { const b = document.createElement('button'); b.className = 'day-btn'; b.textContent = i; b.onclick = () => { document.querySelectorAll('#day-grid .day-btn').forEach(x => x.classList.remove('selected')); b.classList.add('selected'); S.day = i; setTimeout(nextQ, 260); }; g.appendChild(b); } }
     function buildMonthGrid() { const g = document.getElementById('month-grid'); MONTHS.forEach((m, i) => { const b = document.createElement('button'); b.className = 'month-btn'; b.textContent = m; b.onclick = () => { document.querySelectorAll('#month-grid .month-btn').forEach(x => x.classList.remove('selected')); b.classList.add('selected'); S.month = i + 1; setTimeout(nextQ, 260); }; g.appendChild(b); }); }
     function buildYearSel() { const s = document.getElementById('year-select'); for (let y = 2006; y >= 1940; y--) { const o = document.createElement('option'); o.value = y; o.textContent = y; s.appendChild(o); } }
-    function startTimer() { let sec = 587; const el = document.getElementById('timer'); if (!el) return; const t = setInterval(() => { if (sec <= 0) { clearInterval(t); if (el) el.textContent = '00:00'; return; } sec--; const m = Math.floor(sec / 60), s = sec % 60; if (el) el.textContent = (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s; }, 1000); }
+    function startTimer() {
+      const el = document.getElementById('timer');
+      if (!el) return;
+      let exp = localStorage.getItem('numveda_timer_expiry');
+      if (!exp || exp < Date.now()) {
+        exp = Date.now() + 587000; // ~9:47
+        localStorage.setItem('numveda_timer_expiry', exp);
+      }
+      const t = setInterval(() => {
+        let sec = Math.floor((exp - Date.now()) / 1000);
+        if (sec <= 0) {
+          clearInterval(t);
+          if (el) el.textContent = '00:00';
+          return;
+        }
+        const m = Math.floor(sec / 60), s = sec % 60;
+        if (el) el.textContent = (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s;
+      }, 1000);
+    }
+    
+    function startSocialTicker() {
+      const toast = document.getElementById('social-toast');
+      if (!toast) return;
+
+      const names = [
+        'अनीता','राहुल','प्रिया','नेहा','समीर','काजल','अमित','पूजा','रोहित',
+        'दीपक','मोनिका','सुनील','कविता','आयुष','रेखा','विकास','शालिनी','अर्जुन',
+        'तनुजा','मनीष','स्वाति','कृष्णा','लता','हर्ष','रिया','जयेश','मीना',
+        'संजय','अलका','भावेश','दिव्या','अनुराग','शिखा','परेश','कोमल','विनय',
+        'रश्मि','आकाश','तृप्ति','मोहन','गीता','यश','प्रतिभा','चेतन','निलम',
+        'सोनल','विजय','पल्लवी','किरण','राजेश','सुमन','धर्मेश','मधु','आशीष',
+        'सीमा','जिग्नेश','उर्मिला','नितेश','ज्योति','भूपेश','संगीता','मनोज','वर्षा'
+      ];
+      const cities = [
+        'मुंबई','दिल्ली','पुणे','अहमदाबाद','सूरत','जयपुर','इंदौर','लखनऊ',
+        'नागपुर','भोपाल','वडोदरा','राजकोट','कानपुर','पटना','कोलकाता','हैदराबाद',
+        'चेन्नई','बेंगलुरु','जोधपुर','उदयपुर','नोएडा','गुड़गांव','फरीदाबाद',
+        'मेरठ','आगरा','नाशिक','औरंगाबाद','ठाणे','विशाखापट्टनम','कोझीकोड'
+      ];
+      const timeAgo = ['अभी', '1 मिनट पहले', '2 मिनट पहले', '3 मिनट पहले', '5 मिनट पहले'];
+
+      // Fisher-Yates shuffle — returns a new randomised copy
+      function shuffle(arr) {
+        const a = arr.slice();
+        for (let i = a.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [a[i], a[j]] = [a[j], a[i]];
+        }
+        return a;
+      }
+
+      // Queues — refill and re-shuffle once exhausted so no name ever repeats
+      let nameQ = shuffle(names), cityQ = shuffle(cities);
+      function nextName() { if (!nameQ.length) nameQ = shuffle(names); return nameQ.pop(); }
+      function nextCity() { if (!cityQ.length) cityQ = shuffle(cities); return cityQ.pop(); }
+
+
+      // 4 different popup types to build trust
+      const TYPES = [
+        // Type 1 — Purchase (green)
+        (n,c,t) => ({
+          accent: 'toast-green',
+          icon: '✅',
+          label: 'नई खरीद',
+          html: `<strong>${n} (${c})</strong> ने मास्टर रिपोर्ट खरीदी`,
+          time: t
+        }),
+        // Type 2 — Live viewers (blue)
+        (n,c,t) => ({
+          accent: 'toast-blue',
+          icon: '👁',
+          label: 'अभी देख रहे हैं',
+          html: `<strong>${7 + Math.floor(Math.random()*25)} लोग</strong> इस समय इस रिपोर्ट को देख रहे हैं`,
+          time: ''
+        }),
+        // Type 3 — Result / review (gold)
+        (n,c,t) => ({
+          accent: '',
+          icon: '⭐',
+          label: 'सफलता की कहानी',
+          html: `<strong>${n} (${c})</strong> को रिपोर्ट पढ़कर अपनी समस्या का सटीक कारण मिला`,
+          time: t
+        }),
+        // Type 4 — Urgency / scarcity (orange)
+        (n,c,t) => ({
+          accent: 'toast-orange',
+          icon: '⚡',
+          label: 'सीमित समय',
+          html: `आज <strong>${100 + Math.floor(Math.random()*50)}+ लोगों</strong> ने यह रिपोर्ट ली — कीमत कभी भी बढ़ सकती है`,
+          time: ''
+        }),
+      ];
+
+      let isShowing = false;
+      function show() {
+        if (isShowing) return;
+        isShowing = true;
+
+        const n = nextName();
+        const c = nextCity();
+        const t = timeAgo[Math.floor(Math.random() * timeAgo.length)];
+        const typeFn = TYPES[Math.floor(Math.random() * TYPES.length)];
+        const d = typeFn(n, c, t);
+
+        // Reset accent classes
+        toast.className = 'social-toast';
+        if (d.accent) toast.classList.add(d.accent);
+
+        toast.innerHTML = `
+          <div class="st-icon">${d.icon}</div>
+          <div class="st-body">
+            <div class="st-label">${d.label}</div>
+            <div class="st-text">${d.html}</div>
+            ${d.time ? `<div class="st-time">${d.time}</div>` : ''}
+          </div>`;
+
+        // slide in
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => toast.classList.add('show'));
+        });
+
+        // slide out after 4.5s
+        setTimeout(() => {
+          toast.classList.remove('show');
+          setTimeout(() => { isShowing = false; scheduleNext(); }, 500);
+        }, 4500);
+      }
+
+      function scheduleNext() {
+        // Random gap: 3 – 6 seconds between popups
+        const gap = 3000 + Math.random() * 3000;
+        setTimeout(show, gap);
+      }
+
+      // First popup fires after ~4 seconds on landing
+      setTimeout(show, 4000);
+    }
     function toggleFaq(id) { const item = document.getElementById(id), ans = document.getElementById(id + '-a'), isOpen = item.classList.contains('open'); document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open')); document.querySelectorAll('.faq-a').forEach(a => a.classList.remove('open')); if (!isOpen) { item.classList.add('open'); ans.classList.add('open'); } }
 
     function startQuiz() { setRoute("/quiz"); document.getElementById('quiz-overlay').classList.add('show'); document.body.style.overflow = 'hidden'; updateUI(); }
@@ -4510,6 +4856,33 @@
       document.body.style.overflow = '';
       document.getElementById('chk-name-disp').textContent = S.name;
       document.getElementById('chk-lp').textContent = calcLP();
+      
+      // Dynamic Personalization
+      const missingArr = calcLoShu().missing;
+      const missingStr = missingArr.length > 0 ? missingArr.join(', ') : 'कुछ';
+      const elMissing = document.getElementById('chk-missing-nums');
+      if (elMissing) elMissing.textContent = missingStr + ' अंक गायब';
+      
+      let painText = 'यह आपके जीवन में चल रही समस्याओं का एक बड़ा कारण हो सकता है।';
+      if(S.cat === 'money') painText = 'यही कारण है कि पैसा आता है पर टिकता नहीं, या व्यापार में बार-बार बाधाएं आती हैं।';
+      if(S.cat === 'love') painText = 'यही कारण है कि आपको सही जीवनसाथी मिलने या रिश्तों में बाधाओं का सामना करना पड़ रहा है।';
+      if(S.cat === 'health') painText = 'यह आपके शारीरिक ऊर्जा स्तर और बार-बार होने वाली स्वास्थ्य समस्याओं से सीधे जुड़ा है।';
+      if(S.cat === 'mental') painText = 'यह आपके मन की बेचैनी, ओवरथिंकिंग और भावनात्मक अस्थिरता का मुख्य कारण है।';
+      if(S.cat === 'purpose') painText = 'इसीलिए आपको जीवन में दिशाहीनता और आंतरिक असंतोष महसूस होता है।';
+      const elPain = document.getElementById('chk-pain-text');
+      if (elPain) elPain.textContent = painText;
+      
+      const karmicNum = calcKarmic();
+      const kw = document.getElementById('chk-karmic-warning');
+      if(kw) {
+        if(karmicNum) {
+          kw.textContent = '⚠️ अलर्ट: आपके चार्ट में कार्मिक ऋण ' + karmicNum + ' पाया गया है!';
+          kw.style.display = 'block';
+        } else {
+          kw.style.display = 'none';
+        }
+      }
+
       document.getElementById('sticky-pay-bar').classList.add('show');
     }
 
@@ -5041,6 +5414,10 @@
       <button class="retry-cancel" onclick="closeRetryModal()">नहीं, मुझे अपने भाग्य पर छोड़ दें</button>
     </div>
   </div>
+
+  <!-- SOCIAL PROOF TOAST — content built dynamically by startSocialTicker() -->
+  <div class="social-toast" id="social-toast"></div>
+
 
 </body>
 
