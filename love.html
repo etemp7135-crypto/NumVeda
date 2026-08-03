@@ -131,14 +131,14 @@
     .lv-tp{flex:1;min-width:75px;background:rgba(233,30,140,.05);border:1px solid var(--lbr);border-radius:8px;padding:8px 6px;text-align:center;font-size:.65rem;color:var(--lm);line-height:1.4;}
     .lv-tp strong{display:block;font-size:.73rem;color:var(--lt);margin-bottom:2px;}
     
-    /* Checkout CRO Elements (Matched exactly to main theme) */
+    /* Checkout CRO Elements (Pink Love Theme) */
     .chk-header { padding: 12px 18px; background: #1a1a1a; position: sticky; top: 0; z-index: 100; border-bottom: 1px solid #333; display: flex; justify-content: space-between; align-items: center }
-    .chk-logo { font-family: var(--serif); font-size: 1.1rem; color: #d4af37; font-weight: 700; text-transform: uppercase; letter-spacing: .1em }
+    .chk-logo { font-family: var(--serif); font-size: 1.1rem; color: var(--la); font-weight: 700; text-transform: uppercase; letter-spacing: .1em }
     .chk-secure { font-size: .67rem; color: #6dbf8a; font-weight: 700; display: flex; align-items: center; gap: 4px; text-transform: uppercase; letter-spacing: .04em }
     .chk-body { max-width: 500px; margin: 0 auto; padding: 20px 16px calc(120px + env(safe-area-inset-bottom, 0px)); background: #0a0a0a; color: #fff; }
     
-    .chk-unlock-bar { background: linear-gradient(135deg, rgba(212, 175, 100, .1), rgba(123, 104, 200, .08)); border: 1px solid rgba(212, 175, 100, 0.3); padding: 13px 16px; border-radius: 10px; color: #fff; margin-bottom: 20px; text-align: center; display: flex; flex-direction: column; gap: 5px; }
-    .chk-unlock-bar .user-name { font-family: var(--serif); font-size: 1.2rem; font-weight: 600; color: #d4af37 }
+    .chk-unlock-bar { background: linear-gradient(135deg, rgba(233, 30, 140, .1), rgba(123, 104, 200, .08)); border: 1px solid rgba(233, 30, 140, 0.3); padding: 13px 16px; border-radius: 10px; color: #fff; margin-bottom: 20px; text-align: center; display: flex; flex-direction: column; gap: 5px; }
+    .chk-unlock-bar .user-name { font-family: var(--serif); font-size: 1.2rem; font-weight: 600; color: var(--la) }
     .chk-unlock-bar .tagline { font-size: .79rem; color: rgba(255, 255, 255, 0.7) }
     
     .urgency-bar { background: rgba(229, 62, 62, .08); border: 1px solid rgba(229, 62, 62, .25); border-radius: 8px; padding: 9px 13px; display: flex; align-items: center; gap: 7px; font-size: .8rem; color: #fc8181; margin-bottom: 16px; justify-content: center; }
@@ -146,21 +146,21 @@
     
     .chk-title { font-family: var(--serif); font-size: 1.35rem; font-weight: 600; color: #fff; line-height: 1.22; margin-bottom: 10px; text-align: center }
     .chk-teaser { font-size: .87rem; color: rgba(255, 255, 255, 0.7); line-height: 1.65; margin-bottom: 20px; text-align: center }
-    .chk-teaser strong { color: #d4af37; font-weight: 600 }
+    .chk-teaser strong { color: var(--la); font-weight: 600 }
     
-    .what-label { font-size: .72rem; font-weight: 700; color: #d4af37; text-transform: uppercase; letter-spacing: .08em; margin-bottom: 9px }
+    .what-label { font-size: .72rem; font-weight: 700; color: var(--la); text-transform: uppercase; letter-spacing: .08em; margin-bottom: 9px }
     .what-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 20px }
     @media(max-width:380px) { .what-grid { grid-template-columns: 1fr } }
     .what-card { background: #1a1a1a; border: 1px solid #333; border-radius: 9px; padding: 12px 11px; }
-    .what-card .wc-icon { font-size: 1.35rem; margin-bottom: 5px; color: #fff }
+    .what-card .wc-icon { font-size: 1.35rem; margin-bottom: 5px; color: var(--la) }
     .what-card .wc-title { font-size: .79rem; font-weight: 700; color: #fff; margin-bottom: 3px }
     .what-card .wc-desc { font-size: .71rem; color: rgba(255, 255, 255, 0.7); line-height: 1.4 }
 
     @keyframes breatheBox { 0% { transform: scale(1) } 50% { transform: scale(1.02) } 100% { transform: scale(1) } }
     @keyframes shimmerSweep { 0% { left: -100% } 100% { left: 200% } }
-    .chk-price-box { border: 2px solid rgba(212, 175, 100, .4); background: linear-gradient(135deg, rgba(212, 175, 100, 0.1), rgba(26, 24, 48, 0.5)); border-radius: 14px; padding: 20px 16px; margin-bottom: 12px; text-align: center; position: relative; overflow: hidden; animation: breatheBox 3s infinite ease-in-out; box-shadow: 0 10px 30px rgba(212, 175, 100, .15); }
+    .chk-price-box { border: 2px solid rgba(233, 30, 140, .4); background: linear-gradient(135deg, rgba(233, 30, 140, 0.1), rgba(26, 24, 48, 0.5)); border-radius: 14px; padding: 20px 16px; margin-bottom: 12px; text-align: center; position: relative; overflow: hidden; animation: breatheBox 3s infinite ease-in-out; box-shadow: 0 10px 30px rgba(233, 30, 140, .15); }
     .chk-price-box::after { content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%; background: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.2) 50%, rgba(255, 255, 255, 0) 100%); transform: skewX(-25deg); animation: shimmerSweep 4.5s infinite; pointer-events: none; z-index: 1 }
-    .chk-price-badge { position: absolute; top: 0; right: 0; background: #d4af37; color: #111; font-size: .63rem; font-weight: 800; padding: 4px 9px; border-bottom-left-radius: 9px; text-transform: uppercase; letter-spacing: .04em }
+    .chk-price-badge { position: absolute; top: 0; right: 0; background: var(--la); color: #fff; font-size: .63rem; font-weight: 800; padding: 4px 9px; border-bottom-left-radius: 9px; text-transform: uppercase; letter-spacing: .04em }
 
     .blur-preview-wrap { position: relative; margin: 20px 0; border: 1px solid #333; border-radius: 12px; overflow: hidden; background: #1a1a1a; }
     .blur-content { filter: blur(4px); opacity: 0.6; padding: 20px; pointer-events: none; user-select: none; }
@@ -176,7 +176,7 @@
     
     .testimonial { background: #1a1a1a; padding: 14px 16px; border-radius: 9px; border: 1px solid #333; margin-bottom: 9px }
     .t-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 7px }
-    .t-stars { color: #d4af37; font-size: .85rem; letter-spacing: 1.5px }
+    .t-stars { color: var(--la); font-size: .85rem; letter-spacing: 1.5px }
     .t-verified { font-size: .62rem; color: #6dbf8a; font-weight: 700; border: 1px solid rgba(109, 191, 138, .3); padding: 2px 6px; border-radius: 100px; }
     .testimonial p { font-size: .82rem; color: rgba(255, 255, 255, 0.7); font-style: italic; line-height: 1.55; margin-bottom: 8px }
     .t-name { font-size: .72rem; font-weight: 600; color: rgba(255, 255, 255, 0.45); display: block; text-align: right }
@@ -184,7 +184,7 @@
     .faq-wrap { margin-top: 24px }
     .faq-item { border: 1px solid #333; border-radius: 9px; margin-bottom: 7px; overflow: hidden; background: #1a1a1a; }
     .faq-q { width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 13px 15px; cursor: pointer; text-align: left; font-size: .84rem; font-weight: 600; color: #fff; gap: 9px; background: none; transition: background .2s; touch-action: manipulation; border:none; }
-    .faq-q:hover { background: rgba(212, 175, 100, 0.1) }
+    .faq-q:hover { background: rgba(233, 30, 140, 0.1) }
     .faq-chevron { width: 17px; height: 17px; flex-shrink: 0; color: rgba(255, 255, 255, 0.7); transition: transform .3s; display: flex; align-items: center; justify-content: center }
     .faq-a { max-height: 0; overflow: hidden; transition: max-height .35s ease, padding .3s }
     .faq-a.open { max-height: 300px; padding: 0 15px 13px }
@@ -198,7 +198,7 @@
     .spb-price { font-family: var(--sans); font-size: 1.65rem; color: #ffffff; font-weight: 800; line-height: 1; letter-spacing: -0.5px; }
     .spb-orig { font-size: 0.85rem; color: #ef4444; text-decoration: line-through; font-weight: 500; opacity: 0.9; }
     .spb-secure { font-size: 0.65rem; color: #10b981; font-weight: 600; display: flex; align-items: center; gap: 4px; margin-top: 3px; letter-spacing: 0.03em; }
-    .spb-btn { flex-shrink: 0; padding: 14px 24px; background: linear-gradient(135deg, #fbbf24, #f59e0b); color: #000000; font-weight: 800; font-size: 1rem; border: none; cursor: pointer; border-radius: 12px; white-space: nowrap; transition: transform .15s ease; box-shadow: 0 4px 20px rgba(251, 191, 36, 0.4); display: flex; align-items: center; gap: 6px; letter-spacing: 0.02em; }
+    .spb-btn { flex-shrink: 0; padding: 14px 24px; background: linear-gradient(135deg, #e91e8c, #c2185b); color: #ffffff; font-weight: 800; font-size: 1rem; border: none; cursor: pointer; border-radius: 12px; white-space: nowrap; transition: transform .15s ease; box-shadow: 0 4px 20px rgba(233, 30, 140, 0.4); display: flex; align-items: center; gap: 6px; letter-spacing: 0.02em; }
     .spb-btn svg { width: 16px; height: 16px; }
 
     /* Post pay */
@@ -335,9 +335,9 @@
     
     <div class="urgency-bar">⚡ <span>यह ऑफर सिर्फ <strong id="lv-timer">10:00</strong> और उपलब्ध है</span></div>
     
-    <h1 class="chk-title">आपके रिश्ते में तकलीफ का <span style="color:#d4af37">सटीक कारण</span> मिल गया</h1>
+    <h1 class="chk-title">आपके रिश्ते में तकलीफ का <span style="color:var(--la)">सटीक कारण</span> मिल गया</h1>
     <p class="chk-teaser">
-      आपकी जन्मतिथि में <strong style="color:#d4af37"><span id="chk-missing-nums">कुछ गहरे कार्मिक संबंध</span></strong> मिले हैं। 
+      आपकी जन्मतिथि में <strong style="color:var(--la)"><span id="chk-missing-nums">कुछ गहरे कार्मिक संबंध</span></strong> मिले हैं। 
       <br><br>
       <span id="chk-pain-text">यह आपके रिश्ते में चल रही समस्याओं का एक बड़ा कारण हो सकता है।</span>
     </p>
@@ -345,7 +345,7 @@
     <div class="chk-price-box">
       <div class="chk-price-badge">आज का स्पेशल</div>
       <div class="blur-content">
-        <div id="chk-score" style="font-family:var(--serif); font-size:1.8rem; font-weight:bold; color:#d4af37; text-align:center; margin-bottom:10px;">88% अनुकूलता</div>
+        <div id="chk-score" style="font-family:var(--serif); font-size:1.8rem; font-weight:bold; color:var(--la); text-align:center; margin-bottom:10px;">88% अनुकूलता</div>
         <div style="display:flex; justify-content:space-between; margin-bottom:10px; font-size:0.9rem;"><span>प्रेम भाषा:</span><span>अत्यधिक मेल</span></div>
         <div style="display:flex; justify-content:space-between; margin-bottom:10px; font-size:0.9rem;"><span>विवाह योग:</span><span>शुभ</span></div>
         <div style="display:flex; justify-content:space-between; margin-bottom:10px; font-size:0.9rem;"><span>चुनौती:</span><span>अहंकार टकराव</span></div>
