@@ -193,12 +193,12 @@
     .sticky-pay-bar { position: fixed; bottom: 0; left: 0; right: 0; z-index: 750; background: rgba(11, 17, 26, 0.96); border-top: 1px solid rgba(255, 255, 255, 0.08); padding: 14px 20px calc(14px + env(safe-area-inset-bottom, 0px)); display: none; align-items: center; justify-content: space-between; gap: 15px; backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.4); }
     .sticky-pay-bar.show { display: flex; }
     .spb-left { display: flex; flex-direction: column; gap: 2px; }
-    .spb-label { font-size: 0.72rem; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.06em; font-weight: 600; }
+    .spb-label { font-size: 0.75rem; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; }
     .spb-price-row { display: flex; align-items: baseline; gap: 8px; }
     .spb-price { font-family: var(--sans); font-size: 1.65rem; color: #ffffff; font-weight: 800; line-height: 1; letter-spacing: -0.5px; }
     .spb-orig { font-size: 0.85rem; color: #ef4444; text-decoration: line-through; font-weight: 500; opacity: 0.9; }
     .spb-secure { font-size: 0.65rem; color: #10b981; font-weight: 600; display: flex; align-items: center; gap: 4px; margin-top: 3px; letter-spacing: 0.03em; }
-    .spb-btn { flex-shrink: 0; padding: 14px 24px; background: linear-gradient(135deg, #d4af37, #b8860b); color: #000000; font-weight: 800; font-size: 1rem; border: none; cursor: pointer; border-radius: 12px; white-space: nowrap; transition: transform .15s ease; box-shadow: 0 4px 15px rgba(212, 175, 100, 0.15); display: flex; align-items: center; gap: 6px; letter-spacing: 0.02em; }
+    .spb-btn { flex-shrink: 0; padding: 14px 24px; background: linear-gradient(135deg, #fbbf24, #f59e0b); color: #000000; font-weight: 800; font-size: 1rem; border: none; cursor: pointer; border-radius: 12px; white-space: nowrap; transition: transform .15s ease; box-shadow: 0 4px 20px rgba(251, 191, 36, 0.4); display: flex; align-items: center; gap: 6px; letter-spacing: 0.02em; }
     .spb-btn svg { width: 16px; height: 16px; }
 
     /* Post pay */
@@ -322,7 +322,7 @@
 
 <!-- Removed Teaser Screen -->
 
-<div class="lv-screen" id="lv-checkout" style="background:#0a0a0a;">
+<div class="lv-screen" id="lv-checkout" style="background:#0a0a0a; align-items:stretch;">
   <div class="chk-header">
     <div class="chk-logo">✦ NumVeda</div>
     <div class="chk-secure">🔒 100% सुरक्षित</div>
@@ -445,7 +445,7 @@
 
     <div class="sticky-pay-bar show" id="sticky-pay-bar">
       <div class="spb-left">
-        <div class="spb-label">Love Compatibility Report</div>
+        <div class="spb-label">प्रेम अनुकूलता रिपोर्ट</div>
         <div class="spb-price-row">
           <span class="spb-price">₹1</span>
           <span class="spb-orig">₹1,999</span>
