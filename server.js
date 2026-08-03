@@ -81,6 +81,13 @@ app.post('/api/verify-payment', (req, res) => {
 app.get('/love', (req, res) => {
   res.sendFile('love.html', { root: __dirname });
 });
+app.get('/debug', (req, res) => {
+  const fs = require('fs');
+  res.json({
+    dirname: __dirname,
+    files: fs.readdirSync(__dirname)
+  });
+});
 
 // Serve index.html for root route and all other unmatched routes (SPA fallback)
 app.use((req, res) => {
