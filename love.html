@@ -320,33 +320,7 @@
   </div>
 </div>
 
-<!-- SCREEN 4: TEASER -->
-<div class="lv-screen" id="lv-teaser">
-  <div class="lv-teaser-hdr">
-    <div class="lv-pair-row">
-      <div class="lv-pair-av-col"><div class="lv-pair-circle p1" id="t-av1">P</div><div class="lv-pair-name" id="t-name1">आप</div></div>
-      <div class="lv-pair-hrt">💗</div>
-      <div class="lv-pair-av-col"><div class="lv-pair-circle p2" id="t-av2">R</div><div class="lv-pair-name" id="t-name2">साथी</div></div>
-    </div>
-    <div class="lv-gauge-wrap">
-      <svg class="lv-gauge-svg" viewBox="0 0 160 92" fill="none">
-        <path d="M16 88 A64 64 0 0 1 144 88" stroke="rgba(233,30,140,.15)" stroke-width="10" stroke-linecap="round"/>
-        <path id="gauge-arc" d="M16 88 A64 64 0 0 1 144 88" stroke="url(#ggrad)" stroke-width="10" stroke-linecap="round" stroke-dasharray="201" stroke-dashoffset="201"/>
-        <defs><linearGradient id="ggrad" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#e91e8c"/><stop offset="100%" stop-color="#fbbf24"/></linearGradient></defs>
-      </svg>
-      <div class="lv-gauge-txt"><div class="lv-gauge-num" id="gauge-num">0</div><div class="lv-gauge-pct">%</div></div>
-    </div>
-    <div class="lv-compat-label" id="compat-label">अनुकूलता</div>
-    <div class="lv-compat-sub" id="compat-sub">रिपोर्ट तैयार है</div>
-  </div>
-  <div class="lv-rpt-wrap" id="teaser-sections"></div>
-  <div class="lv-sticky">
-    <div class="lv-sticky-inner">
-      <div class="lv-sticky-txt"><div class="lv-sticky-title">पूरी रिपोर्ट देखें — ₹249</div><div class="lv-sticky-sub">12 विश्लेषण · 5 साल की भविष्यवाणी</div></div>
-      <button class="lv-sticky-btn" onclick="goCheckout()">अनलॉक करें →</button>
-    </div>
-  </div>
-</div>
+<!-- Removed Teaser Screen -->
 
 <div class="lv-screen" id="lv-checkout" style="background:#0a0a0a;">
   <div class="chk-header">
@@ -371,7 +345,7 @@
     <div class="chk-price-box">
       <div class="chk-price-badge">आज का स्पेशल</div>
       <div class="blur-content">
-        <div style="font-family:var(--serif); font-size:1.8rem; font-weight:bold; color:#d4af37; text-align:center; margin-bottom:10px;">88% अनुकूलता</div>
+        <div id="chk-score" style="font-family:var(--serif); font-size:1.8rem; font-weight:bold; color:#d4af37; text-align:center; margin-bottom:10px;">88% अनुकूलता</div>
         <div style="display:flex; justify-content:space-between; margin-bottom:10px; font-size:0.9rem;"><span>प्रेम भाषा:</span><span>अत्यधिक मेल</span></div>
         <div style="display:flex; justify-content:space-between; margin-bottom:10px; font-size:0.9rem;"><span>विवाह योग:</span><span>शुभ</span></div>
         <div style="display:flex; justify-content:space-between; margin-bottom:10px; font-size:0.9rem;"><span>चुनौती:</span><span>अहंकार टकराव</span></div>
@@ -584,7 +558,7 @@ function goCalc(){
 function runCalc(){
   const steps=[[20,'जीवन-पथ अंक निकाले जा रहे हैं...'],[42,'आत्मा-अंक का विश्लेषण हो रहा है...'],[60,'भाग्य-अंक की गणना की जा रही है...'],[76,'व्यक्तित्व-अंक मिलाए जा रहे हैं...'],[90,'अनुकूलता स्कोर तैयार किया जा रहा है...'],[100,'रिपोर्ट तैयार! 💗']];
   let si=0;const bar=document.getElementById('calc-bar'),step=document.getElementById('calc-step');
-  const t=setInterval(()=>{if(si>=steps.length){clearInterval(t);computeAll();setTimeout(()=>buildTeaser(),200);return;}bar.style.width=steps[si][0]+'%';step.textContent=steps[si][1];si++;},600);
+  const t=setInterval(()=>{if(si>=steps.length){clearInterval(t);computeAll();setTimeout(()=>goCheckout(),200);return;}bar.style.width=steps[si][0]+'%';step.textContent=steps[si][1];si++;},600);
 }
 
 function computeAll(){
@@ -617,45 +591,11 @@ function animGauge(arcId,numId,pct){
   requestAnimationFrame(step);
 }
 
-function buildTeaser(){
-  const {fn1,fn2,lp1,lp2,score,ltxt,label,summary,years,ad}=C;
-  document.getElementById('t-av1').textContent=getInitials(LS.p1.name);
-  document.getElementById('t-av2').textContent=getInitials(LS.p2.name);
-  document.getElementById('t-name1').textContent=fn1;
-  document.getElementById('t-name2').textContent=fn2;
-  document.getElementById('compat-label').textContent=label;
-  document.getElementById('compat-sub').textContent=summary.substring(0,65)+'...';
-  showScreen('lv-teaser');
-  animGauge('gauge-arc','gauge-num',score);
-  document.getElementById('teaser-sections').innerHTML=`
-    <div class="lv-section">
-      <div class="lv-sec-title">💗 समग्र अनुकूलता</div>
-      <div class="lv-sec-body"><strong>${fn1} (जीवन-पथ ${lp1})</strong> और <strong>${fn2} (जीवन-पथ ${lp2})</strong> — ${ltxt.s}<div class="lv-sbar"><div class="lv-sbar-fill" style="width:${score}%"></div></div><div class="lv-sbar-lbl"><span>कम</span><span>${score}% अनुकूल</span><span>अधिक</span></div></div>
-    </div>
-    <div class="lv-section">
-      <div class="lv-sec-title">💑 रिश्ते की शक्ति और चुनौती</div>
-      <div class="lv-sec-body"><strong>शक्ति:</strong> ${ltxt.s}<br><br><strong>चुनौती:</strong> ${ltxt.c}</div>
-    </div>
-    <div class="lv-section">
-      <div class="lv-sec-title">🔮 2026–2030 भविष्यवाणी</div>
-      <div class="lv-locked">
-        <div class="lv-lock-blur">${Object.entries(years).map(([y,[t,tx]])=>`${y}: ${tx}`).join(' · ')}</div>
-        <div class="lv-lock-badge" onclick="goCheckout()">🔒 ₹249 में अनलॉक करें</div>
-      </div>
-    </div>
-    <div class="lv-section">
-      <div class="lv-sec-title">💍 विवाह अनुकूलता और उपाय</div>
-      <div class="lv-locked">
-        <div class="lv-lock-blur">शुभ तारीखें: ${ad.join(', ')}... रत्न चिकित्सा, 21-दिन उपाय, और शुभ विवाह मुहूर्त रिपोर्ट में...</div>
-        <div class="lv-lock-badge" onclick="goCheckout()">🔒 ₹249 में अनलॉक करें</div>
-      </div>
-    </div>
-    <div style="text-align:center;font-size:.75rem;color:rgba(245,224,255,.4);padding:12px 0;">✦ 8 और गहरे विश्लेषण पूरी रिपोर्ट में ✦</div>`;
-}
-
 function goCheckout(){
-  const {fn1,fn2,score}=C;const ini1=getInitials(LS.p1.name),ini2=getInitials(LS.p2.name);
+  const {fn1,fn2,score}=C;
   document.getElementById('chk-names').textContent = `${fn1} और ${fn2}`;
+  const scoreEl = document.getElementById('chk-score');
+  if(scoreEl) scoreEl.textContent = `${score}% अनुकूलता`;
   showScreen('lv-checkout');
   
   // Timer logic
