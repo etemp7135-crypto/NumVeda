@@ -635,11 +635,6 @@ function buildTeaser(){
 function goCheckout(){
   const {fn1,fn2,score}=C;const ini1=getInitials(LS.p1.name),ini2=getInitials(LS.p2.name);
   document.getElementById('chk-names').textContent = `${fn1} और ${fn2}`;
-  document.getElementById('co-order-card').innerHTML=`
-    <div class="lv-order-pair-row"><div class="lv-order-avs"><div class="lv-order-av p1">${ini1}</div><div class="lv-order-av p2">${ini2}</div></div><div class="lv-order-names"><div class="lv-order-name-text">${fn1} ❤️ ${fn2}</div><div class="lv-order-name-sub">प्रेम अनुकूलता ब्लूप्रिंट</div></div><div class="lv-order-score">${score}%</div></div>
-    <div class="lv-price-row"><span class="lv-price-lbl">मूल मूल्य</span><span class="lv-price-val strike">₹1,499</span></div>
-    <div class="lv-price-row"><span class="lv-price-lbl">विशेष छूट</span><span class="lv-price-val" style="color:#22c55e">−₹1,250</span></div>
-    <div class="lv-price-total"><span class="lv-price-total-lbl">आज का मूल्य</span><span class="lv-price-total-val">₹249</span></div>`;
   showScreen('lv-checkout');
   
   // Timer logic
