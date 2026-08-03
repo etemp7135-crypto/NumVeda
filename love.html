@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>प्रेम अनुकूलता — NumVeda</title>
   <meta name="description" content="अपनी और साथी की जन्मतिथि से जानें आपकी प्रेम अनुकूलता। वैदिक अंकशास्त्र पर आधारित विस्तृत व्यक्तिगत रिपोर्ट।">
+  <meta property="og:image" content="https://www.numveda.com/og_banner.png">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <script src="love-report.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -53,6 +56,7 @@
     .lv-gb{flex:1;padding:11px 6px;border-radius:10px;border:1px solid rgba(233,30,140,.2);background:var(--ls2);color:var(--lm);font-size:.83rem;font-weight:500;cursor:pointer;transition:all .2s;font-family:var(--sans);text-align:center;touch-action:manipulation;}
     .lv-gb.sel{background:rgba(233,30,140,.12);border-color:var(--la);color:var(--la);font-weight:700;}
     .lv-btn{width:100%;padding:16px;background:linear-gradient(135deg,var(--la),#c2185b);color:#fff;border:none;border-radius:100px;font-size:.93rem;font-weight:800;font-family:var(--sans);cursor:pointer;box-shadow:0 8px 28px rgba(233,30,140,.4);transition:transform .2s,box-shadow .2s;touch-action:manipulation;letter-spacing:.02em;}
+    .lv-btn.sm{padding:8px 12px;font-size:0.75rem;width:auto;}
     .lv-btn:hover{transform:translateY(-2px);}
     .lv-btn.gold{background:linear-gradient(135deg,var(--lg),#d4af37);color:#0a0a0a;box-shadow:0 8px 28px rgba(251,191,36,.4);}
     .lv-trust-txt{text-align:center;font-size:.7rem;color:rgba(245,224,255,.3);margin-top:10px;line-height:1.6;}
@@ -265,6 +269,7 @@
   </style>
 </head>
 <body>
+<div id="pdf-render-container" style="position: absolute; left: -9999px; top: 0; width: 800px; background: white;"></div>
 <div id="lv-particles"></div>
 
 <!-- SCREEN 1: YOUR DETAILS -->
@@ -467,6 +472,7 @@
 <div class="lv-screen" id="lv-report">
   <div class="lv-rpt-hdr">
     <div class="lv-rpt-logo">✦ NumVeda</div>
+    <button class="lv-btn sm" onclick="downloadLovePDF()">⬇️ PDF डाउनलोड करें</button>
     <div class="lv-rpt-avs"><div class="lv-rpt-av p1" id="rpt-av1">P</div><div class="lv-rpt-hrt">💗</div><div class="lv-rpt-av p2" id="rpt-av2">R</div></div>
   </div>
   <div class="lv-rpt-hero">
@@ -485,6 +491,14 @@
     <div style="font-size:.78rem;color:var(--lm);max-width:300px;margin:0 auto;" id="rpt-summary"></div>
   </div>
   <div class="lv-rpt-body" id="lv-rpt-body"></div>
+  
+  <div style="text-align: center; margin: 40px 16px;">
+    <button class="lv-btn gold" onclick="downloadLovePDF()" style="font-size: 1.1rem; padding: 18px; box-shadow: 0 4px 20px rgba(233, 30, 140, 0.4); background: linear-gradient(135deg, #e91e8c, #c2185b); color:#fff;">
+      ⬇️ 25-Page Premium PDF डाउनलोड करें
+    </button>
+    <p style="margin-top: 15px; font-size: 0.8rem; color: var(--lm);">अपनी संपूर्ण विस्तृत रिपोर्ट को सहेजें और गहराई से पढ़ें।</p>
+  </div>
+
   <div class="lv-rpt-footer"><p>NumVeda प्रेम अनुकूलता रिपोर्ट © 2026</p><p id="rpt-footer-names" style="margin-top:4px;"></p></div>
 </div>
 
@@ -697,6 +711,38 @@ function buildFullReport(){
         <div class="lv-remedy"><strong>मंत्र:</strong> "ॐ क्लीं नमः" — प्रेम और आकर्षण का मंत्र। दोनों मिलकर रोज़ सुबह 11 बार बोलें।</div>
         <div class="lv-remedy"><strong>21-दिन उपाय:</strong> अगले 21 दिनों तक रोज़ एक-दूसरे को एक सच्ची तारीफ दें। यह रिश्ते में सकारात्मक ऊर्जा का प्रवाह बढ़ाता है।</div>
       </div></div>`;
+
+  // Generate the massive PDF content into the hidden container
+  if(window.generatePremiumPDFHTML) {
+    document.getElementById('pdf-render-container').innerHTML = window.generatePremiumPDFHTML(C);
+  }
+}
+
+function downloadLovePDF() {
+  const element = document.getElementById('pdf-render-container');
+  if(!element || !element.innerHTML) {
+    alert("PDF सामग्री तैयार नहीं है। कृपया पुनः प्रयास करें।");
+    return;
+  }
+  
+  const btns = document.querySelectorAll('.lv-btn');
+  btns.forEach(b => b.style.pointerEvents = "none");
+  
+  const opt = {
+    margin:       0,
+    filename:     `NumVeda_Love_Report_${LS.p1.name}_${LS.p2.name}.pdf`,
+    image:        { type: 'jpeg', quality: 0.98 },
+    html2canvas:  { scale: 2, useCORS: true, logging: false },
+    jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
+  };
+  
+  html2pdf().set(opt).from(element).save().then(() => {
+    btns.forEach(b => b.style.pointerEvents = "auto");
+  }).catch(e => {
+    console.error(e);
+    alert("डाउनलोड विफल।");
+    btns.forEach(b => b.style.pointerEvents = "auto");
+  });
 }
 
 function toggleLvFaq(id) {
