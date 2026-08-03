@@ -131,56 +131,75 @@
     .lv-tp{flex:1;min-width:75px;background:rgba(233,30,140,.05);border:1px solid var(--lbr);border-radius:8px;padding:8px 6px;text-align:center;font-size:.65rem;color:var(--lm);line-height:1.4;}
     .lv-tp strong{display:block;font-size:.73rem;color:var(--lt);margin-bottom:2px;}
     
-    /* Checkout CRO Elements (Matched to index.html) */
-    .chk-header { padding: 16px; background: rgba(12, 5, 21, .95); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); position: sticky; top: 0; z-index: 100; border-bottom: 1px solid var(--lbr); display: flex; justify-content: space-between; align-items: center }
-    .chk-logo { font-family: var(--serif); font-size: 1.1rem; color: var(--lg); font-weight: 700; text-transform: uppercase; letter-spacing: .1em }
+    /* Checkout CRO Elements (Matched exactly to main theme) */
+    .chk-header { padding: 12px 18px; background: #1a1a1a; position: sticky; top: 0; z-index: 100; border-bottom: 1px solid #333; display: flex; justify-content: space-between; align-items: center }
+    .chk-logo { font-family: var(--serif); font-size: 1.1rem; color: #d4af37; font-weight: 700; text-transform: uppercase; letter-spacing: .1em }
     .chk-secure { font-size: .67rem; color: #6dbf8a; font-weight: 700; display: flex; align-items: center; gap: 4px; text-transform: uppercase; letter-spacing: .04em }
-    .chk-body { max-width: 500px; margin: 0 auto; padding: 20px 16px calc(100px + env(safe-area-inset-bottom, 0px)) }
-    .chk-unlock-bar { background: linear-gradient(135deg, rgba(245,224,255,0.05), rgba(233,30,140,0.05)); border: 1px solid var(--lbr); padding: 13px 16px; border-radius: 10px; color: var(--lt); margin-bottom: 20px; text-align: center; display: flex; flex-direction: column; gap: 5px; }
-    .chk-unlock-bar .user-name { font-family: var(--serif); font-size: 1.2rem; font-weight: 600; color: var(--lg) }
-    .chk-unlock-bar .tagline { font-size: .79rem; color: var(--lm) }
+    .chk-body { max-width: 500px; margin: 0 auto; padding: 20px 16px calc(120px + env(safe-area-inset-bottom, 0px)); background: #0a0a0a; color: #fff; }
+    
+    .chk-unlock-bar { background: linear-gradient(135deg, rgba(212, 175, 100, .1), rgba(123, 104, 200, .08)); border: 1px solid rgba(212, 175, 100, 0.3); padding: 13px 16px; border-radius: 10px; color: #fff; margin-bottom: 20px; text-align: center; display: flex; flex-direction: column; gap: 5px; }
+    .chk-unlock-bar .user-name { font-family: var(--serif); font-size: 1.2rem; font-weight: 600; color: #d4af37 }
+    .chk-unlock-bar .tagline { font-size: .79rem; color: rgba(255, 255, 255, 0.7) }
+    
     .urgency-bar { background: rgba(229, 62, 62, .08); border: 1px solid rgba(229, 62, 62, .25); border-radius: 8px; padding: 9px 13px; display: flex; align-items: center; gap: 7px; font-size: .8rem; color: #fc8181; margin-bottom: 16px; justify-content: center; }
     .urgency-bar strong { color: #fff }
-    .chk-title { font-family: var(--serif); font-size: 1.35rem; font-weight: 600; color: var(--lt); line-height: 1.22; margin-bottom: 10px; text-align: center }
-    .chk-teaser { font-size: .87rem; color: var(--lm); line-height: 1.65; margin-bottom: 20px; text-align: center }
-    .chk-teaser strong { color: var(--lg); font-weight: 600 }
     
-    .what-label { font-size: .72rem; font-weight: 700; color: var(--lg); text-transform: uppercase; letter-spacing: .08em; margin-bottom: 9px }
+    .chk-title { font-family: var(--serif); font-size: 1.35rem; font-weight: 600; color: #fff; line-height: 1.22; margin-bottom: 10px; text-align: center }
+    .chk-teaser { font-size: .87rem; color: rgba(255, 255, 255, 0.7); line-height: 1.65; margin-bottom: 20px; text-align: center }
+    .chk-teaser strong { color: #d4af37; font-weight: 600 }
+    
+    .what-label { font-size: .72rem; font-weight: 700; color: #d4af37; text-transform: uppercase; letter-spacing: .08em; margin-bottom: 9px }
     .what-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 20px }
     @media(max-width:380px) { .what-grid { grid-template-columns: 1fr } }
-    .what-card { background: var(--ls2); border: 1px solid var(--lbr); border-radius: 9px; padding: 12px 11px; }
-    .what-card .wc-icon { font-size: 1.35rem; margin-bottom: 5px; color: var(--lg) }
-    .what-card .wc-title { font-size: .79rem; font-weight: 700; color: var(--lt); margin-bottom: 3px }
-    .what-card .wc-desc { font-size: .71rem; color: var(--lm); line-height: 1.4 }
+    .what-card { background: #1a1a1a; border: 1px solid #333; border-radius: 9px; padding: 12px 11px; }
+    .what-card .wc-icon { font-size: 1.35rem; margin-bottom: 5px; color: #fff }
+    .what-card .wc-title { font-size: .79rem; font-weight: 700; color: #fff; margin-bottom: 3px }
+    .what-card .wc-desc { font-size: .71rem; color: rgba(255, 255, 255, 0.7); line-height: 1.4 }
 
     @keyframes breatheBox { 0% { transform: scale(1) } 50% { transform: scale(1.02) } 100% { transform: scale(1) } }
     @keyframes shimmerSweep { 0% { left: -100% } 100% { left: 200% } }
-    .chk-price-box { border: 2px solid rgba(245,224,255, .15); background: linear-gradient(135deg, rgba(233,30,140,0.1), rgba(12, 5, 21, 0.5)); border-radius: 14px; padding: 20px 16px; margin-bottom: 12px; text-align: center; position: relative; overflow: hidden; animation: breatheBox 3s infinite ease-in-out; box-shadow: 0 10px 30px rgba(0,0,0, .5); }
-    .chk-price-box::after { content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%; background: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.1) 50%, rgba(255, 255, 255, 0) 100%); transform: skewX(-25deg); animation: shimmerSweep 4.5s infinite; pointer-events: none; z-index: 1 }
-    .chk-price-badge { position: absolute; top: 0; right: 0; background: var(--lg); color: #000; font-size: .63rem; font-weight: 800; padding: 4px 9px; border-bottom-left-radius: 9px; text-transform: uppercase; letter-spacing: .04em }
+    .chk-price-box { border: 2px solid rgba(212, 175, 100, .4); background: linear-gradient(135deg, rgba(212, 175, 100, 0.1), rgba(26, 24, 48, 0.5)); border-radius: 14px; padding: 20px 16px; margin-bottom: 12px; text-align: center; position: relative; overflow: hidden; animation: breatheBox 3s infinite ease-in-out; box-shadow: 0 10px 30px rgba(212, 175, 100, .15); }
+    .chk-price-box::after { content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%; background: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.2) 50%, rgba(255, 255, 255, 0) 100%); transform: skewX(-25deg); animation: shimmerSweep 4.5s infinite; pointer-events: none; z-index: 1 }
+    .chk-price-badge { position: absolute; top: 0; right: 0; background: #d4af37; color: #111; font-size: .63rem; font-weight: 800; padding: 4px 9px; border-bottom-left-radius: 9px; text-transform: uppercase; letter-spacing: .04em }
+
+    .blur-preview-wrap { position: relative; margin: 20px 0; border: 1px solid #333; border-radius: 12px; overflow: hidden; background: #1a1a1a; }
+    .blur-content { filter: blur(4px); opacity: 0.6; padding: 20px; pointer-events: none; user-select: none; }
+    .blur-overlay { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; background: rgba(12, 11, 20, 0.4); z-index: 2; }
+    .blur-lock-icon { font-size: 2.5rem; margin-bottom: 10px; text-shadow: 0 4px 12px rgba(0,0,0,0.5); }
 
     .trust-strip { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 9px; margin: 18px 0; text-align: center; }
-    .trust-item { background: var(--ls2); border: 1px solid var(--lbr); border-radius: 9px; padding: 11px 7px; font-size: .73rem; color: var(--lm); line-height: 1.4 }
+    .trust-item { background: #1a1a1a; border: 1px solid #333; border-radius: 9px; padding: 11px 7px; font-size: .73rem; color: rgba(255, 255, 255, 0.7); line-height: 1.4 }
     .trust-item .ti-icon { font-size: 1.25rem; margin-bottom: 4px }
-    .trust-item strong { display: block; color: var(--lt); font-weight: 700; font-size: .77rem; margin-bottom: 2px }
+    .trust-item strong { display: block; color: #fff; font-weight: 700; font-size: .77rem; margin-bottom: 2px }
     
-    .section-title { font-family: var(--serif); font-size: 1.05rem; text-align: center; margin-bottom: 14px; color: var(--lt) }
+    .section-title { font-family: var(--serif); font-size: 1.05rem; text-align: center; margin-bottom: 14px; color: #fff }
     
-    .testimonial { background: var(--ls2); padding: 14px 16px; border-radius: 9px; border: 1px solid var(--lbr); margin-bottom: 9px }
+    .testimonial { background: #1a1a1a; padding: 14px 16px; border-radius: 9px; border: 1px solid #333; margin-bottom: 9px }
     .t-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 7px }
-    .t-stars { color: var(--lg); font-size: .85rem; letter-spacing: 1.5px }
+    .t-stars { color: #d4af37; font-size: .85rem; letter-spacing: 1.5px }
     .t-verified { font-size: .62rem; color: #6dbf8a; font-weight: 700; border: 1px solid rgba(109, 191, 138, .3); padding: 2px 6px; border-radius: 100px; }
-    .testimonial p { font-size: .82rem; color: var(--lm); font-style: italic; line-height: 1.55; margin-bottom: 8px }
-    .t-name { font-size: .72rem; font-weight: 600; color: var(--lm); display: block; text-align: right }
+    .testimonial p { font-size: .82rem; color: rgba(255, 255, 255, 0.7); font-style: italic; line-height: 1.55; margin-bottom: 8px }
+    .t-name { font-size: .72rem; font-weight: 600; color: rgba(255, 255, 255, 0.45); display: block; text-align: right }
 
     .faq-wrap { margin-top: 24px }
-    .faq-item { border: 1px solid var(--lbr); border-radius: 9px; margin-bottom: 7px; overflow: hidden; background: var(--ls2); }
-    .faq-q { width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 13px 15px; cursor: pointer; text-align: left; font-size: .84rem; font-weight: 600; color: var(--lt); gap: 9px; background: none; transition: background .2s; touch-action: manipulation; border:none; }
-    .faq-q:hover { background: rgba(233,30,140,.05) }
-    .faq-chevron { width: 17px; height: 17px; flex-shrink: 0; color: var(--lm); transition: transform .3s; display: flex; align-items: center; justify-content: center }
+    .faq-item { border: 1px solid #333; border-radius: 9px; margin-bottom: 7px; overflow: hidden; background: #1a1a1a; }
+    .faq-q { width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 13px 15px; cursor: pointer; text-align: left; font-size: .84rem; font-weight: 600; color: #fff; gap: 9px; background: none; transition: background .2s; touch-action: manipulation; border:none; }
+    .faq-q:hover { background: rgba(212, 175, 100, 0.1) }
+    .faq-chevron { width: 17px; height: 17px; flex-shrink: 0; color: rgba(255, 255, 255, 0.7); transition: transform .3s; display: flex; align-items: center; justify-content: center }
     .faq-a { max-height: 0; overflow: hidden; transition: max-height .35s ease, padding .3s }
     .faq-a.open { max-height: 300px; padding: 0 15px 13px }
-    .faq-a p { font-size:.8rem; color:var(--lm); line-height:1.5; margin:0; }
+    .faq-a p { font-size:.8rem; color:rgba(255, 255, 255, 0.7); line-height:1.5; margin:0; }
+
+    .sticky-pay-bar { position: fixed; bottom: 0; left: 0; right: 0; z-index: 750; background: rgba(11, 17, 26, 0.96); border-top: 1px solid rgba(255, 255, 255, 0.08); padding: 14px 20px calc(14px + env(safe-area-inset-bottom, 0px)); display: none; align-items: center; justify-content: space-between; gap: 15px; backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.4); }
+    .sticky-pay-bar.show { display: flex; }
+    .spb-left { display: flex; flex-direction: column; gap: 2px; }
+    .spb-label { font-size: 0.72rem; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.06em; font-weight: 600; }
+    .spb-price-row { display: flex; align-items: baseline; gap: 8px; }
+    .spb-price { font-family: var(--sans); font-size: 1.65rem; color: #ffffff; font-weight: 800; line-height: 1; letter-spacing: -0.5px; }
+    .spb-orig { font-size: 0.85rem; color: #ef4444; text-decoration: line-through; font-weight: 500; opacity: 0.9; }
+    .spb-secure { font-size: 0.65rem; color: #10b981; font-weight: 600; display: flex; align-items: center; gap: 4px; margin-top: 3px; letter-spacing: 0.03em; }
+    .spb-btn { flex-shrink: 0; padding: 14px 24px; background: linear-gradient(135deg, #d4af37, #b8860b); color: #000000; font-weight: 800; font-size: 1rem; border: none; cursor: pointer; border-radius: 12px; white-space: nowrap; transition: transform .15s ease; box-shadow: 0 4px 15px rgba(212, 175, 100, 0.15); display: flex; align-items: center; gap: 6px; letter-spacing: 0.02em; }
+    .spb-btn svg { width: 16px; height: 16px; }
 
     /* Post pay */
     .lv-pp-inner{text-align:center;z-index:1;position:relative;padding:40px 20px;}
@@ -329,7 +348,7 @@
   </div>
 </div>
 
-<div class="lv-screen" id="lv-checkout">
+<div class="lv-screen" id="lv-checkout" style="background:#0a0a0a;">
   <div class="chk-header">
     <div class="chk-logo">✦ NumVeda</div>
     <div class="chk-secure">🔒 100% सुरक्षित</div>
@@ -342,9 +361,9 @@
     
     <div class="urgency-bar">⚡ <span>यह ऑफर सिर्फ <strong id="lv-timer">10:00</strong> और उपलब्ध है</span></div>
     
-    <h1 class="chk-title">आपके रिश्ते में तकलीफ का <span style="color:var(--lg)">सटीक कारण</span> मिल गया</h1>
+    <h1 class="chk-title">आपके रिश्ते में तकलीफ का <span style="color:#d4af37">सटीक कारण</span> मिल गया</h1>
     <p class="chk-teaser">
-      आपकी जन्मतिथि में <strong style="color:var(--lg)"><span id="chk-missing-nums">कुछ गहरे कार्मिक संबंध</span></strong> मिले हैं। 
+      आपकी जन्मतिथि में <strong style="color:#d4af37"><span id="chk-missing-nums">कुछ गहरे कार्मिक संबंध</span></strong> मिले हैं। 
       <br><br>
       <span id="chk-pain-text">यह आपके रिश्ते में चल रही समस्याओं का एक बड़ा कारण हो सकता है।</span>
     </p>
@@ -352,15 +371,14 @@
     <div class="chk-price-box">
       <div class="chk-price-badge">आज का स्पेशल</div>
       <div class="blur-content">
-        <div style="font-family:var(--serif); font-size:1.8rem; font-weight:bold; color:var(--lg); text-align:center; margin-bottom:10px;">88% अनुकूलता</div>
+        <div style="font-family:var(--serif); font-size:1.8rem; font-weight:bold; color:#d4af37; text-align:center; margin-bottom:10px;">88% अनुकूलता</div>
         <div style="display:flex; justify-content:space-between; margin-bottom:10px; font-size:0.9rem;"><span>प्रेम भाषा:</span><span>अत्यधिक मेल</span></div>
         <div style="display:flex; justify-content:space-between; margin-bottom:10px; font-size:0.9rem;"><span>विवाह योग:</span><span>शुभ</span></div>
         <div style="display:flex; justify-content:space-between; margin-bottom:10px; font-size:0.9rem;"><span>चुनौती:</span><span>अहंकार टकराव</span></div>
-        <p style="font-size:0.8rem; text-align:center; margin-top:15px; color:var(--lm)">आपकी जन्मतिथि के अनुसार आपके रिश्ते में कुछ अनसुलझे रहस्य हैं। इसका मतलब है कि...</p>
+        <p style="font-size:0.8rem; text-align:center; margin-top:15px; color:rgba(255,255,255,0.7)">आपकी जन्मतिथि के अनुसार आपके रिश्ते में कुछ अनसुलझे रहस्य हैं। इसका मतलब है कि...</p>
       </div>
       <div class="blur-overlay">
         <div class="blur-lock-icon">🔒</div>
-        <button class="blur-cta" id="love-pay-btn" onclick="buyLoveReport()">अनलॉक करें ₹1</button>
       </div>
     </div>
 
@@ -451,13 +469,16 @@
       </div>
     </div>
 
-    <!-- Sticky Mobile CTA -->
-    <div id="lv-sticky-cta" style="position:fixed; bottom:0; left:0; right:0; padding:12px 16px; background:#0d1425; border-top:2px solid rgba(212,175,100,0.4); z-index:950; display:flex; justify-content:space-between; align-items:center; transform:translateY(100%); transition:transform 0.3s cubic-bezier(0.16,1,0.3,1); box-shadow:0 -2px 0 rgba(212,175,100,0.3), 0 -12px 40px rgba(0,0,0,0.7);">
-      <div style="display:flex; flex-direction:column; flex:1">
-        <span style="font-family:var(--serif); font-size:.92rem; font-weight:600; color:#fff;">प्रेम अनुकूलता ब्लूप्रिंट</span>
-        <span style="font-size:.72rem; color:rgba(255,255,255,.6); margin-top:2px;">₹1 • तुरंत अनलॉक करें</span>
+    <div class="sticky-pay-bar show" id="sticky-pay-bar">
+      <div class="spb-left">
+        <div class="spb-label">Love Compatibility Report</div>
+        <div class="spb-price-row">
+          <span class="spb-price">₹1</span>
+          <span class="spb-orig">₹1,999</span>
+        </div>
+        <div class="spb-secure"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg> 100% सुरक्षित</div>
       </div>
-      <button onclick="buyLoveReport()" style="flex-shrink:0; padding:10px 16px; background:linear-gradient(135deg, var(--la), #c2185b); border:none; border-radius:100px; color:#fff; font-weight:800; font-size:.82rem; cursor:pointer;">अनलॉक करें</button>
+      <button class="spb-btn" id="love-pay-btn" onclick="buyLoveReport()">अनलॉक करें <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg></button>
     </div>
 
   </div>
