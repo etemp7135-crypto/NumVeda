@@ -130,6 +130,29 @@
     .lv-trust-pills{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;}
     .lv-tp{flex:1;min-width:75px;background:rgba(233,30,140,.05);border:1px solid var(--lbr);border-radius:8px;padding:8px 6px;text-align:center;font-size:.65rem;color:var(--lm);line-height:1.4;}
     .lv-tp strong{display:block;font-size:.73rem;color:var(--lt);margin-bottom:2px;}
+    
+    /* Checkout CRO Elements */
+    .urgency-bar { background: rgba(233, 30, 140, .08); border: 1px solid rgba(233, 30, 140, .25); border-radius: 8px; padding: 9px 13px; display: flex; align-items: center; gap: 7px; font-size: .8rem; color: #ff6b9e; margin-bottom: 16px; }
+    .blur-preview-wrap { position: relative; margin: 20px 0; border: 1px solid var(--lbr); border-radius: 12px; overflow: hidden; background: var(--ls2); }
+    .blur-content { filter: blur(4px); opacity: 0.6; padding: 20px; pointer-events: none; user-select: none; }
+    .blur-overlay { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; background: rgba(12, 5, 21, 0.4); z-index: 2; }
+    .blur-lock-icon { font-size: 2.5rem; margin-bottom: 10px; text-shadow: 0 4px 12px rgba(0,0,0,0.5); }
+    .blur-cta { background: linear-gradient(135deg, var(--la), #c2185b); color: #fff; font-weight: 800; padding: 10px 20px; border-radius: 100px; font-size: 0.9rem; box-shadow: 0 4px 15px rgba(233,30,140,0.3); border: none; cursor: pointer; }
+    .testimonial { background: linear-gradient(145deg, var(--ls1), var(--ls2)); border: 1px solid var(--lbr); padding: 16px; border-radius: 12px; margin-bottom: 12px; }
+    .t-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+    .t-stars { color: var(--lg); font-size: .85rem; letter-spacing: 1.5px; }
+    .t-verified { font-size: .62rem; color: #6dbf8a; font-weight: 700; border: 1px solid rgba(109, 191, 138, .3); padding: 2px 6px; border-radius: 100px; }
+    .testimonial p { font-size: .82rem; color: var(--lm); font-style: italic; line-height: 1.55; margin-bottom: 8px; }
+    .t-name { font-size: .72rem; font-weight: 600; color: var(--lt); display: block; text-align: right; }
+    .faq-wrap { margin-top: 24px; }
+    .faq-item { border: 1px solid var(--lbr); border-radius: 9px; margin-bottom: 7px; overflow: hidden; background: var(--ls2); }
+    .faq-q { width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 13px 15px; cursor: pointer; text-align: left; font-size: .84rem; font-weight: 600; color: var(--lt); gap: 9px; background: none; border:none; transition: background .2s; }
+    .faq-q:hover { background: rgba(233,30,140,.05); }
+    .faq-chevron { width: 17px; height: 17px; flex-shrink: 0; color: var(--lm); transition: transform .3s; display: flex; align-items: center; justify-content: center; }
+    .faq-a { max-height: 0; overflow: hidden; transition: max-height .35s ease, padding .3s; }
+    .faq-a.open { max-height: 300px; padding: 0 15px 13px; }
+    .faq-a p { font-size:.8rem; color:var(--lm); line-height:1.5; margin:0; }
+
     /* Post pay */
     .lv-pp-inner{text-align:center;z-index:1;position:relative;padding:40px 20px;}
     .lv-pp-hrt{font-size:3rem;animation:hbt .8s ease-in-out infinite;margin-bottom:14px;}
@@ -285,24 +308,98 @@
     <div class="lv-co-badge">🔒 SSL Secured</div>
   </div>
   <div class="lv-wrap" style="padding-top:18px;">
-    <div class="lv-order" id="co-order-card"></div>
-    <div class="lv-order" style="margin-bottom:14px;">
-      <div class="lv-incl-title">इस रिपोर्ट में शामिल है:</div>
-      <div class="lv-incl-item"><span class="lv-incl-icon">♥</span><span>जीवन-पथ अनुकूलता — गहरा विश्लेषण</span></div>
-      <div class="lv-incl-item"><span class="lv-incl-icon">♥</span><span>आत्मा-मिलन और प्रेम भाषा विश्लेषण</span></div>
-      <div class="lv-incl-item"><span class="lv-incl-icon">♥</span><span>रिश्ते की शक्तियाँ और चुनौतियाँ</span></div>
-      <div class="lv-incl-item"><span class="lv-incl-icon">♥</span><span>विवाह अनुकूलता विश्लेषण</span></div>
-      <div class="lv-incl-item"><span class="lv-incl-icon">♥</span><span>2026–2030 रिश्ते की भविष्यवाणी</span></div>
-      <div class="lv-incl-item"><span class="lv-incl-icon">♥</span><span>शुभ विवाह तारीखें + नाम अनुकूलता</span></div>
-      <div class="lv-incl-item"><span class="lv-incl-icon">♥</span><span>व्यक्तिगत उपाय और रत्न चिकित्सा</span></div>
+    
+    <div class="urgency-bar">⚡ <span>यह विशेष ऑफर सिर्फ <strong id="lv-timer">10:00</strong> और उपलब्ध है</span></div>
+    
+    <div style="margin-bottom:20px;">
+      <h1 class="lv-title" style="font-size:1.4rem; text-align:left;">आपके रिश्ते का <span style="color:var(--la)">सटीक विश्लेषण</span> तैयार है</h1>
+      <p style="font-size:0.9rem; color:var(--lm); margin-top:8px; line-height:1.5;">
+        <strong id="chk-names" style="color:#fff;">—</strong> का प्रेम और विवाह विश्लेषण पूरा हो गया है। हमने आपके जीवन पथ और आत्मा के अंकों में <strong style="color:var(--lg)">कुछ गहरे कार्मिक संबंध</strong> पाए हैं।
+      </p>
     </div>
+
+    <div class="blur-preview-wrap">
+      <div class="blur-content">
+        <div style="font-family:var(--serif); font-size:1.8rem; font-weight:bold; color:var(--lg); text-align:center; margin-bottom:10px;">88% अनुकूलता</div>
+        <div style="display:flex; justify-content:space-between; margin-bottom:10px;"><span>प्रेम भाषा:</span><span>अत्यधिक मेल</span></div>
+        <div style="display:flex; justify-content:space-between; margin-bottom:10px;"><span>विवाह योग:</span><span>शुभ</span></div>
+        <div style="display:flex; justify-content:space-between; margin-bottom:10px;"><span>चुनौती:</span><span>अहंकार टकराव</span></div>
+        <p style="font-size:0.8rem; text-align:center; margin-top:15px;">आपकी जन्मतिथि के अनुसार आपके रिश्ते में कुछ अनसुलझे रहस्य हैं। इसका मतलब है कि...</p>
+      </div>
+      <div class="blur-overlay">
+        <div class="blur-lock-icon">🔒</div>
+        <button class="blur-cta" onclick="buyLoveReport()">अनलॉक करें ₹249</button>
+      </div>
+    </div>
+
+    <div class="lv-order" id="co-order-card"></div>
+    
+    <div class="lv-order" style="margin-bottom:14px;">
+      <div class="lv-incl-title">12-पेज प्रीमियम रिपोर्ट में क्या मिलेगा?</div>
+      <div class="lv-incl-item"><span class="lv-incl-icon">♥</span><span>जीवन-पथ और आत्मा अनुकूलता का गहरा विश्लेषण</span></div>
+      <div class="lv-incl-item"><span class="lv-incl-icon">♥</span><span>आपके रिश्ते की सबसे बड़ी शक्तियाँ और चुनौतियाँ</span></div>
+      <div class="lv-incl-item"><span class="lv-incl-icon">♥</span><span>विवाह योग और सटीक विवाह तारीखें</span></div>
+      <div class="lv-incl-item"><span class="lv-incl-icon">♥</span><span>2026–2030 के लिए आपके रिश्ते की भविष्यवाणी</span></div>
+      <div class="lv-incl-item"><span class="lv-incl-icon">♥</span><span>रिश्ते को मधुर बनाने के लिए विशेष कर्म उपाय</span></div>
+    </div>
+
     <div class="lv-trust-pills">
       <div class="lv-tp"><strong>7-दिन</strong>मनी-बैक</div>
       <div class="lv-tp"><strong>🔒</strong>गोपनीय</div>
       <div class="lv-tp"><strong>4.9★</strong>29,000+</div>
     </div>
-    <button class="lv-btn gold" id="love-pay-btn" onclick="buyLoveReport()">₹249 में अभी पाएं ✦</button>
-    <div class="lv-trust-txt" style="margin-top:10px;">Razorpay द्वारा 100% सुरक्षित भुगतान</div>
+
+    <!-- Testimonials -->
+    <div class="section-title" style="font-size:1.1rem; font-weight:700; margin:24px 0 16px;">असली जोड़ों के अनुभव</div>
+    <div class="testimonial">
+      <div class="t-top">
+        <div class="t-stars">★★★★★</div>
+        <div class="t-verified">✓ Verified</div>
+      </div>
+      <p>"हमारी रोज़ छोटी-छोटी बातों पर लड़ाई होती थी। रिपोर्ट से पता चला कि हम दोनों की लव लैंग्वेज अलग है। बताए गए उपाय किए, और अब हमारा रिश्ता बहुत प्यारा हो गया है।"</p><span class="t-name">— स्नेहा & राहुल, मुंबई</span>
+    </div>
+    <div class="testimonial">
+      <div class="t-top">
+        <div class="t-stars">★★★★★</div>
+        <div class="t-verified">✓ Verified</div>
+      </div>
+      <p>"शादी को लेकर बहुत कन्फ्यूज़न था। इस रिपोर्ट ने हमारी अनुकूलता और विवाह के शुभ समय को इतनी सटीकता से बताया कि हमारे परिवार भी मान गए!"</p><span class="t-name">— अंजलि & विकास, जयपुर</span>
+    </div>
+    <div class="testimonial">
+      <div class="t-top">
+        <div class="t-stars">★★★★★</div>
+        <div class="t-verified">✓ Verified</div>
+      </div>
+      <p>"मुझे शक था कि हमारे बीच कार्मिक ऋण है। रिपोर्ट ने इसे कन्फर्म किया और उपाय दिए। 4 महीने में हमारे रिश्ते में बहुत शांति आई है।"</p><span class="t-name">— पूजा शर्मा, दिल्ली</span>
+    </div>
+
+    <!-- FAQs -->
+    <div class="faq-wrap">
+      <div class="section-title" style="font-size:1.1rem; font-weight:700; margin-bottom:12px;">अक्सर पूछे जाने वाले सवाल</div>
+      <div class="faq-item" id="lv-faq1">
+        <button class="faq-q" onclick="toggleLvFaq('lv-faq1')"><span>क्या यह रिपोर्ट हम दोनों के लिए सटीक होगी?</span><span class="faq-chevron"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6" /></svg></span></button>
+        <div class="faq-a" id="lv-faq1-a"><p>हाँ। यह रिपोर्ट आप दोनों की जन्मतिथि और नाम के आधार पर व्यक्तिगत गणितीय कैलकुलेशन्स से बनती है, इसलिए यह 100% आपके रिश्ते पर आधारित होती है।</p></div>
+      </div>
+      <div class="faq-item" id="lv-faq2">
+        <button class="faq-q" onclick="toggleLvFaq('lv-faq2')"><span>रिपोर्ट कब और कैसे मिलेगी?</span><span class="faq-chevron"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6" /></svg></span></button>
+        <div class="faq-a" id="lv-faq2-a"><p>भुगतान पूरा होते ही आपकी विस्तृत रिपोर्ट स्क्रीन पर तुरंत खुल जाएगी। आप इसे PDF में डाउनलोड करके भी पढ़ सकते हैं।</p></div>
+      </div>
+    </div>
+
+    <div style="height:20px;"></div>
+    
+    <button class="lv-btn gold" id="love-pay-btn" onclick="buyLoveReport()">₹249 में अभी अनलॉक करें ✦</button>
+    <div class="lv-trust-txt" style="margin-top:10px; margin-bottom:60px;">Razorpay द्वारा 100% सुरक्षित भुगतान</div>
+
+    <!-- Sticky Mobile CTA -->
+    <div id="lv-sticky-cta" style="position:fixed; bottom:0; left:0; width:100%; padding:12px 16px; background:rgba(12, 5, 21, 0.95); backdrop-filter:blur(10px); border-top:1px solid var(--lbr); z-index:100; display:flex; justify-content:space-between; align-items:center; transform:translateY(100%); transition:transform 0.3s ease;">
+      <div style="display:flex; flex-direction:column;">
+        <span style="font-size:0.75rem; color:var(--lm);">प्रेम अनुकूलता रिपोर्ट</span>
+        <span style="font-size:1.1rem; font-weight:800; color:var(--lg);">₹249</span>
+      </div>
+      <button onclick="buyLoveReport()" style="background:linear-gradient(135deg, var(--la), #c2185b); border:none; padding:10px 24px; border-radius:100px; color:#fff; font-weight:800; font-size:0.9rem; box-shadow:0 4px 15px rgba(233,30,140,0.4); cursor:pointer;">अनलॉक करें</button>
+    </div>
+
   </div>
 </div>
 
@@ -477,12 +574,24 @@ function buildTeaser(){
 
 function goCheckout(){
   const {fn1,fn2,score}=C;const ini1=getInitials(LS.p1.name),ini2=getInitials(LS.p2.name);
+  document.getElementById('chk-names').textContent = `${fn1} और ${fn2}`;
   document.getElementById('co-order-card').innerHTML=`
     <div class="lv-order-pair-row"><div class="lv-order-avs"><div class="lv-order-av p1">${ini1}</div><div class="lv-order-av p2">${ini2}</div></div><div class="lv-order-names"><div class="lv-order-name-text">${fn1} ❤️ ${fn2}</div><div class="lv-order-name-sub">प्रेम अनुकूलता ब्लूप्रिंट</div></div><div class="lv-order-score">${score}%</div></div>
     <div class="lv-price-row"><span class="lv-price-lbl">मूल मूल्य</span><span class="lv-price-val strike">₹1,499</span></div>
     <div class="lv-price-row"><span class="lv-price-lbl">विशेष छूट</span><span class="lv-price-val" style="color:#22c55e">−₹1,250</span></div>
     <div class="lv-price-total"><span class="lv-price-total-lbl">आज का मूल्य</span><span class="lv-price-total-val">₹249</span></div>`;
   showScreen('lv-checkout');
+  
+  // Timer logic
+  let timeLeft = 600;
+  const timerEl = document.getElementById('lv-timer');
+  const timerInt = setInterval(() => {
+    timeLeft--;
+    if (timeLeft < 0) { clearInterval(timerInt); return; }
+    const m = Math.floor(timeLeft / 60).toString().padStart(2, '0');
+    const s = (timeLeft % 60).toString().padStart(2, '0');
+    if (timerEl) timerEl.textContent = `${m}:${s}`;
+  }, 1000);
 }
 
 async function buyLoveReport(){
@@ -573,6 +682,35 @@ function buildFullReport(){
         <div class="lv-remedy"><strong>21-दिन उपाय:</strong> अगले 21 दिनों तक रोज़ एक-दूसरे को एक सच्ची तारीफ दें। यह रिश्ते में सकारात्मक ऊर्जा का प्रवाह बढ़ाता है।</div>
       </div></div>`;
 }
+
+function toggleLvFaq(id) {
+  const ans = document.getElementById(id + '-a');
+  const chev = document.getElementById(id).querySelector('.faq-chevron');
+  if (ans.classList.contains('open')) {
+    ans.classList.remove('open');
+    chev.style.transform = 'rotate(0deg)';
+  } else {
+    ans.classList.add('open');
+    chev.style.transform = 'rotate(180deg)';
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const observer = new IntersectionObserver((entries) => {
+    const sticky = document.getElementById('lv-sticky-cta');
+    if(!sticky) return;
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) {
+        sticky.style.transform = 'translateY(0)';
+      } else {
+        sticky.style.transform = 'translateY(100%)';
+      }
+    });
+  }, { threshold: 0.1 });
+  
+  const mainBtn = document.getElementById('love-pay-btn');
+  if(mainBtn) observer.observe(mainBtn);
+});
 
 initForms();
 </script>
