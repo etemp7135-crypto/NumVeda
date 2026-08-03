@@ -5,6 +5,14 @@
       "destination": "/server.js"
     },
     {
+      "source": "/love",
+      "destination": "/love.html"
+    },
+    {
+      "source": "/love/(.*)",
+      "destination": "/love.html"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }

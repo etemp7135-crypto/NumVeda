@@ -77,9 +77,14 @@ app.post('/api/verify-payment', (req, res) => {
   }
 });
 
+// Serve love.html for /love route
+app.get('/love', (req, res) => {
+  res.sendFile('love.html', { root: __dirname });
+});
+
 // Serve index.html for root route and all other unmatched routes (SPA fallback)
 app.use((req, res) => {
-  res.sendFile(path.join(__dirname, 'index.html'));
+  res.sendFile('index.html', { root: __dirname });
 });
 
 app.listen(PORT, () => {

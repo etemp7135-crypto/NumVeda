@@ -5042,7 +5042,7 @@
             if (verifyData.success) {
               // Meta Pixel — fire Purchase event after server verification
               if (typeof fbq === 'function') {
-                fbq('track', 'Purchase', { value: 49.00, currency: 'INR' });
+                fbq('track', 'Purchase', { value: 49.00, currency: 'INR' }, { eventID: response.razorpay_order_id });
               }
               // Payment verified — show report
               document.getElementById('checkout').classList.remove('show');
@@ -5329,7 +5329,7 @@
             if (verifyData.success) {
               // Meta Pixel — fire Purchase event after server verification
               if (typeof fbq === 'function') {
-                fbq('track', 'Purchase', { value: 149.00, currency: 'INR' });
+                fbq('track', 'Purchase', { value: 149.00, currency: 'INR' }, { eventID: response.razorpay_order_id });
               }
               document.getElementById('upsell-bar').classList.remove('show');
               document.getElementById('report').classList.remove('show');
