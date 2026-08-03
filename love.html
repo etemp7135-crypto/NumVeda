@@ -211,7 +211,6 @@
         <div class="lv-dob"><select class="lv-input" id="p1-day"><option value="">दिन</option></select><select class="lv-input" id="p1-month"><option value="">महीना</option></select><input class="lv-input" id="p1-year" type="number" placeholder="वर्ष" min="1940" max="2010"></div></div>
       <div class="lv-field"><label class="lv-label">लिंग</label>
         <div class="lv-gender"><button class="lv-gb" id="p1-m" onclick="selGender(1,'male')">♂ पुरुष</button><button class="lv-gb" id="p1-f" onclick="selGender(1,'female')">♀ महिला</button></div></div>
-      <div class="lv-field"><label class="lv-label">WhatsApp नंबर</label><input class="lv-input" id="p1-phone" type="tel" placeholder="9999999999" maxlength="10"></div>
     </div>
     <button class="lv-btn" onclick="goStep2()">अगला — साथी की जानकारी →</button>
     <div class="lv-trust-txt">🔒 आपकी जानकारी 100% सुरक्षित है · ✦ 29,000+ रिपोर्ट दी जा चुकी हैं</div>
@@ -385,7 +384,7 @@ function goStep2(){
   if(!n){alert('कृपया अपना नाम भरें');return;}
   if(!d||!mo||!y||y<1940||y>2010){alert('कृपया सही जन्मतिथि भरें');return;}
   if(!LS.p1.gender){alert('कृपया लिंग चुनें');return;}
-  LS.p1.name=n;LS.p1.day=d;LS.p1.month=mo;LS.p1.year=y;LS.p1.phone=document.getElementById('p1-phone').value.trim();
+  LS.p1.name=n;LS.p1.day=d;LS.p1.month=mo;LS.p1.year=y;
   showScreen('lv-s2');
 }
 
