@@ -1,4 +1,4 @@
-const LOVE_REPORT_TEXT = {
+window.LOVE_REPORT_TEXT = {
   lp: {
     1: {
       title: "जीवन-पथ 1: स्वतंत्र और जन्मजात नेता",
