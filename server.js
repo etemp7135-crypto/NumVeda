@@ -210,6 +210,48 @@ app.post('/api/admin/sync-razorpay', async (req, res) => {
   }
 });
 
+// Admin endpoint to fetch Meta Ads Spend
+app.get('/api/admin/meta-spend', async (req, res) => {
+  try {
+    const authHeader = req.headers.authorization;
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
+    const token = authHeader.split(' ')[1];
+    const truePassword = process.env.ADMIN_PASSWORD || 'numveda2026';
+    if (token !== truePassword) {
+      return res.status(401).json({ error: 'Invalid password' });
+    }
+    
+    const metaToken = process.env.META_ACCESS_TOKEN;
+    const metaAccountId = process.env.META_AD_ACCOUNT_ID;
+    
+    if (!metaToken || !metaAccountId) {
+      return res.json({ success: true, spend: 0, message: 'Meta keys not configured' });
+    }
+    
+    // Fetch all-time spend (or you can do date_preset=maximum)
+    const url = `https://graph.facebook.com/v18.0/act_${metaAccountId}/insights?fields=spend&date_preset=maximum&access_token=${metaToken}`;
+    const metaRes = await fetch(url);
+    const data = await metaRes.json();
+    
+    if (data.error) {
+      console.error("Meta API Error:", data.error);
+      return res.json({ success: false, spend: 0, error: data.error.message });
+    }
+    
+    let totalSpend = 0;
+    if (data.data && data.data.length > 0) {
+      totalSpend = parseFloat(data.data[0].spend || 0);
+    }
+    
+    res.json({ success: true, spend: totalSpend });
+  } catch(e) {
+    console.error("Meta spend error:", e);
+    res.status(500).json({ error: e.toString() });
+  }
+});
+
 // Serve admin dashboard
 app.get('/admin', (req, res) => {
   res.sendFile('admin.html', { root: __dirname });

@@ -163,7 +163,7 @@
         <div class="stat-sub">Standard 2% + 18% GST</div>
       </div>
       <div class="stat-card glass">
-        <div class="stat-title">Net Profit</div>
+        <div class="stat-title">Net Profit (Before Ads)</div>
         <div class="stat-val success" id="val-profit">₹0</div>
         <div class="stat-sub">Take-home earnings</div>
       </div>
@@ -171,6 +171,16 @@
         <div class="stat-title">Checkout Conversion</div>
         <div class="stat-val" id="val-conversion">0%</div>
         <div class="stat-sub" id="val-conversion-sub">0 Paid / 0 Total Attempts</div>
+      </div>
+      <div class="stat-card glass">
+        <div class="stat-title">Meta Ad Spend</div>
+        <div class="stat-val" id="val-meta-spend" style="color:var(--danger)">₹0</div>
+        <div class="stat-sub" id="val-meta-sub">Fetching...</div>
+      </div>
+      <div class="stat-card glass" style="border: 1px solid var(--accent);">
+        <div class="stat-title" style="color:var(--accent)">True Net Profit (ROAS)</div>
+        <div class="stat-val" id="val-true-profit" style="color:var(--success)">₹0</div>
+        <div class="stat-sub">Net Profit - Ad Spend</div>
       </div>
     </div>
 
@@ -240,6 +250,9 @@
         
         rawOrders = data.orders || [];
         processData(rawOrders);
+        
+        // Fetch Meta Spend asynchronously so it doesn't block dashboard load
+        fetchMetaSpend(password);
 
       } catch(err) {
         if (btn) btn.textContent = 'Unlock Dashboard';
@@ -278,6 +291,41 @@
       } finally {
         btn.textContent = 'Sync Old Orders 🔄';
         btn.style.pointerEvents = 'auto';
+      }
+    }
+
+    let globalNetProfit = 0; // Store globally for Meta calculation
+
+    async function fetchMetaSpend(password) {
+      try {
+        const res = await fetch('/api/admin/meta-spend', {
+          headers: { 'Authorization': 'Bearer ' + password }
+        });
+        const data = await res.json();
+        
+        const spendEl = document.getElementById('val-meta-spend');
+        const subEl = document.getElementById('val-meta-sub');
+        const trueProfEl = document.getElementById('val-true-profit');
+        
+        if (data.success) {
+          if (data.message === 'Meta keys not configured') {
+            spendEl.textContent = 'Not Setup';
+            subEl.textContent = 'Add META_ACCESS_TOKEN in Vercel';
+            trueProfEl.textContent = `₹${Math.floor(globalNetProfit).toLocaleString('en-IN')}`;
+          } else {
+            const spend = data.spend || 0;
+            spendEl.textContent = `₹${spend.toLocaleString('en-IN')}`;
+            subEl.textContent = 'Total all-time spend';
+            
+            const trueNet = globalNetProfit - spend;
+            trueProfEl.textContent = `₹${Math.floor(trueNet).toLocaleString('en-IN')}`;
+          }
+        } else {
+          spendEl.textContent = 'Error';
+          subEl.textContent = 'Invalid Keys or API Error';
+        }
+      } catch (err) {
+        document.getElementById('val-meta-sub').textContent = 'Failed to load';
       }
     }
 
@@ -341,10 +389,14 @@
       // Update Cards
       const fees = gross * 0.0236;
       const net = gross - fees;
+      globalNetProfit = net; // Save for Meta
       
       document.getElementById('val-revenue').textContent = `₹${gross.toLocaleString('en-IN')}`;
       document.getElementById('val-fees').textContent = `₹${fees.toFixed(2)}`;
       document.getElementById('val-profit').textContent = `₹${Math.floor(net).toLocaleString('en-IN')}`;
+      
+      // Default True Profit before Meta loads
+      document.getElementById('val-true-profit').textContent = `₹${Math.floor(net).toLocaleString('en-IN')}`;
       
       const totalAttempts = paidCount + pendingCount;
       const convRate = totalAttempts > 0 ? ((paidCount / totalAttempts) * 100).toFixed(1) : 0;
