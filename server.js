@@ -239,9 +239,11 @@ app.post('/api/admin/sync-razorpay', async (req, res) => {
     let imported = 0;
     let skip = 0;
     let hasMore = true;
+    let pagesFetched = 0; // Prevent Vercel 10s timeout limit
 
-    while (hasMore) {
+    while (hasMore && pagesFetched < 5) {
       const payments = await razorpay.payments.all({ count: 100, skip: skip });
+      pagesFetched++;
       
       if (!payments || !payments.items || payments.items.length === 0) {
         hasMore = false;
