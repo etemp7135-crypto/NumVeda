@@ -230,22 +230,36 @@ app.get('/api/admin/meta-spend', async (req, res) => {
       return res.json({ success: true, spend: 0, message: 'Meta keys not configured' });
     }
     
-    // Fetch all-time spend (or you can do date_preset=maximum)
-    const url = `https://graph.facebook.com/v18.0/act_${metaAccountId}/insights?fields=spend&date_preset=maximum&access_token=${metaToken}`;
-    const metaRes = await fetch(url);
-    const data = await metaRes.json();
+    // Fetch all-time spend
+    const spendUrl = `https://graph.facebook.com/v18.0/act_${metaAccountId}/insights?fields=spend&date_preset=maximum&access_token=${metaToken}`;
+    const spendRes = await fetch(spendUrl);
+    const spendData = await spendRes.json();
     
-    if (data.error) {
-      console.error("Meta API Error:", data.error);
-      return res.json({ success: false, spend: 0, error: data.error.message });
+    // Fetch account details for prepaid balance
+    const accUrl = `https://graph.facebook.com/v18.0/act_${metaAccountId}?fields=balance,amount_spent,funding_source_details&access_token=${metaToken}`;
+    const accRes = await fetch(accUrl);
+    const accData = await accRes.json();
+    
+    if (spendData.error) {
+      console.error("Meta API Error:", spendData.error);
+      return res.json({ success: false, spend: 0, balance: 0, error: spendData.error.message });
     }
     
     let totalSpend = 0;
-    if (data.data && data.data.length > 0) {
-      totalSpend = parseFloat(data.data[0].spend || 0);
+    if (spendData.data && spendData.data.length > 0) {
+      totalSpend = parseFloat(spendData.data[0].spend || 0);
     }
     
-    res.json({ success: true, spend: totalSpend });
+    let prepaidBalance = 0;
+    // funding_source_details sometimes contains the prepaid balance in 'amount'
+    if (accData.funding_source_details && accData.funding_source_details.amount) {
+      prepaidBalance = parseFloat(accData.funding_source_details.amount); // Might be in rupees or paise
+    } else if (accData.balance) {
+      // Fallback: Sometimes balance is returned here
+      prepaidBalance = parseFloat(accData.balance) / 100;
+    }
+    
+    res.json({ success: true, spend: totalSpend, balance: prepaidBalance, rawAcc: accData });
   } catch(e) {
     console.error("Meta spend error:", e);
     res.status(500).json({ error: e.toString() });

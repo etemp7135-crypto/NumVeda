@@ -317,7 +317,16 @@
             const spendWithGst = rawSpend * 1.18; // Add 18% GST
             
             spendEl.textContent = `₹${spendWithGst.toLocaleString('en-IN', { maximumFractionDigits: 2 })}`;
-            subEl.textContent = 'Includes 18% Meta GST';
+            
+            // Show prepaid balance if available
+            let balText = 'Includes 18% Meta GST';
+            if (data.balance > 0) {
+                // If it's huge, it might be in paise. Try to guess based on size, or just show it if we assume rupees
+                let displayBal = data.balance;
+                if (displayBal > 100000) displayBal = displayBal / 100; 
+                balText = `Prepaid Balance: ₹${displayBal.toLocaleString('en-IN', { maximumFractionDigits: 2 })} (Includes GST)`;
+            }
+            subEl.textContent = balText;
             
             const trueNet = globalNetProfit - spendWithGst;
             trueProfEl.textContent = `₹${Math.floor(trueNet).toLocaleString('en-IN')}`;
