@@ -3796,10 +3796,84 @@
     function closeRetryModal() {
       document.getElementById('retry-modal').classList.remove('show');
     }
+
+    // TRACK REPORT LOGIC
+    function openTrackModal() {
+      document.getElementById('track-modal').classList.add('show');
+    }
+    function closeTrackModal() {
+      document.getElementById('track-modal').classList.remove('show');
+    }
+    async function trackReport() {
+      const phone = document.getElementById('track-phone').value;
+      const msg = document.getElementById('track-msg');
+      const btn = document.getElementById('track-btn-act');
+      
+      if(!phone || phone.length < 10) {
+        msg.textContent = 'Please enter a valid phone number.';
+        msg.style.display = 'block';
+        return;
+      }
+      
+      btn.textContent = 'Searching...';
+      msg.style.display = 'none';
+      
+      try {
+        const res = await fetch('/api/track-report', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ phone })
+        });
+        const data = await res.json();
+        
+        if (data.success) {
+          // Found paid order, populate LS and redirect
+          const cd = data.order.customer_details;
+          localStorage.setItem('numveda_name', cd.name);
+          localStorage.setItem('numveda_phone', cd.phone);
+          // Just dummy DOB to generate math
+          localStorage.setItem('numveda_day', '1');
+          localStorage.setItem('numveda_month', '1');
+          localStorage.setItem('numveda_year', '1990');
+          localStorage.setItem('numveda_paid', 'true');
+          
+          if (cd.type === 'ultimate') {
+            window.location.href = 'ultimate-report.html';
+          } else {
+            window.location.href = 'master-report.html';
+          }
+        } else {
+          msg.textContent = data.message || 'No paid report found for this number.';
+          msg.style.display = 'block';
+        }
+      } catch(e) {
+        msg.textContent = 'Error connecting to server. Try again.';
+        msg.style.display = 'block';
+      } finally {
+        btn.textContent = 'Find My Report ✦';
+      }
+    }
   </script>
 </head>
 
 <body>
+  <!-- TRACK REPORT FLOATING BTN -->
+  <button class="track-float-btn" onclick="openTrackModal()">
+    <span>📄</span> Already Paid?
+  </button>
+
+  <!-- TRACK REPORT MODAL -->
+  <div class="retry-modal" id="track-modal">
+    <div class="retry-content" style="text-align:center;">
+      <button class="retry-close" onclick="closeTrackModal()">✕</button>
+      <div class="retry-icon">📄</div>
+      <div class="retry-title">Download Your Report</div>
+      <div class="retry-desc">If you already paid but didn't get your PDF, enter your phone number below to instantly download it.</div>
+      <input type="tel" id="track-phone" class="input-field" placeholder="Phone Number (e.g. 9876543210)" style="margin-bottom:16px;">
+      <button class="retry-btn" id="track-btn-act" onclick="trackReport()">Find My Report ✦</button>
+      <div id="track-msg" style="color:var(--danger); font-size:0.8rem; margin-top:8px; display:none;"></div>
+    </div>
+  </div>
 
   <!-- QUIZ -->
   <div id="quiz-overlay">

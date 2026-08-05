@@ -274,9 +274,65 @@
     .legal-content h3 { color: #fff; margin-top: 0; margin-bottom: 15px; font-family: var(--serif); font-size: 1.3rem; }
     .legal-content p { margin-bottom: 10px; color: var(--lm); }
     .legal-close { position: absolute; top: 15px; right: 15px; background: none; border: none; color: var(--lm); font-size: 1.2rem; cursor: pointer; }
+
+    /* Track Report UI */
+    .track-float-btn {
+      position: fixed;
+      top: 16px;
+      right: 16px;
+      background: var(--ls1);
+      border: 1px solid var(--la);
+      color: var(--la);
+      padding: 8px 16px;
+      border-radius: 100px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      z-index: 10000;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      transition: all 0.2s ease;
+    }
+    .track-float-btn:hover {
+      background: var(--la);
+      color: #fff;
+    }
+    .track-modal {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 100000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(5px);
+    }
+    .track-modal.show { display: flex; }
+    .track-content {
+      background: var(--ls1); border: 1px solid var(--lbr); padding: 24px; border-radius: 20px; width: 90%; max-width: 340px; text-align: center; position: relative;
+    }
+    .track-close { position: absolute; top: 12px; right: 15px; background: none; border: none; color: var(--lm); font-size: 1.2rem; cursor: pointer; }
+    .track-icon { font-size: 2.5rem; margin-bottom: 12px; }
+    .track-title { font-family: var(--serif); font-size: 1.2rem; font-weight: 700; color: #fff; margin-bottom: 8px; }
+    .track-desc { font-size: 0.85rem; color: var(--lm); margin-bottom: 16px; line-height: 1.5; }
+    .track-input { width: 100%; background: var(--ls2); border: 1px solid var(--lbr); padding: 12px 16px; border-radius: 12px; color: #fff; font-size: 1rem; outline: none; margin-bottom: 16px; text-align: center; }
+    .track-btn-act { width: 100%; background: linear-gradient(135deg, var(--la), var(--la2)); border: none; padding: 14px; border-radius: 12px; color: #fff; font-weight: 700; font-size: 1rem; cursor: pointer; transition: transform 0.2s ease; }
+    .track-btn-act:active { transform: scale(0.96); }
   </style>
 </head>
 <body>
+  <!-- TRACK REPORT FLOATING BTN -->
+  <button class="track-float-btn" onclick="openTrackModal()">
+    <span>📄</span> Already Paid?
+  </button>
+
+  <!-- TRACK REPORT MODAL -->
+  <div class="track-modal" id="track-modal">
+    <div class="track-content">
+      <button class="track-close" onclick="closeTrackModal()">✕</button>
+      <div class="track-icon">📄</div>
+      <div class="track-title">Download Your Report</div>
+      <div class="track-desc">If you already paid but didn't get your PDF, enter your phone number below to instantly download it.</div>
+      <input type="tel" id="track-phone" class="track-input" placeholder="Phone Number (e.g. 9876543210)">
+      <button class="track-btn-act" id="track-btn-act" onclick="trackReport()">Find My Report ✦</button>
+      <div id="track-msg" style="color:#ef4444; font-size:0.8rem; margin-top:8px; display:none;"></div>
+    </div>
+  </div>
 <div id="lv-particles"></div>
 
 <!-- SCREEN 1: YOUR DETAILS -->
@@ -753,10 +809,78 @@ function openLegal(type) {
   document.getElementById('legal-body').innerHTML = LEGAL[type];
   document.getElementById('legal-modal').classList.add('show');
 }
-function closeLegal() {
-  document.getElementById('legal-modal').classList.remove('show');
-}
+  function closeLegal() {
+    document.getElementById('legal-modal').classList.remove('active');
+  }
 
+  // TRACK REPORT LOGIC
+  function openTrackModal() {
+    document.getElementById('track-modal').classList.add('show');
+  }
+  function closeTrackModal() {
+    document.getElementById('track-modal').classList.remove('show');
+  }
+  async function trackReport() {
+    const phone = document.getElementById('track-phone').value;
+    const msg = document.getElementById('track-msg');
+    const btn = document.getElementById('track-btn-act');
+    
+    if(!phone || phone.length < 10) {
+      msg.textContent = 'Please enter a valid phone number.';
+      msg.style.display = 'block';
+      return;
+    }
+    
+    btn.textContent = 'Searching...';
+    msg.style.display = 'none';
+    
+    try {
+      const res = await fetch('/api/track-report', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phone })
+      });
+      const data = await res.json();
+      
+      if (data.success) {
+        const cd = data.order.customer_details;
+        localStorage.setItem('numveda_name', cd.name);
+        localStorage.setItem('numveda_phone', cd.phone);
+        localStorage.setItem('numveda_paid', 'true');
+        
+        // Dummy values just to prevent math errors
+        localStorage.setItem('numveda_day', '1');
+        localStorage.setItem('numveda_month', '1');
+        localStorage.setItem('numveda_year', '1990');
+        
+        if (cd.type === 'love') {
+          // It's a love report, but we might not have p2 data saved in DB. 
+          // At least redirect them so they can see the report using local storage if it's there.
+          // Otherwise, they just see their love report with P1.
+          window.location.reload(); 
+        } else if (cd.type === 'ultimate') {
+          window.location.href = 'ultimate-report.html';
+        } else {
+          window.location.href = 'master-report.html';
+        }
+      } else {
+        msg.textContent = data.message || 'No paid report found for this number.';
+        msg.style.display = 'block';
+      }
+    } catch(e) {
+      msg.textContent = 'Error connecting to server. Try again.';
+      msg.style.display = 'block';
+    } finally {
+      btn.textContent = 'Find My Report ✦';
+    }
+  }
+
+  // Handle auto-load for paid love reports
+  window.onload = function() {
+    if(localStorage.getItem('numveda_paid') === 'true' && localStorage.getItem('lv_p2_name')) {
+      showReport();
+    }
+  };
 document.addEventListener('DOMContentLoaded', () => {
   const observer = new IntersectionObserver((entries) => {
     const sticky = document.getElementById('lv-sticky-cta');

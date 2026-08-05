@@ -19,7 +19,9 @@ const PORT = process.env.PORT || 3000;
 
 // Middleware
 app.use(cors());
-app.use(express.json());
+app.use(express.json({
+  verify: (req, res, buf) => { req.rawBody = buf; }
+}));
 app.use(express.static(path.join(__dirname, '')));
 
 // Connect to MongoDB (Serverless pattern)
@@ -122,6 +124,65 @@ app.post('/api/verify-payment', async (req, res) => {
   } catch (error) {
     console.error('Error verifying payment:', error);
     res.status(500).json({ success: false, message: 'Could not verify payment' });
+  }
+});
+
+// Razorpay Webhook for background confirmation
+app.post('/api/webhook/razorpay', async (req, res) => {
+  try {
+    const secret = process.env.RAZORPAY_WEBHOOK_SECRET || 'numvedawebhook2026';
+    const signature = req.headers['x-razorpay-signature'];
+    
+    // Use rawBody to ensure exact byte match for signature
+    const expectedSignature = crypto.createHmac('sha256', secret).update(req.rawBody).digest('hex');
+    
+    if (expectedSignature === signature) {
+      const event = req.body.event;
+      if (event === 'payment.captured' || event === 'payment.authorized') {
+        const payment = req.body.payload.payment.entity;
+        await connectDB();
+        if (process.env.MONGODB_URI) {
+          await Order.findOneAndUpdate(
+            { order_id: payment.order_id },
+            { status: 'paid', payment_id: payment.id }
+          );
+        }
+      }
+      res.status(200).json({ status: 'ok' });
+    } else {
+      res.status(400).json({ error: 'Invalid signature' });
+    }
+  } catch (error) {
+    console.error('Webhook error:', error);
+    res.status(500).send('Error processing webhook');
+  }
+});
+
+// Endpoint to track/recover report by phone number
+app.post('/api/track-report', async (req, res) => {
+  try {
+    const { phone } = req.body;
+    if (!phone) return res.status(400).json({ error: 'Phone number required' });
+    
+    // Clean phone number (remove +91, spaces)
+    let cleanPhone = phone.replace('+91', '').replace(/\s+/g, '').trim();
+    
+    await connectDB();
+    if (!process.env.MONGODB_URI) return res.status(500).json({ error: 'DB not connected' });
+    
+    // Find the most recent paid order with this phone
+    const order = await Order.findOne({ 
+      'customer_details.phone': cleanPhone,
+      status: 'paid'
+    }).sort({ created_at: -1 });
+    
+    if (order) {
+      res.json({ success: true, order });
+    } else {
+      res.json({ success: false, message: 'No paid report found for this number' });
+    }
+  } catch(e) {
+    res.status(500).json({ error: 'Server error tracking report' });
   }
 });
 
