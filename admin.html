@@ -172,10 +172,13 @@
         <div class="stat-val" id="val-conversion">0%</div>
         <div class="stat-sub" id="val-conversion-sub">0 Paid / 0 Total Attempts</div>
       </div>
-      <div class="stat-card glass">
-        <div class="stat-title">Total Added to Meta</div>
-        <div class="stat-val" id="val-meta-added" style="color:var(--danger)">₹0</div>
-        <div class="stat-sub" id="val-meta-added-sub">Includes 18% GST deduction</div>
+      <div class="stat-card glass" style="display:flex; flex-direction:column; justify-content:center;">
+        <div class="stat-title">Total Deposited to Meta</div>
+        <div style="display:flex; align-items:center; gap:8px; margin: 8px 0;">
+          <span style="font-size:1.4rem; font-weight:700; color:var(--text);">₹</span>
+          <input type="number" id="manual-meta-deposit" value="4500" style="background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); color:#fff; font-size:1.4rem; font-weight:700; padding:4px 8px; border-radius:6px; width:120px; outline:none;" oninput="recalcTrueProfit()">
+        </div>
+        <div class="stat-sub">Type exact cash added to bank</div>
       </div>
       <div class="stat-card glass">
         <div class="stat-title">Meta Ads Usage</div>
@@ -300,6 +303,19 @@
     }
 
     let globalNetProfit = 0; // Store globally for Meta calculation
+    let globalGrossRevenue = 0; // Store globally for ROAS
+    
+    function recalcTrueProfit() {
+      const deposit = parseFloat(document.getElementById('manual-meta-deposit').value) || 0;
+      const trueNet = globalNetProfit - deposit;
+      
+      let roas = "0.0";
+      if (deposit > 0) {
+        roas = (globalGrossRevenue / deposit).toFixed(2);
+      }
+      
+      document.getElementById('val-true-profit').innerHTML = `₹${Math.floor(trueNet).toLocaleString('en-IN')} <span style="font-size:1rem;color:var(--text-muted);font-weight:500;margin-left:8px;">(ROAS: ${roas}x)</span>`;
+    }
 
     async function fetchMetaSpend(password) {
       try {
@@ -322,19 +338,14 @@
           } else {
             const rawSpend = data.spend || 0;
             let prepaidBalance = data.balance || 0;
-            // Balance might be in paise if it's very large
+            
+            // If the server somehow missed the conversion and sent paise
             if (prepaidBalance > 100000) prepaidBalance = prepaidBalance / 100;
             
-            // Total amount actually added by user (Spend + Remaining) * 1.18 to account for GST
-            const totalMoneyAdded = (rawSpend + prepaidBalance) * 1.18;
-            
-            addedEl.textContent = `₹${totalMoneyAdded.toLocaleString('en-IN', { maximumFractionDigits: 0 })}`;
             spendEl.textContent = `Spent: ₹${rawSpend.toLocaleString('en-IN', { maximumFractionDigits: 0 })}`;
-            
             subEl.innerHTML = `<span style="color:#10b981">Remaining: ₹${prepaidBalance.toLocaleString('en-IN', { maximumFractionDigits: 0 })}</span>`;
             
-            const trueNet = globalNetProfit - totalMoneyAdded;
-            trueProfEl.textContent = `₹${Math.floor(trueNet).toLocaleString('en-IN')}`;
+            recalcTrueProfit();
           }
         } else {
           addedEl.textContent = 'Error';
@@ -407,13 +418,13 @@
       const fees = gross * 0.0236;
       const net = gross - fees;
       globalNetProfit = net; // Save for Meta
+      globalGrossRevenue = gross; // Save for ROAS
       
       document.getElementById('val-revenue').textContent = `₹${gross.toLocaleString('en-IN')}`;
       document.getElementById('val-fees').textContent = `₹${fees.toFixed(2)}`;
       document.getElementById('val-profit').textContent = `₹${Math.floor(net).toLocaleString('en-IN')}`;
       
-      // Default True Profit before Meta loads
-      document.getElementById('val-true-profit').textContent = `₹${Math.floor(net).toLocaleString('en-IN')}`;
+      recalcTrueProfit();
       
       const totalAttempts = paidCount + pendingCount;
       const convRate = totalAttempts > 0 ? ((paidCount / totalAttempts) * 100).toFixed(1) : 0;

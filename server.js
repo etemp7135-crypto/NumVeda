@@ -236,37 +236,52 @@ app.post('/api/admin/sync-razorpay', async (req, res) => {
     await connectDB();
     if (!process.env.MONGODB_URI) return res.status(500).json({ error: 'DB not connected' });
     
-    // Fetch last 100 payments from Razorpay
-    const payments = await razorpay.payments.all({ count: 100 });
     let imported = 0;
+    let skip = 0;
+    let hasMore = true;
 
-    for (const p of payments.items) {
-      if (p.status === 'captured') {
-        const amt = p.amount / 100;
-        let type = 'unknown';
-        if (amt === 49) type = 'master';
-        else if (amt === 149) type = 'ultimate';
-        else if (amt === 1) type = 'love';
+    while (hasMore) {
+      const payments = await razorpay.payments.all({ count: 100, skip: skip });
+      
+      if (!payments || !payments.items || payments.items.length === 0) {
+        hasMore = false;
+        break;
+      }
 
-        // Check if exists
-        const exists = await Order.findOne({ $or: [{ order_id: p.order_id }, { payment_id: p.id }] });
-        if (!exists) {
-          const newOrder = new Order({
-            order_id: p.order_id || 'hist_' + p.id,
-            payment_id: p.id,
-            status: 'paid',
-            amount: amt,
-            currency: p.currency,
-            customer_details: {
-              name: 'Historical User',
-              phone: p.contact ? p.contact.replace('+91', '') : 'N/A',
-              type: type
-            },
-            created_at: new Date(p.created_at * 1000)
-          });
-          await newOrder.save();
-          imported++;
+      for (const p of payments.items) {
+        if (p.status === 'captured') {
+          const amt = p.amount / 100;
+          let type = 'unknown';
+          if (amt === 49) type = 'master';
+          else if (amt === 149) type = 'ultimate';
+          else if (amt === 1) type = 'love';
+
+          // Check if exists
+          const exists = await Order.findOne({ $or: [{ order_id: p.order_id }, { payment_id: p.id }] });
+          if (!exists) {
+            const newOrder = new Order({
+              order_id: p.order_id || 'hist_' + p.id,
+              payment_id: p.id,
+              status: 'paid',
+              amount: amt,
+              currency: p.currency,
+              customer_details: {
+                name: 'Historical User',
+                phone: p.contact ? p.contact.replace('+91', '') : 'N/A',
+                type: type
+              },
+              created_at: new Date(p.created_at * 1000)
+            });
+            await newOrder.save();
+            imported++;
+          }
         }
+      }
+      
+      if (payments.items.length < 100) {
+        hasMore = false;
+      } else {
+        skip += 100;
       }
     }
     
@@ -318,12 +333,13 @@ app.get('/api/admin/meta-spend', async (req, res) => {
     }
     
     let prepaidBalance = 0;
-    // funding_source_details sometimes contains the prepaid balance in 'amount'
-    if (accData.funding_source_details && accData.funding_source_details.amount) {
-      prepaidBalance = parseFloat(accData.funding_source_details.amount); // Might be in rupees or paise
-    } else if (accData.balance) {
-      // Fallback: Sometimes balance is returned here
+    if (accData.balance) {
       prepaidBalance = parseFloat(accData.balance) / 100;
+    } else if (accData.funding_source_details && accData.funding_source_details.amount) {
+      // Sometimes it's in string format. If it's very large, assume paise.
+      let fAmount = parseFloat(accData.funding_source_details.amount);
+      if (fAmount > 50000) fAmount = fAmount / 100; // heuristic if balance is > ₹500
+      prepaidBalance = fAmount;
     }
     
     res.json({ success: true, spend: totalSpend, balance: prepaidBalance, rawAcc: accData });
