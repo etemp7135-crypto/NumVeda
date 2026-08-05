@@ -22,11 +22,20 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, '')));
 
-// Connect to MongoDB
-if (process.env.MONGODB_URI) {
-  mongoose.connect(process.env.MONGODB_URI)
-    .then(() => console.log('Connected to MongoDB'))
-    .catch(err => console.error('MongoDB connection error:', err));
+// Connect to MongoDB (Serverless pattern)
+let isConnected = false;
+async function connectDB() {
+  if (isConnected) return;
+  if (!process.env.MONGODB_URI) return;
+  try {
+    await mongoose.connect(process.env.MONGODB_URI, {
+      serverSelectionTimeoutMS: 5000 // fail fast if IP is blocked
+    });
+    isConnected = true;
+    console.log('Connected to MongoDB');
+  } catch (err) {
+    console.error('MongoDB connection error:', err);
+  }
 }
 
 // Define Order Schema
@@ -61,6 +70,7 @@ app.post('/api/create-order', async (req, res) => {
     const order = await razorpay.orders.create(options);
     
     // Save to DB
+    await connectDB();
     if (process.env.MONGODB_URI) {
       const newOrder = new Order({
         order_id: order.id,
@@ -97,6 +107,7 @@ app.post('/api/verify-payment', async (req, res) => {
 
     if (expectedSignature === razorpay_signature) {
       // Signature is valid
+      await connectDB();
       if (process.env.MONGODB_URI) {
         await Order.findOneAndUpdate(
           { order_id: razorpay_order_id },
@@ -122,6 +133,7 @@ app.get('/love', (req, res) => {
 // Admin endpoint to view orders
 app.get('/api/admin/orders', async (req, res) => {
   try {
+    await connectDB();
     if (!process.env.MONGODB_URI) return res.status(500).json({ error: 'DB not connected' });
     const orders = await Order.find().sort({ created_at: -1 });
     let html = '<h1>NumVeda Orders</h1><table border="1" cellpadding="5" cellspacing="0" style="font-family:sans-serif; text-align:left;">';
