@@ -153,6 +153,63 @@ app.get('/api/admin/data', async (req, res) => {
   }
 });
 
+// Admin endpoint to sync historical Razorpay payments
+app.post('/api/admin/sync-razorpay', async (req, res) => {
+  try {
+    const authHeader = req.headers.authorization;
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
+    const token = authHeader.split(' ')[1];
+    const truePassword = process.env.ADMIN_PASSWORD || 'numveda2026';
+    if (token !== truePassword) {
+      return res.status(401).json({ error: 'Invalid password' });
+    }
+    
+    await connectDB();
+    if (!process.env.MONGODB_URI) return res.status(500).json({ error: 'DB not connected' });
+    
+    // Fetch last 100 payments from Razorpay
+    const payments = await razorpay.payments.all({ count: 100 });
+    let imported = 0;
+
+    for (const p of payments.items) {
+      if (p.status === 'captured') {
+        const amt = p.amount / 100;
+        let type = 'unknown';
+        if (amt === 49) type = 'master';
+        else if (amt === 149) type = 'ultimate';
+        else if (amt === 1) type = 'love';
+
+        // Check if exists
+        const exists = await Order.findOne({ $or: [{ order_id: p.order_id }, { payment_id: p.id }] });
+        if (!exists) {
+          const newOrder = new Order({
+            order_id: p.order_id || 'hist_' + p.id,
+            payment_id: p.id,
+            status: 'paid',
+            amount: amt,
+            currency: p.currency,
+            customer_details: {
+              name: 'Historical User',
+              phone: p.contact ? p.contact.replace('+91', '') : 'N/A',
+              type: type
+            },
+            created_at: new Date(p.created_at * 1000)
+          });
+          await newOrder.save();
+          imported++;
+        }
+      }
+    }
+    
+    res.json({ success: true, message: `Synced ${imported} historical orders successfully.` });
+  } catch(e) {
+    console.error("Sync error:", e);
+    res.status(500).json({ error: e.toString() });
+  }
+});
+
 // Serve admin dashboard
 app.get('/admin', (req, res) => {
   res.sendFile('admin.html', { root: __dirname });
