@@ -130,27 +130,32 @@ app.get('/love', (req, res) => {
   res.sendFile('love.html', { root: __dirname });
 });
 
-// Admin endpoint to view orders
-app.get('/api/admin/orders', async (req, res) => {
+// Admin endpoint to view orders securely (JSON)
+app.get('/api/admin/data', async (req, res) => {
   try {
+    const authHeader = req.headers.authorization;
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
+    const token = authHeader.split(' ')[1];
+    const truePassword = process.env.ADMIN_PASSWORD || 'numveda2026';
+    if (token !== truePassword) {
+      return res.status(401).json({ error: 'Invalid password' });
+    }
+    
     await connectDB();
     if (!process.env.MONGODB_URI) return res.status(500).json({ error: 'DB not connected' });
+    
     const orders = await Order.find().sort({ created_at: -1 });
-    let html = '<h1>NumVeda Orders</h1><table border="1" cellpadding="5" cellspacing="0" style="font-family:sans-serif; text-align:left;">';
-    html += '<tr><th>Date</th><th>Name</th><th>Phone</th><th>Type</th><th>Amount</th><th>Status</th><th>Order ID</th></tr>';
-    orders.forEach(o => {
-      const d = o.customer_details || {};
-      const name = d.name || d.p1_name || 'N/A';
-      const phone = d.phone || d.p1_phone || 'N/A';
-      const type = d.type || 'N/A';
-      const color = o.status === 'paid' ? 'lightgreen' : (o.status === 'pending' ? 'lightyellow' : 'white');
-      html += `<tr style="background:${color}"><td>${new Date(o.created_at).toLocaleString('en-IN')}</td><td>${name}</td><td>${phone}</td><td>${type}</td><td>₹${o.amount}</td><td><b>${o.status.toUpperCase()}</b></td><td><small>${o.order_id}</small></td></tr>`;
-    });
-    html += '</table>';
-    res.send(html);
+    res.json({ success: true, orders });
   } catch(e) {
-    res.status(500).send(e.toString());
+    res.status(500).json({ error: e.toString() });
   }
+});
+
+// Serve admin dashboard
+app.get('/admin', (req, res) => {
+  res.sendFile('admin.html', { root: __dirname });
 });
 // Serve index.html for root route and all other unmatched routes (SPA fallback)
 app.use((req, res) => {

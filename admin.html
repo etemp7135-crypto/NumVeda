@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NumVeda Premium Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --bg-card: rgba(30, 41, 59, 0.7);
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent: #d4af37;
+      --accent-hover: #fcd34d;
+      --success: #10b981;
+      --warning: #fbbf24;
+      --danger: #ef4444;
+      --border: rgba(255, 255, 255, 0.1);
+      --font: 'Inter', system-ui, sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: var(--font); }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* GLASSMORPHISM UTILS */
+    .glass {
+      background: var(--bg-card);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+    }
+
+    /* LOCK SCREEN */
+    #lock-screen {
+      position: fixed; inset: 0;
+      background: var(--bg);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      z-index: 1000;
+      transition: opacity 0.5s ease;
+    }
+    #lock-screen.hidden { opacity: 0; pointer-events: none; }
+    .lock-box {
+      padding: 40px; width: 90%; max-width: 400px;
+      text-align: center;
+    }
+    .lock-logo { font-size: 2rem; font-weight: 700; color: var(--accent); margin-bottom: 8px; letter-spacing: 2px;}
+    .lock-title { font-size: 1.1rem; color: var(--text-muted); margin-bottom: 30px; }
+    .lock-input {
+      width: 100%; padding: 16px; margin-bottom: 20px;
+      background: rgba(0,0,0,0.2); border: 1px solid var(--border);
+      border-radius: 8px; color: white; font-size: 1rem;
+      outline: none; transition: border-color 0.3s;
+    }
+    .lock-input:focus { border-color: var(--accent); }
+    .lock-btn {
+      width: 100%; padding: 16px;
+      background: var(--accent); color: #000;
+      border: none; border-radius: 8px; font-size: 1rem; font-weight: 600;
+      cursor: pointer; transition: transform 0.2s, background 0.3s;
+    }
+    .lock-btn:hover { background: var(--accent-hover); transform: translateY(-2px); }
+    .error-msg { color: var(--danger); font-size: 0.9rem; margin-top: 15px; display: none; }
+
+    /* DASHBOARD LAYOUT */
+    #dashboard { padding: 30px; max-width: 1400px; margin: 0 auto; display: none; }
+    
+    header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; }
+    header h1 { font-size: 1.8rem; font-weight: 600; }
+    .logout-btn { background: transparent; border: 1px solid var(--border); color: var(--text); padding: 8px 16px; border-radius: 6px; cursor: pointer; transition: background 0.3s;}
+    .logout-btn:hover { background: rgba(255,255,255,0.1); }
+
+    /* STAT CARDS */
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; margin-bottom: 40px; }
+    .stat-card { padding: 24px; display: flex; flex-direction: column; justify-content: space-between; }
+    .stat-title { font-size: 0.9rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; }
+    .stat-val { font-size: 2.2rem; font-weight: 700; color: white; }
+    .stat-val.accent { color: var(--accent); }
+    .stat-val.success { color: var(--success); }
+    .stat-sub { font-size: 0.8rem; color: var(--text-muted); margin-top: 8px; }
+
+    /* CHART SECTION */
+    .chart-section { padding: 24px; margin-bottom: 40px; height: 400px; }
+    
+    /* TABLE SECTION */
+    .table-section { padding: 24px; overflow-x: auto; }
+    .table-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+    .table-header h2 { font-size: 1.3rem; font-weight: 600; }
+    
+    table { width: 100%; border-collapse: collapse; min-width: 800px; }
+    th, td { padding: 16px; text-align: left; border-bottom: 1px solid var(--border); }
+    th { color: var(--text-muted); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
+    td { font-size: 0.95rem; }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: rgba(255,255,255,0.02); }
+
+    .badge { padding: 6px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+    .badge.paid { background: rgba(16, 185, 129, 0.15); color: var(--success); }
+    .badge.pending { background: rgba(251, 191, 36, 0.15); color: var(--warning); }
+    
+    .type-badge { font-size: 0.8rem; color: var(--accent); background: rgba(212, 175, 55, 0.1); padding: 4px 8px; border-radius: 4px; border: 1px solid rgba(212, 175, 55, 0.3);}
+
+    .empty-state { text-align: center; padding: 40px; color: var(--text-muted); }
+
+    /* LOADER */
+    .loader { display: none; margin: 100px auto; width: 40px; height: 40px; border: 4px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 1s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    @media (max-width: 768px) {
+      #dashboard { padding: 15px; }
+      .stat-val { font-size: 1.8rem; }
+      .chart-section { height: 300px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- LOCK SCREEN -->
+  <div id="lock-screen">
+    <div class="lock-box glass">
+      <div class="lock-logo">NUMVEDA</div>
+      <div class="lock-title">Admin Dashboard</div>
+      <form id="login-form">
+        <input type="password" id="admin-pass" class="lock-input" placeholder="Enter Admin Password" required autofocus>
+        <button type="submit" class="lock-btn">Unlock Dashboard</button>
+        <div id="error-msg" class="error-msg">Incorrect Password. Try again.</div>
+      </form>
+    </div>
+  </div>
+
+  <div class="loader" id="main-loader"></div>
+
+  <!-- MAIN DASHBOARD -->
+  <div id="dashboard">
+    <header>
+      <div>
+        <h1 style="color:var(--accent); letter-spacing:2px; text-transform:uppercase;">NumVeda</h1>
+        <p style="color:var(--text-muted); font-size:0.9rem; margin-top:4px;">Business Intelligence Overview</p>
+      </div>
+      <button class="logout-btn" onclick="logout()">Lock 🔒</button>
+    </header>
+
+    <div class="stats-grid">
+      <div class="stat-card glass">
+        <div class="stat-title">Gross Revenue</div>
+        <div class="stat-val accent" id="val-revenue">₹0</div>
+        <div class="stat-sub">Total sales collected via Razorpay</div>
+      </div>
+      <div class="stat-card glass">
+        <div class="stat-title">Razorpay Fees (est. 2.36%)</div>
+        <div class="stat-val" id="val-fees" style="color:var(--danger)">₹0</div>
+        <div class="stat-sub">Standard 2% + 18% GST</div>
+      </div>
+      <div class="stat-card glass">
+        <div class="stat-title">Net Profit</div>
+        <div class="stat-val success" id="val-profit">₹0</div>
+        <div class="stat-sub">Take-home earnings</div>
+      </div>
+      <div class="stat-card glass">
+        <div class="stat-title">Checkout Conversion</div>
+        <div class="stat-val" id="val-conversion">0%</div>
+        <div class="stat-sub" id="val-conversion-sub">0 Paid / 0 Total Attempts</div>
+      </div>
+    </div>
+
+    <div class="chart-section glass">
+      <canvas id="revenueChart"></canvas>
+    </div>
+
+    <div class="table-section glass">
+      <div class="table-header">
+        <h2>Recent Customer Orders</h2>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Date & Time</th>
+            <th>Status</th>
+            <th>Customer Name</th>
+            <th>Phone (WhatsApp)</th>
+            <th>Report Details</th>
+            <th>Amount</th>
+            <th>Order ID</th>
+          </tr>
+        </thead>
+        <tbody id="table-body">
+          <!-- Data injected here -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    let rawOrders = [];
+    let chartInstance = null;
+
+    // Check if logged in
+    const savedPass = localStorage.getItem('numveda_admin_pass');
+    if (savedPass) {
+      attemptLogin(savedPass);
+    }
+
+    document.getElementById('login-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const pass = document.getElementById('admin-pass').value;
+      attemptLogin(pass);
+    });
+
+    async function attemptLogin(password) {
+      const btn = document.querySelector('.lock-btn');
+      if (btn) btn.textContent = 'Verifying...';
+      
+      try {
+        const res = await fetch('/api/admin/data', {
+          headers: { 'Authorization': 'Bearer ' + password }
+        });
+        
+        if (res.status === 401) {
+          throw new Error('Unauthorized');
+        }
+        
+        const data = await res.json();
+        
+        // Success!
+        localStorage.setItem('numveda_admin_pass', password);
+        document.getElementById('lock-screen').classList.add('hidden');
+        document.getElementById('error-msg').style.display = 'none';
+        document.getElementById('dashboard').style.display = 'block';
+        
+        rawOrders = data.orders || [];
+        processData(rawOrders);
+
+      } catch(err) {
+        if (btn) btn.textContent = 'Unlock Dashboard';
+        document.getElementById('error-msg').style.display = 'block';
+        localStorage.removeItem('numveda_admin_pass');
+      }
+    }
+
+    function logout() {
+      localStorage.removeItem('numveda_admin_pass');
+      location.reload();
+    }
+
+    function processData(orders) {
+      let gross = 0;
+      let paidCount = 0;
+      let pendingCount = 0;
+
+      const dailyRevenue = {}; // for chart
+
+      const tbody = document.getElementById('table-body');
+      tbody.innerHTML = '';
+
+      if (orders.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7"><div class="empty-state">No orders found yet.</div></td></tr>';
+      }
+
+      orders.forEach(o => {
+        // Analytics calculations
+        if (o.status === 'paid') {
+          gross += o.amount;
+          paidCount++;
+          
+          // Chart grouping (by date string)
+          const dateStr = new Date(o.created_at).toLocaleDateString('en-IN');
+          dailyRevenue[dateStr] = (dailyRevenue[dateStr] || 0) + o.amount;
+        } else {
+          pendingCount++;
+        }
+
+        // Table Row building
+        const d = o.customer_details || {};
+        let names = d.name || d.p1_name || 'N/A';
+        if (d.p2_name) names += ` & ${d.p2_name}`;
+        
+        let phones = d.phone || d.p1_phone || 'N/A';
+        
+        let dob = d.dob || d.p1_dob || '';
+        if (d.p2_dob) dob += ` & ${d.p2_dob}`;
+
+        let type = (d.type || 'N/A').toUpperCase();
+
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td style="color:var(--text-muted)">${new Date(o.created_at).toLocaleString('en-IN')}</td>
+          <td><span class="badge ${o.status}">${o.status}</span></td>
+          <td style="font-weight:600">${names}</td>
+          <td>
+            ${phones !== 'N/A' ? \`<a href="https://wa.me/91${phones}" target="_blank" style="color:var(--text); text-decoration:none;">📱 ${phones}</a>\` : 'N/A'}
+          </td>
+          <td>
+            <div class="type-badge">${type}</div>
+            <div style="font-size:0.75rem; color:var(--text-muted); margin-top:4px;">DOB: ${dob}</div>
+          </td>
+          <td style="font-weight:600; color:var(--success)">₹${o.amount || 0}</td>
+          <td style="font-family:monospace; font-size:0.8rem; color:var(--text-muted)">${o.order_id}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      // Update Cards
+      const fees = gross * 0.0236;
+      const net = gross - fees;
+      
+      document.getElementById('val-revenue').textContent = \`₹${gross.toLocaleString('en-IN')}\`;
+      document.getElementById('val-fees').textContent = \`₹${fees.toFixed(2)}\`;
+      document.getElementById('val-profit').textContent = \`₹${Math.floor(net).toLocaleString('en-IN')}\`;
+      
+      const totalAttempts = paidCount + pendingCount;
+      const convRate = totalAttempts > 0 ? ((paidCount / totalAttempts) * 100).toFixed(1) : 0;
+      document.getElementById('val-conversion').textContent = \`${convRate}%\`;
+      document.getElementById('val-conversion-sub').textContent = \`${paidCount} Paid / ${totalAttempts} Total Checkouts\`;
+
+      // Draw Chart
+      drawChart(dailyRevenue);
+    }
+
+    function drawChart(dailyData) {
+      // Sort dates chronologically
+      const sortedDates = Object.keys(dailyData).sort((a,b) => {
+        const [d1,m1,y1] = a.split('/');
+        const [d2,m2,y2] = b.split('/');
+        return new Date(y1,m1-1,d1) - new Date(y2,m2-1,d2);
+      });
+
+      const labels = sortedDates;
+      const data = sortedDates.map(d => dailyData[d]);
+
+      const ctx = document.getElementById('revenueChart').getContext('2d');
+      
+      if (chartInstance) chartInstance.destroy();
+      
+      chartInstance = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Daily Revenue (₹)',
+            data: data,
+            borderColor: '#d4af37',
+            backgroundColor: 'rgba(212, 175, 55, 0.1)',
+            borderWidth: 3,
+            tension: 0.4,
+            fill: true,
+            pointBackgroundColor: '#10b981',
+            pointRadius: 4,
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              grid: { color: 'rgba(255,255,255,0.05)' },
+              ticks: { color: '#94a3b8' }
+            },
+            x: {
+              grid: { display: false },
+              ticks: { color: '#94a3b8' }
+            }
+          }
+        }
+      });
+    }
+  </script>
+</body>
+</html>
