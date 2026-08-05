@@ -313,11 +313,13 @@
             subEl.textContent = 'Add META_ACCESS_TOKEN in Vercel';
             trueProfEl.textContent = `₹${Math.floor(globalNetProfit).toLocaleString('en-IN')}`;
           } else {
-            const spend = data.spend || 0;
-            spendEl.textContent = `₹${spend.toLocaleString('en-IN')}`;
-            subEl.textContent = 'Total all-time spend';
+            const rawSpend = data.spend || 0;
+            const spendWithGst = rawSpend * 1.18; // Add 18% GST
             
-            const trueNet = globalNetProfit - spend;
+            spendEl.textContent = `₹${spendWithGst.toLocaleString('en-IN', { maximumFractionDigits: 2 })}`;
+            subEl.textContent = 'Includes 18% Meta GST';
+            
+            const trueNet = globalNetProfit - spendWithGst;
             trueProfEl.textContent = `₹${Math.floor(trueNet).toLocaleString('en-IN')}`;
           }
         } else {
