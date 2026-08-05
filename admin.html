@@ -295,7 +295,7 @@
           <td><span class="badge ${o.status}">${o.status}</span></td>
           <td style="font-weight:600">${names}</td>
           <td>
-            ${phones !== 'N/A' ? \`<a href="https://wa.me/91${phones}" target="_blank" style="color:var(--text); text-decoration:none;">📱 ${phones}</a>\` : 'N/A'}
+            ${phones !== 'N/A' ? `<a href="https://wa.me/91${phones}" target="_blank" style="color:var(--text); text-decoration:none;">📱 ${phones}</a>` : 'N/A'}
           </td>
           <td>
             <div class="type-badge">${type}</div>
@@ -311,14 +311,14 @@
       const fees = gross * 0.0236;
       const net = gross - fees;
       
-      document.getElementById('val-revenue').textContent = \`₹${gross.toLocaleString('en-IN')}\`;
-      document.getElementById('val-fees').textContent = \`₹${fees.toFixed(2)}\`;
-      document.getElementById('val-profit').textContent = \`₹${Math.floor(net).toLocaleString('en-IN')}\`;
+      document.getElementById('val-revenue').textContent = `₹${gross.toLocaleString('en-IN')}`;
+      document.getElementById('val-fees').textContent = `₹${fees.toFixed(2)}`;
+      document.getElementById('val-profit').textContent = `₹${Math.floor(net).toLocaleString('en-IN')}`;
       
       const totalAttempts = paidCount + pendingCount;
       const convRate = totalAttempts > 0 ? ((paidCount / totalAttempts) * 100).toFixed(1) : 0;
-      document.getElementById('val-conversion').textContent = \`${convRate}%\`;
-      document.getElementById('val-conversion-sub').textContent = \`${paidCount} Paid / ${totalAttempts} Total Checkouts\`;
+      document.getElementById('val-conversion').textContent = `${convRate}%`;
+      document.getElementById('val-conversion-sub').textContent = `${paidCount} Paid / ${totalAttempts} Total Checkouts`;
 
       // Draw Chart
       drawChart(dailyRevenue);
