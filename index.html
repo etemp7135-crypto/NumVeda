@@ -4748,7 +4748,7 @@
       window.location.href = '/';
     });
 
-    if (window.location.pathname !== '/' && window.location.pathname !== '/quiz' && window.location.pathname !== '/api/create-order') {
+    if (window.location.pathname !== '/' && window.location.pathname !== '/quiz' && window.location.pathname !== '/download' && window.location.pathname !== '/api/create-order') {
       window.location.replace('/');
     }
 
@@ -4761,6 +4761,10 @@
       const trackPhone = urlParams.get('track');
       if (trackPhone) {
         autoTrackReport(trackPhone);
+      }
+      
+      if (window.location.pathname.startsWith('/download')) {
+        setTimeout(openTrackModal, 300);
       }
     });
 
