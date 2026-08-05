@@ -3775,35 +3775,6 @@
     .retry-cancel:hover {
       color: var(--text-d);
     }
-    
-    .social-toast.show {
-      transform: translateX(-50%) translateY(0);
-      opacity: 1
-    }
-
-    .track-float-btn {
-      position: fixed;
-      top: 16px;
-      right: 16px;
-      background: var(--surface);
-      border: 1px solid var(--accent);
-      color: var(--accent);
-      padding: 8px 16px;
-      border-radius: 100px;
-      font-size: 0.85rem;
-      font-weight: 600;
-      z-index: 100000;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-      transition: all 0.2s ease;
-    }
-    .track-float-btn:hover {
-      background: var(--accent);
-      color: #fff;
-    }
   </style>
   <!-- Vercel Analytics -->
   <script defer src="/_vercel/insights/script.js"></script>
@@ -3856,20 +3827,33 @@
         const data = await res.json();
         
         if (data.success) {
-          // Found paid order, populate LS and redirect
+          // Found paid order, populate S object and LS
           const cd = data.order.customer_details;
-          localStorage.setItem('numveda_name', cd.name);
-          localStorage.setItem('numveda_phone', cd.phone);
-          // Just dummy DOB to generate math
-          localStorage.setItem('numveda_day', '1');
-          localStorage.setItem('numveda_month', '1');
-          localStorage.setItem('numveda_year', '1990');
+          
+          S.name = cd.name || 'User';
+          S.phone = cd.phone || phone;
+          if (cd.dob) {
+            const [d, m, y] = cd.dob.split('/');
+            S.day = parseInt(d); S.month = parseInt(m); S.year = parseInt(y);
+          } else {
+            S.day = 1; S.month = 1; S.year = 1990;
+          }
+          S.gender = cd.gender || 'male';
+          S.cat = cd.cat || 'purpose';
+          
+          localStorage.setItem('numveda_name', S.name);
+          localStorage.setItem('numveda_phone', S.phone);
+          localStorage.setItem('numveda_day', S.day);
+          localStorage.setItem('numveda_month', S.month);
+          localStorage.setItem('numveda_year', S.year);
           localStorage.setItem('numveda_paid', 'true');
           
+          closeTrackModal();
+          
           if (cd.type === 'ultimate') {
-            window.location.href = 'ultimate-report.html';
+            buildProReport();
           } else {
-            window.location.href = 'master-report.html';
+            buildReport();
           }
         } else {
           msg.textContent = data.message || 'No paid report found for this number.';
@@ -3886,10 +3870,7 @@
 </head>
 
 <body>
-  <!-- TRACK REPORT FLOATING BTN -->
-  <button class="track-float-btn" onclick="openTrackModal()">
-    <span>📄</span> Already Paid?
-  </button>
+
 
   <!-- TRACK REPORT MODAL -->
   <div class="retry-modal" id="track-modal">
@@ -3943,6 +3924,9 @@
               class="opt-icon">🧭</span><span class="opt-text">जीवन का उद्देश्य — दिशा नहीं मिल रही, खो गया हूँ</span>
             <div class="opt-check">✓</div>
           </button>
+        </div>
+        <div style="margin-top:24px; text-align:center;">
+          <a href="#" onclick="openTrackModal(); return false;" style="color:var(--text-m); font-size:0.9rem; text-decoration:underline;">Already Paid? Download Your Report</a>
         </div>
       </div>
       <!-- LOVE Q2-Q4 -->
@@ -4772,7 +4756,52 @@
       buildParticles(); buildDayGrid(); buildMonthGrid(); buildYearSel(); startTimer(); startSocialTicker(); 
       updateUI();
       document.body.style.overflow = 'hidden';
+      
+      const urlParams = new URLSearchParams(window.location.search);
+      const trackPhone = urlParams.get('track');
+      if (trackPhone) {
+        autoTrackReport(trackPhone);
+      }
     });
+
+    async function autoTrackReport(phone) {
+      try {
+        const res = await fetch('/api/track-report', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ phone })
+        });
+        const data = await res.json();
+        if (data.success) {
+          const cd = data.order.customer_details;
+          S.name = cd.name || 'User';
+          S.phone = cd.phone || phone;
+          if (cd.dob) {
+            const [d, m, y] = cd.dob.split('/');
+            S.day = parseInt(d); S.month = parseInt(m); S.year = parseInt(y);
+          } else {
+            S.day = 1; S.month = 1; S.year = 1990;
+          }
+          S.gender = cd.gender || 'male';
+          S.cat = cd.cat || 'purpose';
+          
+          localStorage.setItem('numveda_name', S.name);
+          localStorage.setItem('numveda_phone', S.phone);
+          localStorage.setItem('numveda_day', S.day);
+          localStorage.setItem('numveda_month', S.month);
+          localStorage.setItem('numveda_year', S.year);
+          localStorage.setItem('numveda_paid', 'true');
+          
+          if (cd.type === 'ultimate') {
+            buildProReport();
+          } else {
+            buildReport();
+          }
+        }
+      } catch (err) {
+        console.error('Auto-track failed:', err);
+      }
+    }
 
     function buildParticles() { const c = document.getElementById('particles'); for (let i = 0; i < 14; i++) { const d = document.createElement('div'), sz = 2 + Math.random() * 3; d.className = 'particle'; d.style.cssText = 'width:' + sz + 'px;height:' + sz + 'px;background:rgba(212,175,100,.4);left:' + (Math.random() * 100) + '%;top:' + (20 + Math.random() * 80) + '%;animation-duration:' + (10 + Math.random() * 10) + 's;animation-delay:' + (Math.random() * 6) + 's;'; c.appendChild(d); } }
     function buildDayGrid() { const g = document.getElementById('day-grid'); for (let i = 1; i <= 31; i++) { const b = document.createElement('button'); b.className = 'day-btn'; b.textContent = i; b.onclick = () => { document.querySelectorAll('#day-grid .day-btn').forEach(x => x.classList.remove('selected')); b.classList.add('selected'); S.day = i; setTimeout(nextQ, 260); }; g.appendChild(b); } }

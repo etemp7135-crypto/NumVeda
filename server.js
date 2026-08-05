@@ -164,15 +164,21 @@ app.post('/api/track-report', async (req, res) => {
     const { phone } = req.body;
     if (!phone) return res.status(400).json({ error: 'Phone number required' });
     
-    // Clean phone number (remove +91, spaces)
-    let cleanPhone = phone.replace('+91', '').replace(/\s+/g, '').trim();
+    // Clean phone number (keep only digits)
+    let cleanPhone = phone.replace(/\D/g, '');
+    // If it starts with 91 and is 12 digits, take last 10
+    if (cleanPhone.length > 10 && cleanPhone.startsWith('91')) {
+      cleanPhone = cleanPhone.slice(-10);
+    } else if (cleanPhone.length > 10) {
+      cleanPhone = cleanPhone.slice(-10);
+    }
     
     await connectDB();
     if (!process.env.MONGODB_URI) return res.status(500).json({ error: 'DB not connected' });
     
-    // Find the most recent paid order with this phone
+    // Find the most recent paid order containing these 10 digits
     const order = await Order.findOne({ 
-      'customer_details.phone': cleanPhone,
+      'customer_details.phone': { $regex: cleanPhone },
       status: 'paid'
     }).sort({ created_at: -1 });
     

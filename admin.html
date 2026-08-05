@@ -173,14 +173,19 @@
         <div class="stat-sub" id="val-conversion-sub">0 Paid / 0 Total Attempts</div>
       </div>
       <div class="stat-card glass">
-        <div class="stat-title">Meta Ad Spend</div>
-        <div class="stat-val" id="val-meta-spend" style="color:var(--danger)">₹0</div>
-        <div class="stat-sub" id="val-meta-sub">Fetching...</div>
+        <div class="stat-title">Total Added to Meta</div>
+        <div class="stat-val" id="val-meta-added" style="color:var(--danger)">₹0</div>
+        <div class="stat-sub" id="val-meta-added-sub">Includes 18% GST deduction</div>
+      </div>
+      <div class="stat-card glass">
+        <div class="stat-title">Meta Ads Usage</div>
+        <div class="stat-val" id="val-meta-spend" style="font-size:1.4rem;">₹0</div>
+        <div class="stat-sub" id="val-meta-sub">Fetching balance...</div>
       </div>
       <div class="stat-card glass" style="border: 1px solid var(--accent);">
         <div class="stat-title" style="color:var(--accent)">True Net Profit (ROAS)</div>
         <div class="stat-val" id="val-true-profit" style="color:var(--success)">₹0</div>
-        <div class="stat-sub">Net Profit - Ad Spend</div>
+        <div class="stat-sub">Net Profit - Total Added to Meta</div>
       </div>
     </div>
 
@@ -303,35 +308,36 @@
         });
         const data = await res.json();
         
+        const addedEl = document.getElementById('val-meta-added');
         const spendEl = document.getElementById('val-meta-spend');
         const subEl = document.getElementById('val-meta-sub');
         const trueProfEl = document.getElementById('val-true-profit');
         
         if (data.success) {
           if (data.message === 'Meta keys not configured') {
+            addedEl.textContent = 'Not Setup';
             spendEl.textContent = 'Not Setup';
             subEl.textContent = 'Add META_ACCESS_TOKEN in Vercel';
             trueProfEl.textContent = `₹${Math.floor(globalNetProfit).toLocaleString('en-IN')}`;
           } else {
             const rawSpend = data.spend || 0;
-            const spendWithGst = rawSpend * 1.18; // Add 18% GST
+            let prepaidBalance = data.balance || 0;
+            // Balance might be in paise if it's very large
+            if (prepaidBalance > 100000) prepaidBalance = prepaidBalance / 100;
             
-            spendEl.textContent = `₹${spendWithGst.toLocaleString('en-IN', { maximumFractionDigits: 2 })}`;
+            // Total amount actually added by user (Spend + Remaining) * 1.18 to account for GST
+            const totalMoneyAdded = (rawSpend + prepaidBalance) * 1.18;
             
-            // Show prepaid balance if available
-            let balText = 'Includes 18% Meta GST';
-            if (data.balance > 0) {
-                // If it's huge, it might be in paise. Try to guess based on size, or just show it if we assume rupees
-                let displayBal = data.balance;
-                if (displayBal > 100000) displayBal = displayBal / 100; 
-                balText = `Prepaid Balance: ₹${displayBal.toLocaleString('en-IN', { maximumFractionDigits: 2 })} (Includes GST)`;
-            }
-            subEl.textContent = balText;
+            addedEl.textContent = `₹${totalMoneyAdded.toLocaleString('en-IN', { maximumFractionDigits: 0 })}`;
+            spendEl.textContent = `Spent: ₹${rawSpend.toLocaleString('en-IN', { maximumFractionDigits: 0 })}`;
             
-            const trueNet = globalNetProfit - spendWithGst;
+            subEl.innerHTML = `<span style="color:#10b981">Remaining: ₹${prepaidBalance.toLocaleString('en-IN', { maximumFractionDigits: 0 })}</span>`;
+            
+            const trueNet = globalNetProfit - totalMoneyAdded;
             trueProfEl.textContent = `₹${Math.floor(trueNet).toLocaleString('en-IN')}`;
           }
         } else {
+          addedEl.textContent = 'Error';
           spendEl.textContent = 'Error';
           subEl.textContent = 'Invalid Keys or API Error';
         }
