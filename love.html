@@ -634,7 +634,7 @@ async function buyLoveReport(){
   const btn=document.getElementById('love-pay-btn');const orig=btn.textContent;
   btn.textContent='लोड हो रहा है...';btn.style.pointerEvents='none';
   try{
-    const res=await fetch('/api/create-order',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({amount:1,currency:'INR',receipt:'love_'+Date.now()})});
+    const res=await fetch('/api/create-order',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({amount:1,currency:'INR',receipt:'love_'+Date.now(), customer_details: { p1_name: LS.p1.name, p1_phone: LS.p1.phone, p1_dob: LS.p1.day+'/'+LS.p1.month+'/'+LS.p1.year, p2_name: LS.p2.name, p2_dob: LS.p2.day+'/'+LS.p2.month+'/'+LS.p2.year, type: 'love' } })});
     const data=await res.json();if(!data.success)throw new Error('Order failed');
     const rzp=new Razorpay({key:data.key_id,amount:data.order.amount,currency:'INR',name:'NumVeda',description:`प्रेम अनुकूलता — ${C.fn1} & ${C.fn2}`,order_id:data.order.id,prefill:{name:LS.p1.name,contact:LS.p1.phone?'+91'+LS.p1.phone:''},theme:{color:'#e91e8c'},
       handler:async function(response){

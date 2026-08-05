@@ -5020,7 +5020,12 @@
         const orderRes = await fetch('/api/create-order', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ amount: 49, currency: 'INR', receipt: 'receipt_' + Date.now() })
+          body: JSON.stringify({ 
+            amount: 49, 
+            currency: 'INR', 
+            receipt: 'receipt_' + Date.now(),
+            customer_details: { name: S.name, phone: S.phone, dob: S.day+'/'+S.month+'/'+S.year, gender: S.gender, type: 'master' }
+          })
         });
         const orderData = await orderRes.json();
 
@@ -5310,7 +5315,12 @@
         const orderRes = await fetch('/api/create-order', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ amount: 149, currency: 'INR', receipt: 'receipt_pro_' + Date.now() })
+          body: JSON.stringify({ 
+            amount: 149, 
+            currency: 'INR', 
+            receipt: 'receipt_pro_' + Date.now(),
+            customer_details: { name: S.name, phone: S.phone, dob: S.day+'/'+S.month+'/'+S.year, gender: S.gender, type: 'ultimate' }
+          })
         });
         const orderData = await orderRes.json();
         if (!orderData.success) throw new Error('Order creation failed');
