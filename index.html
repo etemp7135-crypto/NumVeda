@@ -3775,6 +3775,35 @@
     .retry-cancel:hover {
       color: var(--text-d);
     }
+    
+    .social-toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1
+    }
+
+    .track-float-btn {
+      position: fixed;
+      top: 16px;
+      right: 16px;
+      background: var(--surface);
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      padding: 8px 16px;
+      border-radius: 100px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      z-index: 100000;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      transition: all 0.2s ease;
+    }
+    .track-float-btn:hover {
+      background: var(--accent);
+      color: #fff;
+    }
   </style>
   <!-- Vercel Analytics -->
   <script defer src="/_vercel/insights/script.js"></script>
