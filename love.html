@@ -5,9 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>प्रेम अनुकूलता — NumVeda</title>
   <meta name="description" content="अपनी और साथी की जन्मतिथि से जानें आपकी प्रेम अनुकूलता। वैदिक अंकशास्त्र पर आधारित विस्तृत व्यक्तिगत रिपोर्ट।">
-  <meta property="og:image" content="https://www.numveda.com/og_banner.png">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-  <script src="love-report.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -56,7 +53,6 @@
     .lv-gb{flex:1;padding:11px 6px;border-radius:10px;border:1px solid rgba(233,30,140,.2);background:var(--ls2);color:var(--lm);font-size:.83rem;font-weight:500;cursor:pointer;transition:all .2s;font-family:var(--sans);text-align:center;touch-action:manipulation;}
     .lv-gb.sel{background:rgba(233,30,140,.12);border-color:var(--la);color:var(--la);font-weight:700;}
     .lv-btn{width:100%;padding:16px;background:linear-gradient(135deg,var(--la),#c2185b);color:#fff;border:none;border-radius:100px;font-size:.93rem;font-weight:800;font-family:var(--sans);cursor:pointer;box-shadow:0 8px 28px rgba(233,30,140,.4);transition:transform .2s,box-shadow .2s;touch-action:manipulation;letter-spacing:.02em;}
-    .lv-btn.sm{padding:8px 12px;font-size:0.75rem;width:auto;}
     .lv-btn:hover{transform:translateY(-2px);}
     .lv-btn.gold{background:linear-gradient(135deg,var(--lg),#d4af37);color:#0a0a0a;box-shadow:0 8px 28px rgba(251,191,36,.4);}
     .lv-trust-txt{text-align:center;font-size:.7rem;color:rgba(245,224,255,.3);margin-top:10px;line-height:1.6;}
@@ -266,10 +262,21 @@
     .lv-date-num{font-family:var(--serif);font-size:1.4rem;font-weight:700;color:var(--la);margin-bottom:2px;}
     .lv-date-lbl{font-size:.68rem;color:var(--lm);}
     @media(max-width:360px){.lv-dob{grid-template-columns:1fr 1fr 1fr;}.lv-btn{font-size:.87rem;padding:14px;}}
+
+    /* Legal & Footer */
+    .site-footer { margin-top: 30px; text-align: center; font-size: 0.75rem; color: var(--lm); line-height: 1.6; padding-bottom: 20px; }
+    .site-footer p { margin-bottom: 6px; }
+    .site-footer a { color: var(--lm); text-decoration: none; margin: 0 6px; cursor: pointer; transition: color 0.3s; }
+    .site-footer a:hover { color: var(--la); text-decoration: underline; }
+    .legal-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(8, 14, 23, 0.9); z-index: 10000; align-items: center; justify-content: center; padding: 20px; }
+    .legal-modal.show { display: flex; }
+    .legal-content { background: var(--ls2); border: 1px solid var(--lbr); padding: 25px; border-radius: 12px; max-width: 500px; width: 100%; color: var(--lt); font-size: 0.85rem; line-height: 1.6; position: relative; max-height: 80vh; overflow-y: auto; text-align: left; }
+    .legal-content h3 { color: #fff; margin-top: 0; margin-bottom: 15px; font-family: var(--serif); font-size: 1.3rem; }
+    .legal-content p { margin-bottom: 10px; color: var(--lm); }
+    .legal-close { position: absolute; top: 15px; right: 15px; background: none; border: none; color: var(--lm); font-size: 1.2rem; cursor: pointer; }
   </style>
 </head>
 <body>
-<div id="pdf-render-container" style="position: absolute; left: -9999px; top: 0; width: 800px; background: white;"></div>
 <div id="lv-particles"></div>
 
 <!-- SCREEN 1: YOUR DETAILS -->
@@ -290,6 +297,16 @@
     </div>
     <button class="lv-btn" onclick="goStep2()">अगला — साथी की जानकारी →</button>
     <div class="lv-trust-txt">🔒 आपकी जानकारी 100% सुरक्षित है · ✦ 29,000+ रिपोर्ट दी जा चुकी हैं</div>
+    
+    <footer class="site-footer">
+      <p style="margin-bottom:8px">© 2026 NumVeda. All rights reserved.</p>
+      <p>
+        <a onclick="openLegal('terms')">Terms & Conditions</a>
+        <a onclick="openLegal('privacy')">Privacy Policy</a>
+        <a onclick="openLegal('refund')">Refund Policy</a>
+        <a onclick="openLegal('contact')">Contact Us</a>
+      </p>
+    </footer>
   </div>
 </div>
 
@@ -447,6 +464,16 @@
         <div class="faq-a" id="lv-faq3-a"><p>हाँ, यह एक टेस्टिंग ऑफर है। इसके बाद इसकी कीमत ₹249 हो जाएगी।</p></div>
       </div>
     </div>
+    
+    <footer class="site-footer" style="margin-top:40px; padding-bottom:40px;">
+      <p style="margin-bottom:8px">© 2026 NumVeda. All rights reserved.</p>
+      <p>
+        <a onclick="openLegal('terms')">Terms & Conditions</a>
+        <a onclick="openLegal('privacy')">Privacy Policy</a>
+        <a onclick="openLegal('refund')">Refund Policy</a>
+        <a onclick="openLegal('contact')">Contact Us</a>
+      </p>
+    </footer>
 
     <div class="sticky-pay-bar show" id="sticky-pay-bar">
       <div class="spb-left">
@@ -472,7 +499,6 @@
 <div class="lv-screen" id="lv-report">
   <div class="lv-rpt-hdr">
     <div class="lv-rpt-logo">✦ NumVeda</div>
-    <button class="lv-btn sm" onclick="downloadLovePDF()">⬇️ PDF डाउनलोड करें</button>
     <div class="lv-rpt-avs"><div class="lv-rpt-av p1" id="rpt-av1">P</div><div class="lv-rpt-hrt">💗</div><div class="lv-rpt-av p2" id="rpt-av2">R</div></div>
   </div>
   <div class="lv-rpt-hero">
@@ -491,15 +517,15 @@
     <div style="font-size:.78rem;color:var(--lm);max-width:300px;margin:0 auto;" id="rpt-summary"></div>
   </div>
   <div class="lv-rpt-body" id="lv-rpt-body"></div>
-  
-  <div style="text-align: center; margin: 40px 16px;">
-    <button class="lv-btn gold" onclick="downloadLovePDF()" style="font-size: 1.1rem; padding: 18px; box-shadow: 0 4px 20px rgba(233, 30, 140, 0.4); background: linear-gradient(135deg, #e91e8c, #c2185b); color:#fff;">
-      ⬇️ 25-Page Premium PDF डाउनलोड करें
-    </button>
-    <p style="margin-top: 15px; font-size: 0.8rem; color: var(--lm);">अपनी संपूर्ण विस्तृत रिपोर्ट को सहेजें और गहराई से पढ़ें।</p>
-  </div>
-
   <div class="lv-rpt-footer"><p>NumVeda प्रेम अनुकूलता रिपोर्ट © 2026</p><p id="rpt-footer-names" style="margin-top:4px;"></p></div>
+</div>
+
+<!-- Legal Modal -->
+<div class="legal-modal" id="legal-modal">
+  <div class="legal-content">
+    <button class="legal-close" onclick="closeLegal()">✖</button>
+    <div id="legal-body"></div>
+  </div>
 </div>
 
 <script>
@@ -535,7 +561,7 @@ function getInitials(name){const p=name.trim().split(' ');return(p.length>=2?p[0
 
 function initForms(){
   ['p1-day','p2-day'].forEach(id=>{const s=document.getElementById(id);for(let d=1;d<=31;d++){const o=document.createElement('option');o.value=d;o.textContent=d;s.appendChild(o);}});
-  ['p1-month','p2-month'].forEach(id=>{const s=document.getElementById(id);MONTHS.forEach((m,i)=>{const o=document.createElement('option');o.value=i+1;o.textContent=m;s.appendChild(o);});});
+  ['p1-month','p2-month'].forEach(id=>{const s=document.getElementById(id);MONTHS.forEach((m,i)=>{const o=document.createElement('option');o.value=i+1;o.textContent=m;s.appendChild(o);}});
   const c=document.getElementById('lv-particles');
   for(let i=0;i<14;i++){const d=document.createElement('div');const sz=2+Math.random()*4;d.className='lvp';d.style.cssText=`width:${sz}px;height:${sz}px;background:rgba(233,30,140,.5);left:${Math.random()*100}%;animation-duration:${12+Math.random()*14}s;animation-delay:${Math.random()*8}s;`;c.appendChild(d);}
 }
@@ -656,37 +682,16 @@ function buildFullReport(){
   setTimeout(()=>animGauge('rpt-gauge-arc','rpt-score-num',score),300);
   const am=['जनवरी','अप्रैल','जुलाई','अक्टूबर'];
   document.getElementById('lv-rpt-body').innerHTML=`
-    <!-- DEEP SECTION 1 -->
-    <div class="lv-rs"><div class="lv-rs-title"><span>🌟</span> 1 — जीवन-पथ: गहरा ब्रह्मांडीय विश्लेषण</div>
+    <div class="lv-rs"><div class="lv-rs-title"><span>🌟</span> 1 — जीवन-पथ अनुकूलता</div>
       <div class="lv-num-cmp"><div class="lv-num-box"><div class="lv-nval c1">${lp1}</div><div class="lv-nname">${fn1}</div><div class="lv-nlbl">जीवन-पथ</div></div><div class="lv-num-box"><div class="lv-nval c2">${lp2}</div><div class="lv-nname">${fn2}</div><div class="lv-nlbl">जीवन-पथ</div></div></div>
-      <div class="lv-rs-body">
-        <h4 style="color:var(--la); margin-bottom:4px;">${fn1} का जीवन-पथ (${lp1}):</h4>
-        <p style="margin-bottom:12px;">${LOVE_REPORT_TEXT.lp[lp1] ? LOVE_REPORT_TEXT.lp[lp1].meaning : lpDesc(lp1,fn1)}<br>
-        <strong>ताकत:</strong> ${LOVE_REPORT_TEXT.lp[lp1] ? LOVE_REPORT_TEXT.lp[lp1].strengths : ''}<br>
-        <strong>कमजोरी:</strong> ${LOVE_REPORT_TEXT.lp[lp1] ? LOVE_REPORT_TEXT.lp[lp1].weaknesses : ''}</p>
-        
-        <h4 style="color:var(--la); margin-bottom:4px;">${fn2} का जीवन-पथ (${lp2}):</h4>
-        <p style="margin-bottom:12px;">${LOVE_REPORT_TEXT.lp[lp2] ? LOVE_REPORT_TEXT.lp[lp2].meaning : lpDesc(lp2,fn2)}<br>
-        <strong>ताकत:</strong> ${LOVE_REPORT_TEXT.lp[lp2] ? LOVE_REPORT_TEXT.lp[lp2].strengths : ''}<br>
-        <strong>कमजोरी:</strong> ${LOVE_REPORT_TEXT.lp[lp2] ? LOVE_REPORT_TEXT.lp[lp2].weaknesses : ''}</p>
-        
-        <h4 style="color:var(--lg); margin-bottom:4px;">इन दोनों का मिलन:</h4>
-        <p>${ltxt.s}</p>
-        <p><strong>प्रेम शैली:</strong> ${ltxt.l}</p>
+      <div class="lv-rs-body"><p><strong>${fn1}:</strong> ${lpDesc(lp1,fn1)}</p><p><strong>${fn2}:</strong> ${lpDesc(lp2,fn2)}</p><p><strong>इन दोनों का मिलन:</strong> ${ltxt.s}</p><p><strong>प्रेम शैली:</strong> ${ltxt.l}</p>
       <div class="lv-bar-row"><span class="lv-bar-lbl">अनुकूलता</span><div class="lv-bar"><div class="lv-bar-fill lv-bf-acc" style="width:${score}%"></div></div><span class="lv-bar-val">${score}%</span></div></div></div>
-
-    <!-- DEEP SECTION 2 -->
-    <div class="lv-rs alt"><div class="lv-rs-title"><span>💜</span> 2 — आत्मा-अंक: भीतरी आवाज़</div>
+    <div class="lv-rs alt"><div class="lv-rs-title"><span>💜</span> 2 — आत्मा-मिलन विश्लेषण</div>
       <div class="lv-num-cmp"><div class="lv-num-box"><div class="lv-nval c1">${soul1}</div><div class="lv-nname">${fn1}</div><div class="lv-nlbl">आत्मा-अंक</div></div><div class="lv-num-box"><div class="lv-nval c2">${soul2}</div><div class="lv-nname">${fn2}</div><div class="lv-nlbl">आत्मा-अंक</div></div></div>
-      <div class="lv-rs-body">
-        <p><strong>${fn1} (आत्मा-अंक ${soul1}):</strong> ${LOVE_REPORT_TEXT.soul[soul1] || soulDesc(soul1,fn1)}</p>
-        <p><strong>${fn2} (आत्मा-अंक ${soul2}):</strong> ${LOVE_REPORT_TEXT.soul[soul2] || soulDesc(soul2,fn2)}</p>
-        <p>${soul1===soul2?`दोनों की आत्माएं एक ही भाषा बोलती हैं — यह दुर्लभ और गहरा बंधन है।`:`दोनों की भावनात्मक ज़रूरतें ${Math.abs(soul1-soul2)<=2?'बेहद मिलती-जुलती हैं।':'अलग हैं — यही अंतर एक-दूसरे को पूर्ण करता है।'}`}</p>
+      <div class="lv-rs-body"><p><strong>${fn1} (आत्मा-अंक ${soul1}):</strong> ${soulDesc(soul1,fn1)}</p><p><strong>${fn2} (आत्मा-अंक ${soul2}):</strong> ${soulDesc(soul2,fn2)}</p><p>${soul1===soul2?`दोनों की आत्माएं एक ही भाषा बोलती हैं — यह दुर्लभ और गहरा बंधन है।`:`दोनों की भावनात्मक ज़रूरतें ${Math.abs(soul1-soul2)<=2?'बेहद मिलती-जुलती हैं।':'अलग हैं — यही अंतर एक-दूसरे को पूर्ण करता है।'}`}</p>
       <div class="lv-bar-row"><span class="lv-bar-lbl">आत्मिक मेल</span><div class="lv-bar"><div class="lv-bar-fill lv-bf-prp" style="width:${emo}%"></div></div><span class="lv-bar-val">${emo}%</span></div></div></div>
-
     <div class="lv-rs"><div class="lv-rs-title"><span>💕</span> 3 — प्रेम भाषा डिकोड</div>
       <div class="lv-rs-body"><p><strong>${fn1} की प्रेम भाषा:</strong> ${getLang(soul1)}</p><p><strong>${fn2} की प्रेम भाषा:</strong> ${getLang(soul2)}</p><p>${soul1===soul2?`दोनों एक ही प्रेम भाषा बोलते हैं — बेहद दुर्लभ और सुंदर।`:`${fn1} जिस तरह प्रेम व्यक्त करते हैं और ${fn2} जिस तरह महसूस करते हैं — थोड़े अलग हैं। एक-दूसरे की भाषा सीखना ज़रूरी है।`}</p></div></div>
-    
     <div class="lv-rs alt gold-bdr"><div class="lv-rs-title"><span>✨</span> 4 — रिश्ते की शक्तियाँ</div>
       <div class="lv-rs-body">
         <div class="lv-list-item"><span class="lv-li-icon">💎</span><span>${fn1} और ${fn2} एक-दूसरे की सबसे बड़ी कमज़ोरी को ताकत में बदल सकते हैं।</span></div>
@@ -695,7 +700,6 @@ function buildFullReport(){
         <div class="lv-list-item"><span class="lv-li-icon">💎</span><span>${ltxt.s}</span></div>
         <div class="lv-list-item"><span class="lv-li-icon">💎</span><span>${ltxt.l}</span></div>
       </div></div>
-      
     <div class="lv-rs"><div class="lv-rs-title"><span>🌿</span> 5 — चुनौतियाँ और समाधान</div>
       <div class="lv-rs-body"><p>${ltxt.c}</p>
         <div class="lv-list-item"><span class="lv-li-icon">⚡</span><span>संचार में खुलापन ज़रूरी है — जो मन में है वो कहें, छुपाएं नहीं।</span></div>
@@ -703,7 +707,6 @@ function buildFullReport(){
         <div class="lv-list-item"><span class="lv-li-icon">⚡</span><span>गुस्से के क्षणों में शांत रहना सीखें — कड़वे शब्द लंबे समय तक घाव करते हैं।</span></div>
         <div class="lv-list-item"><span class="lv-li-icon">⚡</span><span>अपेक्षाओं को स्पष्ट बोलें — दूसरे मन के भाव नहीं पढ़ सकते।</span></div>
       </div></div>
-      
     <div class="lv-rs alt"><div class="lv-rs-title"><span>📊</span> 6 — शारीरिक, भावनात्मक, बौद्धिक अनुकूलता</div>
       <div class="lv-rs-body">
         <div class="lv-bar-row"><span class="lv-bar-lbl">शारीरिक</span><div class="lv-bar"><div class="lv-bar-fill lv-bf-acc" style="width:${phys}%"></div></div><span class="lv-bar-val">${phys}%</span></div>
@@ -711,31 +714,21 @@ function buildFullReport(){
         <div class="lv-bar-row"><span class="lv-bar-lbl">बौद्धिक</span><div class="lv-bar"><div class="lv-bar-fill lv-bf-gold" style="width:${intel}%"></div></div><span class="lv-bar-val">${intel}%</span></div>
         <p style="margin-top:12px;">${emo>=80?`दोनों के बीच भावनात्मक जुड़ाव बहुत गहरा है — यही इस रिश्ते की सबसे बड़ी ताकत है।`:intel>=80?`बौद्धिक स्तर पर दोनों एक-दूसरे से बहुत प्रभावित होते हैं।`:`दोनों के बीच संतुलित अनुकूलता है।`}</p>
       </div></div>
-      
-    <!-- DEEP SECTION 7 -->
-    <div class="lv-rs"><div class="lv-rs-title"><span>🎯</span> 7 — भाग्य-अंक: जीवन का अंतिम लक्ष्य</div>
+    <div class="lv-rs"><div class="lv-rs-title"><span>🎯</span> 7 — भाग्य-अंक विश्लेषण</div>
       <div class="lv-num-cmp"><div class="lv-num-box"><div class="lv-nval c1">${dest1}</div><div class="lv-nname">${fn1}</div><div class="lv-nlbl">भाग्य-अंक</div></div><div class="lv-num-box"><div class="lv-nval c2">${dest2}</div><div class="lv-nname">${fn2}</div><div class="lv-nlbl">भाग्य-अंक</div></div></div>
-      <div class="lv-rs-body">
-        <p><strong>${fn1} (भाग्य ${dest1}):</strong> ${LOVE_REPORT_TEXT.destiny[dest1] || ''}</p>
-        <p><strong>${fn2} (भाग्य ${dest2}):</strong> ${LOVE_REPORT_TEXT.destiny[dest2] || ''}</p>
-        <p>${dest1===dest2?`${fn1} और ${fn2} के भाग्य-अंक समान हैं (${dest1}) — दोनों के जीवन लक्ष्य एक ही दिशा में हैं। बेहद शुभ!`:`${fn1} और ${fn2} के जीवन लक्ष्य ${Math.abs(dest1-dest2)<=2?'मिलती-जुलती दिशाओं में हैं।':'अलग-अलग दिशाओं में हैं — लेकिन एक-दूसरे के पूरक हो सकते हैं।'}`}</p>
+      <div class="lv-rs-body"><p>${dest1===dest2?`${fn1} और ${fn2} के भाग्य-अंक समान हैं (${dest1}) — दोनों के जीवन लक्ष्य एक ही दिशा में हैं। बेहद शुभ!`:`${fn1} (भाग्य-अंक ${dest1}) और ${fn2} (भाग्य-अंक ${dest2}) के जीवन लक्ष्य ${Math.abs(dest1-dest2)<=2?'मिलती-जुलती दिशाओं में हैं।':'अलग-अलग दिशाओं में हैं — लेकिन एक-दूसरे के पूरक हो सकते हैं।'}`}</p>
       <div class="lv-bar-row"><span class="lv-bar-lbl">लक्ष्य मेल</span><div class="lv-bar"><div class="lv-bar-fill lv-bf-gold" style="width:${intel}%"></div></div><span class="lv-bar-val">${intel}%</span></div></div></div>
-      
     <div class="lv-rs alt gold-bdr"><div class="lv-rs-title"><span>💍</span> 8 — विवाह अनुकूलता</div>
       <div class="lv-rs-body"><p>${score>=80?`${fn1} और ${fn2} की अनुकूलता विवाह के लिए बेहद शुभ है। आपके अंकों का मेल दर्शाता है कि यह एक दीर्घकालिक और संतोषजनक जीवन साथी का रिश्ता हो सकता है।`:score>=65?`${fn1} और ${fn2} के बीच विवाह की अच्छी संभावना है। कुछ क्षेत्रों में समझौता और संवाद ज़रूरी होगा।`:`${fn1} और ${fn2} के बीच विवाह संभव है। पहले एक-दूसरे को गहराई से समझना ज़रूरी है।`}</p><p><strong>शुभ तारीखें:</strong> ${ad.slice(0,4).join(', ')} — हर महीने।</p><p><strong>सर्वश्रेष्ठ विवाह मास:</strong> ${am[lp1%4]} या ${am[lp2%4]}।</p></div></div>
-      
     <div class="lv-rs"><div class="lv-rs-title"><span>🔮</span> 9 — 2026–2030 रिश्ते की भविष्यवाणी</div>
       <div class="lv-rs-body" style="padding-top:4px;">${Object.entries(years).map(([y,[t,tx]])=>`<div class="lv-yr-row"><div class="lv-yr-num">${y}</div><div class="lv-yr-txt"><span class="lv-yr-tag ${t}">${t==='good'?'शुभ':t==='ok'?'सामान्य':'चुनौती'}</span><br>${tx}</div></div>`).join('')}</div></div>
-      
     <div class="lv-rs alt"><div class="lv-rs-title"><span>📅</span> 10 — शुभ तारीखें और मुहूर्त</div>
       <div class="lv-rs-body"><p>आपके दोनों के अंकों के आधार पर ये तारीखें बेहद शुभ हैं:</p>
         <div class="lv-date-grid">${ad.map(d=>`<div class="lv-date-card"><div class="lv-date-num">${d}</div><div class="lv-date-lbl">हर महीने</div></div>`).join('')}</div>
         <p style="margin-top:12px;"><strong>सलाह:</strong> कोई भी बड़ा निर्णय — सगाई, शादी, एक साथ रहना — इन तारीखों पर करें।</p></div></div>
-        
     <div class="lv-rs gold-bdr"><div class="lv-rs-title"><span>📝</span> 11 — नाम अनुकूलता विश्लेषण</div>
       <div class="lv-num-cmp"><div class="lv-num-box"><div class="lv-nval c1">${dest1}</div><div class="lv-nname">${LS.p1.name}</div><div class="lv-nlbl">नाम-अंक</div></div><div class="lv-num-box"><div class="lv-nval c2">${dest2}</div><div class="lv-nname">${LS.p2.name}</div><div class="lv-nlbl">नाम-अंक</div></div></div>
       <div class="lv-rs-body"><p>${dest1===dest2?`दोनों के नामों का अंक एक समान (${dest1}) — यह बेहद शुभ संकेत है। नामों की ऊर्जाएं सामंजस्यपूर्ण हैं।`:Math.abs(dest1-dest2)<=2?`दोनों के नामों की ऊर्जाएं मिलती-जुलती हैं।`:`यदि चाहें तो नाम की स्पेलिंग में छोटा बदलाव करके अनुकूलता बढ़ाई जा सकती है।`}</p>${dest1===dest2?`<p style="color:var(--lg);font-weight:600;">✦ आप दोनों के नाम-अंक एक समान हैं — यह बेहद दुर्लभ और शुभ संयोग है!</p>`:''}</div></div>
-      
     <div class="lv-rs alt"><div class="lv-rs-title"><span>🌺</span> 12 — व्यक्तिगत उपाय और रत्न चिकित्सा</div>
       <div class="lv-rs-body">
         <div class="lv-remedy"><strong>रत्न चिकित्सा:</strong> ${fn1} के लिए ${gems(lp1)} और ${fn2} के लिए ${gems(lp2)} धारण करना शुभ रहेगा।</div>
@@ -743,46 +736,7 @@ function buildFullReport(){
         <div class="lv-remedy"><strong>रंग चिकित्सा:</strong> अपने घर में गुलाबी और सोने के रंग का इस्तेमाल करें — ये प्रेम और समृद्धि को आकर्षित करते हैं।</div>
         <div class="lv-remedy"><strong>मंत्र:</strong> "ॐ क्लीं नमः" — प्रेम और आकर्षण का मंत्र। दोनों मिलकर रोज़ सुबह 11 बार बोलें।</div>
         <div class="lv-remedy"><strong>21-दिन उपाय:</strong> अगले 21 दिनों तक रोज़ एक-दूसरे को एक सच्ची तारीफ दें। यह रिश्ते में सकारात्मक ऊर्जा का प्रवाह बढ़ाता है।</div>
-      </div></div>
-`;
-
-  // Generate the massive PDF content into the hidden container
-  if(window.generatePremiumPDFHTML) {
-    document.getElementById('pdf-render-container').innerHTML = window.generatePremiumPDFHTML(C);
-  }
-}
-
-function downloadLovePDF() {
-  const el = document.getElementById('lv-report');
-  
-  // To prevent html2canvas from cropping due to overflow, temporarily expand
-  const origHeight = el.style.height;
-  const origOverflow = el.style.overflow;
-  el.style.height = 'auto';
-  el.style.overflow = 'visible';
-  
-  const btns = document.querySelectorAll('.lv-btn');
-  btns.forEach(b => { b.dataset.origText = b.textContent; b.textContent = "PDF तैयार हो रहा है..."; b.style.pointerEvents = "none"; });
-  
-  const opt = {
-    margin:       [0, 0],
-    filename:     `NumVeda_Love_Report_${LS.p1.name}_${LS.p2.name}.pdf`,
-    image:        { type: 'jpeg', quality: 0.98 },
-    html2canvas:  { scale: 2, useCORS: true, logging: false, windowWidth: el.scrollWidth, windowHeight: el.scrollHeight },
-    jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
-  };
-  
-  html2pdf().set(opt).from(el).save().then(() => {
-    btns.forEach(b => { b.textContent = b.dataset.origText; b.style.pointerEvents = "auto"; });
-    el.style.height = origHeight;
-    el.style.overflow = origOverflow;
-  }).catch(e => {
-    console.error(e);
-    alert("डाउनलोड विफल।");
-    btns.forEach(b => { b.textContent = b.dataset.origText; b.style.pointerEvents = "auto"; });
-    el.style.height = origHeight;
-    el.style.overflow = origOverflow;
-  });
+      </div></div>`;
 }
 
 function toggleLvFaq(id) {
@@ -795,6 +749,32 @@ function toggleLvFaq(id) {
     ans.classList.add('open');
     chev.style.transform = 'rotate(180deg)';
   }
+}
+
+const LEGAL = {
+  terms: `<h3>Terms & Conditions</h3>
+<p>By using NumVeda, you agree to our terms. Our numerology reports are generated based on ancient mathematical algorithms and are provided strictly for <strong>entertainment, self-reflection, and educational purposes only.</strong></p>
+<p>Our reports are not a substitute for professional medical, psychiatric, financial, or legal advice. Any life decisions made based on these reports are solely your responsibility.</p>
+<p>We reserve the right to modify these terms at any time.</p>`,
+  privacy: `<h3>Privacy Policy</h3>
+<p>We respect your privacy. We collect your name, date of birth, and phone number solely for the purpose of generating your accurate numerology calculations.</p>
+<p>We do not sell, rent, or share your personal data with third parties. Your payment information is securely processed via Razorpay and is not stored on our servers.</p>`,
+  refund: `<h3>Refund Policy (Strictly Non-Refundable)</h3>
+<p>Because NumVeda delivers digital, personalized reports that are generated and delivered instantly upon payment, <strong>we do not offer any refunds once the report has been successfully generated and shown/delivered to you.</strong></p>
+<p>By completing your purchase, you acknowledge and agree that this is a digital good and all sales are final.</p>
+<p><strong>Exception:</strong> If your payment was deducted but the report failed to generate or download due to a technical error, you will not lose your money. Please use the Contact Us form, and our team will manually generate and send your report to your WhatsApp/Email within 24 hours.</p>`,
+  contact: `<h3>Contact Us</h3>
+<p>If you face any issues, especially related to payment deductions without report delivery, we are here to help!</p>
+<p><strong>Email:</strong> numvedasupport@gmail.com</p>
+<p>Please include your Payment ID or the Phone Number you entered so we can track your report quickly.</p>`
+};
+
+function openLegal(type) {
+  document.getElementById('legal-body').innerHTML = LEGAL[type];
+  document.getElementById('legal-modal').classList.add('show');
+}
+function closeLegal() {
+  document.getElementById('legal-modal').classList.remove('show');
 }
 
 document.addEventListener('DOMContentLoaded', () => {
