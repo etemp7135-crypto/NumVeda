@@ -14,10 +14,6 @@
       "dest": "/love.html"
     },
     {
-      "src": "/admin",
-      "dest": "/admin.html"
-    },
-    {
       "src": "/love/(.*)",
       "dest": "/love.html"
     },
