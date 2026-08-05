@@ -52,10 +52,95 @@ const orderSchema = new mongoose.Schema({
 });
 const Order = mongoose.model('Order', orderSchema);
 
+// Define Event Schema for funnel tracking
+const eventSchema = new mongoose.Schema({
+  session_id: { type: String, index: true },
+  event_name: { type: String, index: true },
+  timestamp: { type: Date, default: Date.now, index: true },
+  question_id: String,
+  answer_value: String,
+  category: String,
+  step_number: Number,
+  report_type: String,
+  amount: Number,
+  order_id: String,
+  payment_id: String,
+  utm_source: String,
+  utm_medium: String,
+  utm_campaign: String,
+  referrer: String,
+  device_type: String,
+}, { collection: 'events' });
+const Event = mongoose.model('Event', eventSchema);
+
+// Define Session Schema for funnel tracking
+const sessionSchema = new mongoose.Schema({
+  session_id: { type: String, unique: true, index: true },
+  started_at: { type: Date, default: Date.now, index: true },
+  last_active: { type: Date, default: Date.now },
+  utm_source: String,
+  device_type: String,
+  events: [String],
+  category_selected: String,
+  current_step: Number,
+}, { collection: 'sessions' });
+const Session = mongoose.model('Session', sessionSchema);
+
 // Initialize Razorpay
 const razorpay = new Razorpay({
   key_id: process.env.RAZORPAY_KEY_ID || 'rzp_test_dummykey123',
   key_secret: process.env.RAZORPAY_KEY_SECRET || 'dummysecret456',
+});
+
+// Endpoint for analytics tracking
+app.post('/api/track', async (req, res) => {
+  try {
+    const data = req.body;
+    if (!data.session_id || !data.event) return res.status(400).json({ error: 'Missing session_id or event' });
+
+    await connectDB();
+    if (!process.env.MONGODB_URI) return res.json({ success: true, simulated: true });
+
+    const newEvent = new Event({
+      session_id: data.session_id,
+      event_name: data.event,
+      timestamp: new Date(),
+      question_id: data.question_id,
+      answer_value: data.answer,
+      category: data.category,
+      step_number: data.step,
+      amount: data.amount,
+      order_id: data.order_id,
+      payment_id: data.payment_id,
+      report_type: data.report_type,
+      utm_source: data.utm_source,
+      device_type: data.device_type,
+      referrer: data.referrer,
+    });
+    await newEvent.save();
+
+    // Update Session
+    await Session.findOneAndUpdate(
+      { session_id: data.session_id },
+      { 
+        $set: { last_active: new Date() },
+        $setOnInsert: { 
+          started_at: new Date(),
+          utm_source: data.utm_source,
+          device_type: data.device_type,
+        },
+        $push: { events: data.event },
+        ...(data.category ? { category_selected: data.category } : {}),
+        ...(data.step ? { current_step: data.step } : {})
+      },
+      { upsert: true, new: true }
+    );
+
+    res.json({ success: true });
+  } catch (err) {
+    console.error('Tracking error:', err);
+    res.status(500).json({ success: false });
+  }
 });
 
 // Endpoint to create an order

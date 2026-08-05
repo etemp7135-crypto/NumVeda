@@ -4722,6 +4722,43 @@
     const S = { cat: null, flow: [], step: 0, day: null, month: null, year: null, name: '', gender: null, phone: '' };
     const X = {};
     let fwd = true;
+    
+    // --- Funnel Analytics Tracking ---
+    function generateSessionId() {
+      return 'sess_' + Math.random().toString(36).substring(2, 15) + Date.now().toString(36);
+    }
+    const sessionId = localStorage.getItem('nv_sess_id') || generateSessionId();
+    localStorage.setItem('nv_sess_id', sessionId);
+
+    function getUTMParams() {
+      const urlParams = new URLSearchParams(window.location.search);
+      return {
+        utm_source: urlParams.get('utm_source') || 'direct',
+        utm_medium: urlParams.get('utm_medium') || '',
+        utm_campaign: urlParams.get('utm_campaign') || '',
+      };
+    }
+
+    async function nv_track(eventName, data = {}) {
+      try {
+        const utm = getUTMParams();
+        const payload = {
+          session_id: sessionId,
+          event: eventName,
+          ...data,
+          ...utm,
+          referrer: document.referrer,
+          device_type: window.innerWidth < 768 ? 'mobile' : 'desktop'
+        };
+        fetch('/api/track', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+          keepalive: true
+        }).catch(e => console.log('Analytics Error'));
+      } catch (e) {}
+    }
+    nv_track('page_view');
     const FLOWS = {
       love: ['q_cat', 'q_love_2', 'q_love_3', 'q_love_4', 'q_day', 'q_month', 'q_year', 'q_name', 'q_gender', 'q_phone'],
       money: ['q_cat', 'q_money_2', 'q_money_3', 'q_money_4', 'q_day', 'q_month', 'q_year', 'q_name', 'q_gender', 'q_phone'],
@@ -4950,13 +4987,13 @@
     }
     function toggleFaq(id) { const item = document.getElementById(id), ans = document.getElementById(id + '-a'), isOpen = item.classList.contains('open'); document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open')); document.querySelectorAll('.faq-a').forEach(a => a.classList.remove('open')); if (!isOpen) { item.classList.add('open'); ans.classList.add('open'); } }
 
-    function startQuiz() { setRoute("/quiz"); document.getElementById('quiz-overlay').classList.add('show'); document.body.style.overflow = 'hidden'; updateUI(); }
+    function startQuiz() { nv_track('quiz_start'); setRoute("/quiz"); document.getElementById('quiz-overlay').classList.add('show'); document.body.style.overflow = 'hidden'; updateUI(); }
     function updateUI() { const tot = S.flow.length || 10; const pct = S.flow.length ? (S.step / tot * 100) : 0; document.getElementById('q-progress').style.width = pct + '%'; document.getElementById('q-count').textContent = (S.step + 1) + '/' + tot; document.getElementById('back-btn').style.visibility = S.step > 0 ? 'visible' : 'hidden'; }
-    function goTo(newStep) { const curId = S.flow[S.step] || 'q_cat'; fwd = newStep > S.step; const curEl = document.getElementById(curId); if (curEl) curEl.className = 'q-card ' + (fwd ? 'exit-left' : 'exit-right'); S.step = newStep; updateUI(); setTimeout(() => { if (curEl) curEl.className = 'q-card'; const nId = S.flow[S.step]; if (!nId) return; const nEl = document.getElementById(nId); if (!nEl) return; nEl.className = 'q-card ' + (fwd ? 'enter-right' : 'enter-left'); nEl.addEventListener('animationend', function h() { nEl.className = 'q-card active'; nEl.removeEventListener('animationend', h); }); }, 310); }
+    function goTo(newStep) { const curId = S.flow[S.step] || 'q_cat'; fwd = newStep > S.step; const curEl = document.getElementById(curId); if (curEl) curEl.className = 'q-card ' + (fwd ? 'exit-left' : 'exit-right'); S.step = newStep; updateUI(); setTimeout(() => { if (curEl) curEl.className = 'q-card'; const nId = S.flow[S.step]; if (!nId) return; const nEl = document.getElementById(nId); if (!nEl) return; nv_track('question_view_' + (S.step + 1), { category: S.cat, step: S.step + 1, question_id: nId }); nEl.className = 'q-card ' + (fwd ? 'enter-right' : 'enter-left'); nEl.addEventListener('animationend', function h() { nEl.className = 'q-card active'; nEl.removeEventListener('animationend', h); }); }, 310); }
     function nextQ() { if (S.step < S.flow.length - 1) goTo(S.step + 1); }
     function goBack() { if (S.step > 0) goTo(S.step - 1); }
-    function selectCategory(btn) { document.querySelectorAll('#q_cat .opt-btn').forEach(b => b.classList.remove('selected')); btn.classList.add('selected'); S.cat = btn.dataset.val; S.flow = FLOWS[S.cat] || FLOWS['love']; updateUI(); document.getElementById('q_cat').className = 'q-card active'; setTimeout(() => goTo(1), 340); }
-    function selectOpt(btn, key) { btn.closest('.opts').querySelectorAll('.opt-btn').forEach(b => b.classList.remove('selected')); btn.classList.add('selected'); X[key] = btn.dataset.val; setTimeout(nextQ, 320); }
+    function selectCategory(btn) { nv_track('category_selected', { category: btn.dataset.val, question_id: 'q_cat', answer: btn.dataset.val }); document.querySelectorAll('#q_cat .opt-btn').forEach(b => b.classList.remove('selected')); btn.classList.add('selected'); S.cat = btn.dataset.val; S.flow = FLOWS[S.cat] || FLOWS['love']; updateUI(); document.getElementById('q_cat').className = 'q-card active'; setTimeout(() => goTo(1), 340); }
+    function selectOpt(btn, key) { nv_track('answer_selected', { question_id: S.flow[S.step], answer: btn.dataset.val, category: S.cat, step: S.step + 1 }); btn.closest('.opts').querySelectorAll('.opt-btn').forEach(b => b.classList.remove('selected')); btn.classList.add('selected'); X[key] = btn.dataset.val; setTimeout(nextQ, 320); }
     function selectYear() { S.year = parseInt(document.getElementById('year-select').value) || null; document.getElementById('y-cont').disabled = !S.year; }
     function checkName() { S.name = document.getElementById('inp-name').value.trim(); document.getElementById('name-cont').disabled = S.name.length < 2; }
     function selGender(btn) { document.querySelectorAll('.gender-btn').forEach(b => b.classList.remove('selected')); btn.classList.add('selected'); S.gender = btn.dataset.val; setTimeout(nextQ, 320); }
@@ -4964,6 +5001,7 @@
     function submitForm() { if (S.phone.length === 10) showAnalysis(); }
 
     function showAnalysis() {
+      nv_track('analysis_start', { category: S.cat });
       setRoute("/analysis");
       document.getElementById('quiz-overlay').classList.remove('show');
       document.getElementById('analysis').classList.add('show');
@@ -5110,6 +5148,7 @@
       7: 'लोग आपको बहुत ही रहस्यमयी, ज्ञानी और थोड़ा रिज़र्व मानते हैं।', 8: 'लोग आपको एक सफल, ताकतवर और बिज़नेस-माइंडेड इंसान मानते हैं।',
       9: 'लोग आपको एक दयालु, आकर्षक और दूसरों की मदद करने वाला मानते हैं।'
     }; function showCheckout() {
+      nv_track('checkout_view', { category: S.cat });
       setRoute("/checkout");
       document.getElementById('analysis').classList.remove('show');
       document.getElementById('checkout').classList.add('show');
@@ -5147,6 +5186,7 @@
     }
 
     async function processPayment() {
+      nv_track('payment_initiated', { category: S.cat, amount: 49, report_type: 'master' });
       const sb = document.querySelector('.spb-btn');
       const origText = sb ? sb.innerHTML : '';
       if (sb) { sb.innerHTML = 'लोड हो रहा है…'; sb.style.pointerEvents = 'none'; sb.style.opacity = '.7'; }
@@ -5191,6 +5231,10 @@
             const verifyData = await verifyRes.json();
 
             if (verifyData.success) {
+              nv_track('payment_success', { 
+                amount: 49, report_type: 'master', category: S.cat, 
+                order_id: response.razorpay_order_id, payment_id: response.razorpay_payment_id 
+              });
               // Meta Pixel — fire Purchase event after server verification
               if (typeof fbq === 'function') {
                 fbq('track', 'Purchase', { value: 49.00, currency: 'INR' }, { eventID: response.razorpay_order_id });
