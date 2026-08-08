@@ -5300,7 +5300,7 @@
           name: 'NumVeda',
           description: 'NumVeda Master Report',
           order_id: orderData.order.id,
-          prefill: { name: S.name, contact: '+91' + S.phone },
+          prefill: { name: S.name, email: S.phone + '@numveda.com', contact: '+91' + S.phone },
           theme: { color: '#d4af37' },
           handler: async function (response) {
             // Step 3: Verify payment on backend
@@ -5608,7 +5608,7 @@
           name: 'NumVeda',
           description: 'Ultimate Blueprint Upgrade',
           order_id: orderData.order.id,
-          prefill: { name: S.name, contact: '+91' + S.phone },
+          prefill: { name: S.name, email: S.phone + '@numveda.com', contact: '+91' + S.phone },
           theme: { color: '#d4af37' },
           handler: async function (response) {
             const verifyRes = await fetch('/api/verify-payment', {

@@ -277,10 +277,6 @@ app.post('/api/track-report', async (req, res) => {
   }
 });
 
-// Serve love.html for /love route
-app.get('/love', (req, res) => {
-  res.sendFile('love.html', { root: __dirname });
-});
 
 
 // Serve index.html for root route and all other unmatched routes (SPA fallback)
