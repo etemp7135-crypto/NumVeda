@@ -4803,6 +4803,40 @@
       if (window.location.pathname.startsWith('/download')) {
         setTimeout(openTrackModal, 300);
       }
+
+      // Recovery after Razorpay callback_url redirect
+      if (urlParams.get('payment') === 'success') {
+        const pType = urlParams.get('type');
+        
+        // Recover state
+        S.name = localStorage.getItem('numveda_name') || 'User';
+        S.phone = localStorage.getItem('numveda_phone') || '';
+        S.day = localStorage.getItem('numveda_day') || '1';
+        S.month = localStorage.getItem('numveda_month') || '1';
+        S.year = localStorage.getItem('numveda_year') || '1990';
+        S.cat = localStorage.getItem('numveda_cat') || 'money';
+        S.gender = localStorage.getItem('numveda_gender') || 'm';
+        try { Object.assign(X, JSON.parse(localStorage.getItem('numveda_X') || '{}')); } catch(e){}
+
+        localStorage.setItem('numveda_paid', 'true');
+        document.getElementById('quiz-overlay').classList.remove('show');
+        document.getElementById('checkout').classList.remove('show');
+        document.getElementById('upsell-bar').classList.remove('show');
+
+        // Show loading and trigger report
+        if (pType === 'pro') {
+          document.getElementById('report').classList.remove('show');
+          document.getElementById('pp-title').textContent = 'Ultimate Blueprint अनलॉक हो रहा है ✦';
+          document.getElementById('pp-sub').textContent = 'चाल्डियन गणनाएँ प्रोसेस की जा रही हैं…';
+          document.getElementById('post-pay').classList.add('show');
+          setTimeout(() => { document.getElementById('post-pay').classList.remove('show'); buildProReport(); }, 1500);
+        } else {
+          document.getElementById('post-pay').classList.add('show');
+          setTimeout(() => { document.getElementById('post-pay').classList.remove('show'); buildReport(); }, 1500);
+        }
+        
+        window.history.replaceState(null, '', '/'); // Clean URL
+      }
     });
 
     async function autoTrackReport(phone) {
@@ -5292,6 +5326,16 @@
 
         if (!orderData.success) throw new Error('Order creation failed');
 
+        // Save state before redirecting
+        localStorage.setItem('numveda_name', S.name);
+        localStorage.setItem('numveda_phone', S.phone);
+        localStorage.setItem('numveda_day', S.day);
+        localStorage.setItem('numveda_month', S.month);
+        localStorage.setItem('numveda_year', S.year);
+        localStorage.setItem('numveda_cat', S.cat);
+        localStorage.setItem('numveda_gender', S.gender);
+        localStorage.setItem('numveda_X', JSON.stringify(X));
+
         // Step 2: Open Razorpay checkout
         const options = {
           key: orderData.key_id,
@@ -5302,38 +5346,8 @@
           order_id: orderData.order.id,
           prefill: { name: S.name, email: S.phone + '@numveda.com', contact: '+91' + S.phone },
           theme: { color: '#d4af37' },
-          handler: async function (response) {
-            // Step 3: Verify payment on backend
-            const verifyRes = await fetch('/api/verify-payment', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                razorpay_order_id: response.razorpay_order_id,
-                razorpay_payment_id: response.razorpay_payment_id,
-                razorpay_signature: response.razorpay_signature
-              })
-            });
-            const verifyData = await verifyRes.json();
-
-            if (verifyData.success) {
-              nv_track('payment_success', { 
-                amount: 49, report_type: 'master', category: S.cat, 
-                order_id: response.razorpay_order_id, payment_id: response.razorpay_payment_id 
-              });
-              // Meta Pixel — fire Purchase event after server verification
-              if (typeof fbq === 'function') {
-                fbq('track', 'Purchase', { value: 49.00, currency: 'INR' }, { eventID: response.razorpay_order_id });
-              }
-              // Payment verified — show report
-              document.getElementById('checkout').classList.remove('show');
-              document.getElementById('sticky-pay-bar').classList.remove('show');
-              document.getElementById('post-pay').classList.add('show');
-              setTimeout(() => { document.getElementById('post-pay').classList.remove('show'); buildReport(); }, 1500);
-            } else {
-              alert('भुगतान सत्यापन विफल। कृपया हमसे संपर्क करें: numvedasupport@gmail.com');
-              resetPayBtns(sb, origText);
-            }
-          },
+          callback_url: '/api/payment-callback?type=base',
+          redirect: true,
           modal: {
             ondismiss: function () { resetPayBtns(sb, origText); showRetryModal(false); }
           }
@@ -5601,6 +5615,16 @@
         const orderData = await orderRes.json();
         if (!orderData.success) throw new Error('Order creation failed');
 
+        // Save state before redirecting
+        localStorage.setItem('numveda_name', S.name);
+        localStorage.setItem('numveda_phone', S.phone);
+        localStorage.setItem('numveda_day', S.day);
+        localStorage.setItem('numveda_month', S.month);
+        localStorage.setItem('numveda_year', S.year);
+        localStorage.setItem('numveda_cat', S.cat);
+        localStorage.setItem('numveda_gender', S.gender);
+        localStorage.setItem('numveda_X', JSON.stringify(X));
+
         const options = {
           key: orderData.key_id,
           amount: orderData.order.amount,
@@ -5610,34 +5634,8 @@
           order_id: orderData.order.id,
           prefill: { name: S.name, email: S.phone + '@numveda.com', contact: '+91' + S.phone },
           theme: { color: '#d4af37' },
-          handler: async function (response) {
-            const verifyRes = await fetch('/api/verify-payment', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                razorpay_order_id: response.razorpay_order_id,
-                razorpay_payment_id: response.razorpay_payment_id,
-                razorpay_signature: response.razorpay_signature
-              })
-            });
-            const verifyData = await verifyRes.json();
-
-            if (verifyData.success) {
-              // Meta Pixel — fire Purchase event after server verification
-              if (typeof fbq === 'function') {
-                fbq('track', 'Purchase', { value: 149.00, currency: 'INR' }, { eventID: response.razorpay_order_id });
-              }
-              document.getElementById('upsell-bar').classList.remove('show');
-              document.getElementById('report').classList.remove('show');
-              document.getElementById('pp-title').textContent = 'Ultimate Blueprint अनलॉक हो रहा है ✦';
-              document.getElementById('pp-sub').textContent = 'चाल्डियन गणनाएँ प्रोसेस की जा रही हैं…';
-              document.getElementById('post-pay').classList.add('show');
-              setTimeout(() => { document.getElementById('post-pay').classList.remove('show'); buildProReport(); }, 1500);
-            } else {
-              alert('भुगतान सत्यापन विफल। कृपया हमसे संपर्क करें: numvedasupport@gmail.com');
-              resetProBtns(usBtn, ubBtn);
-            }
-          },
+          callback_url: '/api/payment-callback?type=pro',
+          redirect: true,
           modal: {
             ondismiss: function () { resetProBtns(usBtn, ubBtn); showRetryModal(true); }
           }

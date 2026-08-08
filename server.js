@@ -22,6 +22,7 @@ app.use(cors());
 app.use(express.json({
   verify: (req, res, buf) => { req.rawBody = buf; }
 }));
+app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, '')));
 
 // Connect to MongoDB (Serverless pattern)
@@ -209,6 +210,40 @@ app.post('/api/verify-payment', async (req, res) => {
   } catch (error) {
     console.error('Error verifying payment:', error);
     res.status(500).json({ success: false, message: 'Could not verify payment' });
+  }
+});
+
+// Endpoint for Razorpay callback_url (handles form POST)
+app.post('/api/payment-callback', async (req, res) => {
+  try {
+    const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
+    const { type } = req.query; // 'base' or 'pro'
+    
+    if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature) {
+      return res.redirect('/?payment=failed');
+    }
+
+    const secret = process.env.RAZORPAY_KEY_SECRET || 'dummysecret456';
+    const hmac = crypto.createHmac('sha256', secret);
+    hmac.update(razorpay_order_id + "|" + razorpay_payment_id);
+    const expectedSignature = hmac.digest('hex');
+
+    if (expectedSignature === razorpay_signature) {
+      // Valid payment
+      await connectDB();
+      if (process.env.MONGODB_URI) {
+        await Order.findOneAndUpdate(
+          { order_id: razorpay_order_id },
+          { status: 'paid', payment_id: razorpay_payment_id }
+        ).catch(err => console.error("DB update error:", err));
+      }
+      return res.redirect(`/?payment=success&type=${type || 'base'}`);
+    } else {
+      return res.redirect('/?payment=failed');
+    }
+  } catch (error) {
+    console.error('Error in payment callback:', error);
+    return res.redirect('/?payment=failed');
   }
 });
 
