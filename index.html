@@ -5346,7 +5346,7 @@
           order_id: orderData.order.id,
           prefill: { name: S.name, email: S.phone + '@numveda.com', contact: '+91' + S.phone },
           theme: { color: '#d4af37' },
-          callback_url: '/api/payment-callback?type=base',
+          callback_url: window.location.origin + '/api/payment-callback?type=base',
           redirect: true,
           modal: {
             ondismiss: function () { resetPayBtns(sb, origText); showRetryModal(false); }
@@ -5634,7 +5634,7 @@
           order_id: orderData.order.id,
           prefill: { name: S.name, email: S.phone + '@numveda.com', contact: '+91' + S.phone },
           theme: { color: '#d4af37' },
-          callback_url: '/api/payment-callback?type=pro',
+          callback_url: window.location.origin + '/api/payment-callback?type=pro',
           redirect: true,
           modal: {
             ondismiss: function () { resetProBtns(usBtn, ubBtn); showRetryModal(true); }
