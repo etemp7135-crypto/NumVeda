@@ -4819,6 +4819,17 @@
         try { Object.assign(X, JSON.parse(localStorage.getItem('numveda_X') || '{}')); } catch(e){}
 
         localStorage.setItem('numveda_paid', 'true');
+        
+        // Track Purchase Analytics
+        nv_track('payment_success', { 
+          amount: pType === 'pro' ? 149 : 49, 
+          report_type: pType === 'pro' ? 'ultimate' : 'master', 
+          category: S.cat 
+        });
+        if (typeof fbq === 'function') {
+          fbq('track', 'Purchase', { value: pType === 'pro' ? 149.00 : 49.00, currency: 'INR' });
+        }
+
         document.getElementById('quiz-overlay').classList.remove('show');
         document.getElementById('checkout').classList.remove('show');
         document.getElementById('upsell-bar').classList.remove('show');
