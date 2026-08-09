@@ -4807,6 +4807,7 @@
       // Recovery after Razorpay callback_url redirect
       if (urlParams.get('payment') === 'success') {
         const pType = urlParams.get('type');
+        const orderId = urlParams.get('order_id') || 'unknown';
         
         // Recover state
         S.name = localStorage.getItem('numveda_name') || 'User';
@@ -4824,10 +4825,11 @@
         nv_track('payment_success', { 
           amount: pType === 'pro' ? 149 : 49, 
           report_type: pType === 'pro' ? 'ultimate' : 'master', 
-          category: S.cat 
+          category: S.cat,
+          order_id: orderId
         });
         if (typeof fbq === 'function') {
-          fbq('track', 'Purchase', { value: pType === 'pro' ? 149.00 : 49.00, currency: 'INR' });
+          fbq('track', 'Purchase', { value: pType === 'pro' ? 149.00 : 49.00, currency: 'INR' }, { eventID: orderId });
         }
 
         document.getElementById('quiz-overlay').classList.remove('show');

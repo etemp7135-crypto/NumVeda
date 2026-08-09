@@ -237,7 +237,7 @@ app.post('/api/payment-callback', async (req, res) => {
           { status: 'paid', payment_id: razorpay_payment_id }
         ).catch(err => console.error("DB update error:", err));
       }
-      return res.redirect(`/?payment=success&type=${type || 'base'}`);
+      return res.redirect(`/?payment=success&type=${type || 'base'}&order_id=${razorpay_order_id}`);
     } else {
       return res.redirect('/?payment=failed');
     }
