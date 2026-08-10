@@ -4,30 +4,22 @@
       "includeFiles": "**"
     }
   },
-  "routes": [
+  "rewrites": [
     {
-      "src": "/api/(.*)",
-      "dest": "/server.js"
+      "source": "/api/(.*)",
+      "destination": "/server.js"
     },
     {
-      "src": "/love",
-      "dest": "/love.html"
+      "source": "/love",
+      "destination": "/love.html"
     },
     {
-      "src": "/love/(.*)",
-      "dest": "/love.html"
+      "source": "/love/(.*)",
+      "destination": "/love.html"
     },
     {
-      "src": "/favicon.png",
-      "dest": "/favicon.png"
-    },
-    {
-      "src": "/og_banner.png",
-      "dest": "/og_banner.png"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/server.js"
+      "source": "/(.*)",
+      "destination": "/index.html"
     }
   ]
 }
