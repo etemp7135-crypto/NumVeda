@@ -1827,10 +1827,8 @@
     .r-doc-hero h1 {
       font-family: var(--serif);
       font-size: clamp(1.6rem, 4.5vw, 2.4rem);
-      background: linear-gradient(135deg, #fff 30%, var(--rg2) 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+      color: #fff;
+      text-shadow: 0 0 40px rgba(212,168,50,.3);
       line-height: 1.18;
       margin-bottom: 10px;
       font-weight: 700;
@@ -1846,14 +1844,12 @@
 
     .r-doc-hero .r-name {
       font-family: var(--serif);
-      font-size: 1.15rem;
+      font-size: 1.2rem;
       font-weight: 700;
-      background: linear-gradient(135deg, var(--rg2), var(--rg));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+      color: var(--rg2);
+      text-shadow: 0 0 20px rgba(212,168,50,.4);
       margin-top: 6px;
-      letter-spacing: .02em;
+      letter-spacing: .05em;
     }
 
     .r-doc-hero .r-dob {
@@ -1909,10 +1905,7 @@
     .r-sec-title {
       font-family: var(--serif);
       font-size: clamp(1.05rem, 3vw, 1.35rem);
-      background: linear-gradient(135deg, #fff 30%, var(--rg2) 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+      color: #fff;
       margin-bottom: 16px;
       display: flex;
       align-items: center;
@@ -1923,7 +1916,7 @@
     }
 
     .r-sec-title .ic {
-      -webkit-text-fill-color: var(--rg);
+      color: var(--rg);
       font-size: 1.3rem;
       line-height: 1;
       flex-shrink: 0;
@@ -2026,10 +2019,8 @@
     .core-num {
       font-family: var(--serif);
       font-size: 2rem;
-      background: linear-gradient(135deg, var(--rg2), var(--rg));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+      color: var(--rg2);
+      text-shadow: 0 0 16px rgba(212,168,50,.5);
       font-weight: 700;
       line-height: 1;
     }
@@ -2739,9 +2730,11 @@
       --pb: #0e1621;
       --pc: #111c2d;
       --pc2: #162235;
+      --pc3: #1a2a40;
       --pt: #dde6f0;
       --ptl: #7fa4c4;
-      --pg: #c9a227;
+      --pg: #d4af64;
+      --pg2: #f2e29e;
       --pgl: rgba(201, 162, 39, 0.12);
       --pbr: rgba(255, 255, 255, 0.07);
       position: fixed;
@@ -2892,11 +2885,9 @@
     .pro-hero h1 {
       font-family: var(--serif);
       font-size: clamp(1.7rem, 4.5vw, 2.6rem);
-      background: linear-gradient(135deg, #fff 30%, var(--pg2) 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      line-height: 1.16;
+      color: #fff;
+      text-shadow: 0 0 40px rgba(212,168,50,.3);
+      line-height: 1.18;
       margin-bottom: 10px;
       font-weight: 700;
     }
@@ -2911,14 +2902,12 @@
 
     .pro-hero .p-name {
       font-family: var(--serif);
-      font-size: 1.15rem;
+      font-size: 1.2rem;
       font-weight: 700;
-      background: linear-gradient(135deg, var(--pg2), var(--pg));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+      color: var(--pg2);
+      text-shadow: 0 0 20px rgba(212,168,50,.4);
       margin-top: 8px;
-      letter-spacing: .02em;
+      letter-spacing: .05em;
     }
 
     .pro-hero-divider {
@@ -2967,10 +2956,7 @@
     .pro-sec-title {
       font-family: var(--serif);
       font-size: clamp(1.05rem, 3vw, 1.35rem);
-      background: linear-gradient(135deg, #fff 30%, var(--pg2) 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+      color: #fff;
       margin-bottom: 16px;
       display: flex;
       align-items: center;
@@ -2981,7 +2967,7 @@
     }
 
     .pro-sec-title .pic {
-      -webkit-text-fill-color: var(--pg);
+      color: var(--pg);
       font-size: 1.3rem;
       flex-shrink: 0;
     }
@@ -4291,6 +4277,7 @@
           localStorage.setItem('numveda_month', S.month);
           localStorage.setItem('numveda_year', S.year);
           localStorage.setItem('numveda_paid', 'true');
+          localStorage.setItem('numveda_type', cd.type || 'master');
           
           closeTrackModal();
           
@@ -5294,6 +5281,7 @@
         try { Object.assign(X, JSON.parse(localStorage.getItem('numveda_X') || '{}')); } catch(e){}
 
         localStorage.setItem('numveda_paid', 'true');
+        localStorage.setItem('numveda_type', pType === 'pro' ? 'ultimate' : 'master');
         
         // Track Purchase Analytics
         nv_track('payment_success', { 
@@ -6365,6 +6353,8 @@
       document.body.style.overflow = 'hidden';
       document.getElementById('report-pro').scrollTop = 0;
 
+      try {
+
       const lp = calcLP(), dest = calcDest(), soul = calcSoul(), pers = calcPers(), py = calcPY(lp);
       const loshu = calcLoShu(), pins = calcPins(), karmic = calcKarmic();
       const lpD = LP[lp] || LP[9], focD = FOCUS[S.cat] || FOCUS['purpose'];
@@ -6487,6 +6477,12 @@
 
       // 23. Soul Mission
       document.getElementById('pro-soul').innerHTML = '<div class="soul-mission-box"><div class="sm-num">' + lp + '</div><h3 style="font-size:1.2rem;color:#fff;margin-bottom:8px">आपका आत्मिक मिशन: ' + lpD.arch + '</h3><p style="font-size:.88rem;color:var(--ptl);line-height:1.6">' + lpD.mission + '</p></div><p class="pro-para" style="margin-top:16px">' + S.name + ' जी, आपकी यात्रा यहाँ से शुरू होती है। आपका जीवन पथ ' + lp + ' आपको बताता है कि आप ' + lpD.mission.toLowerCase() + ' के लिए आए हैं। जब आप इस पथ पर चलते हैं, तो ब्रह्मांड खुद आपका रास्ता साफ करता है।</p><div class="pro-highlight">आपका कर्म-मंत्र: "मैं ' + lpD.arch + ' हूँ। मेरा अस्तित्व उद्देश्यपूर्ण है। मैं अपने मिशन को पूरा करूंगा।"</div>';
+
+      } catch(err) {
+        console.error('buildProReport error:', err);
+        const errEl = document.getElementById('pro-chal');
+        if (errEl) errEl.innerHTML = '<div style="color:#fc8181;padding:12px;border:1px solid rgba(252,129,129,.3);border-radius:8px;font-size:.85rem">⚠️ Report load error: ' + err.message + '<br><br>Please refresh the page and try again.</div>';
+      }
     }
     const LEGAL = {
       terms: `<h3>Terms & Conditions</h3>
