@@ -278,60 +278,6 @@ app.post('/api/webhook/razorpay', async (req, res) => {
   }
 });
 
-// Endpoint to generate invoice data by phone number (admin use)
-app.post('/api/get-invoice', async (req, res) => {
-  try {
-    const { phone } = req.body;
-    if (!phone) return res.status(400).json({ error: 'Phone number required' });
-
-    let cleanPhone = phone.replace(/\D/g, '');
-    if (cleanPhone.length > 10 && cleanPhone.startsWith('91')) {
-      cleanPhone = cleanPhone.slice(-10);
-    } else if (cleanPhone.length > 10) {
-      cleanPhone = cleanPhone.slice(-10);
-    }
-
-    await connectDB();
-    if (!process.env.MONGODB_URI) return res.status(500).json({ error: 'DB not connected' });
-
-    // Find all paid orders for this phone (latest first)
-    const orders = await Order.find({
-      'customer_details.phone': { $regex: cleanPhone },
-      status: 'paid'
-    }).sort({ created_at: -1 });
-
-    if (!orders || orders.length === 0) {
-      return res.json({ success: false, message: 'No paid order found for this number' });
-    }
-
-    // Map to invoice-friendly format
-    const invoices = orders.map((order, idx) => {
-      const cd = order.customer_details || {};
-      const reportType = cd.type === 'ultimate' ? 'Ultimate Blueprint Report (Pro)' : 'NumVeda Master Report (Base)';
-      const invoiceNumber = 'NV-' + (order.order_id || '').replace('order_', '').toUpperCase().slice(0, 10);
-      return {
-        invoice_number: invoiceNumber,
-        order_id: order.order_id,
-        payment_id: order.payment_id,
-        date: order.created_at,
-        customer_name: cd.name || 'N/A',
-        customer_phone: cd.phone || cleanPhone,
-        customer_dob: cd.dob || 'N/A',
-        customer_gender: cd.gender || 'N/A',
-        report_type: reportType,
-        amount: order.amount,
-        currency: order.currency || 'INR',
-        status: order.status,
-      };
-    });
-
-    res.json({ success: true, invoices });
-  } catch (err) {
-    console.error('Invoice fetch error:', err);
-    res.status(500).json({ error: 'Server error fetching invoice' });
-  }
-});
-
 // Endpoint to track/recover report by phone number
 app.post('/api/track-report', async (req, res) => {
   try {
