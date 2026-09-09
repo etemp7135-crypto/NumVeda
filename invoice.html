@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NumVeda — Invoice Generator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Serif+Devanagari:wght@600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --ink: #0a0910;
+      --ink2: #111019;
+      --ink3: #1a1828;
+      --border: rgba(255,255,255,0.07);
+      --border-g: rgba(212,175,100,0.25);
+      --text: #ece8dc;
+      --text-d: #9a9480;
+      --text-m: #4e4c42;
+      --gold: #d4af64;
+      --gold2: #e8c97a;
+      --gold-glow: rgba(212,175,100,0.15);
+      --gold-pale: rgba(212,175,100,0.07);
+      --green: #22c55e;
+      --sans: 'Inter', system-ui, sans-serif;
+      --serif: 'Noto Serif Devanagari', Georgia, serif;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: var(--sans); background: var(--ink); color: var(--text); min-height: 100vh; -webkit-font-smoothing: antialiased; }
+
+    /* AUTH GATE */
+    #auth-gate { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 24px; }
+    #auth-gate.hidden { display: none; }
+    .auth-card { width: 100%; max-width: 400px; background: var(--ink2); border: 1px solid var(--border-g); border-radius: 20px; padding: 40px 36px; text-align: center; box-shadow: 0 32px 80px rgba(0,0,0,0.6), 0 0 60px rgba(212,175,100,0.05); }
+    .auth-logo { font-family: var(--serif); font-size: 1.5rem; font-weight: 700; color: var(--gold); margin-bottom: 6px; }
+    .auth-sub { font-size: .8rem; color: var(--text-d); margin-bottom: 28px; letter-spacing: .08em; text-transform: uppercase; }
+    .auth-label { font-size: .7rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--text-d); display: block; text-align: left; margin-bottom: 6px; }
+    .auth-input { width: 100%; padding: 13px 16px; background: var(--ink3); border: 1px solid var(--border); border-radius: 10px; color: var(--text); font-size: 15px; font-family: var(--sans); outline: none; transition: border-color .2s, box-shadow .2s; margin-bottom: 16px; letter-spacing: .1em; }
+    .auth-input:focus { border-color: var(--gold); box-shadow: 0 0 0 3px var(--gold-glow); }
+    .auth-btn { width: 100%; padding: 14px; background: linear-gradient(135deg, var(--gold2), var(--gold)); color: #0a0910; font-weight: 700; font-size: .95rem; border-radius: 10px; cursor: pointer; transition: transform .2s, box-shadow .2s; border: none; letter-spacing: .02em; font-family: var(--sans); }
+    .auth-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(212,175,100,0.3); }
+    .auth-err { font-size: .8rem; color: #f87171; margin-top: 10px; display: none; }
+
+    /* MAIN APP */
+    #app { display: none; min-height: 100vh; flex-direction: column; }
+    #app.show { display: flex; }
+
+    .app-header { border-bottom: 1px solid var(--border); padding: 16px 32px; display: flex; align-items: center; justify-content: space-between; background: var(--ink2); position: sticky; top: 0; z-index: 10; }
+    .header-brand { display: flex; align-items: center; gap: 12px; }
+    .header-logo { font-family: var(--serif); font-size: 1.2rem; color: var(--gold); font-weight: 700; }
+    .header-tag { font-size: .65rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; background: var(--gold-pale); border: 1px solid var(--border-g); color: var(--gold); padding: 3px 10px; border-radius: 100px; }
+    .logout-btn { font-size: .75rem; color: var(--text-d); cursor: pointer; padding: 6px 14px; border: 1px solid var(--border); border-radius: 8px; transition: all .2s; background: none; font-family: var(--sans); }
+    .logout-btn:hover { border-color: var(--border-g); color: var(--gold); }
+
+    .search-section { padding: 40px 32px 24px; max-width: 680px; margin: 0 auto; width: 100%; }
+    .search-title { font-size: 1.6rem; font-weight: 800; margin-bottom: 6px; }
+    .search-title span { color: var(--gold); }
+    .search-desc { font-size: .85rem; color: var(--text-d); margin-bottom: 28px; line-height: 1.6; }
+    .search-row { display: flex; gap: 10px; }
+    .phone-input-wrap { flex: 1; position: relative; }
+    .phone-flag { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); font-size: .85rem; color: var(--text-d); pointer-events: none; white-space: nowrap; display: flex; align-items: center; gap: 6px; }
+    .search-input { width: 100%; padding: 14px 14px 14px 70px; background: var(--ink2); border: 1px solid var(--border); border-radius: 12px; color: var(--text); font-size: 15px; font-family: var(--sans); outline: none; transition: border-color .2s, box-shadow .2s; letter-spacing: .05em; }
+    .search-input:focus { border-color: var(--gold); box-shadow: 0 0 0 3px var(--gold-glow); }
+    .search-btn { padding: 14px 28px; background: linear-gradient(135deg, var(--gold2), var(--gold)); color: #0a0910; font-weight: 700; font-size: .9rem; border-radius: 12px; cursor: pointer; border: none; transition: transform .2s, box-shadow .2s; white-space: nowrap; display: flex; align-items: center; gap: 8px; font-family: var(--sans); }
+    .search-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(212,175,100,0.3); }
+    .search-btn:disabled { opacity: .5; transform: none; cursor: not-allowed; }
+
+    .status-msg { max-width: 680px; margin: 0 auto; width: 100%; padding: 0 32px; }
+    .msg-box { padding: 16px 20px; border-radius: 12px; font-size: .87rem; display: none; align-items: center; gap: 10px; }
+    .msg-box.show { display: flex; }
+    .msg-box.error { background: rgba(248,113,113,0.08); border: 1px solid rgba(248,113,113,0.2); color: #fca5a5; }
+    .msg-box.info { background: var(--gold-pale); border: 1px solid var(--border-g); color: var(--gold); }
+    .loader { width: 18px; height: 18px; border: 2px solid var(--border-g); border-top-color: var(--gold); border-radius: 50%; animation: spin .7s linear infinite; flex-shrink: 0; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    #results-area { max-width: 680px; margin: 24px auto 60px; width: 100%; padding: 0 32px; display: flex; flex-direction: column; gap: 24px; }
+
+    .result-header { display: flex; align-items: center; justify-content: space-between; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
+    .result-count { font-size: .8rem; color: var(--text-d); margin-top: 3px; }
+    .result-count strong { color: var(--green); }
+
+    .invoice-card { background: var(--ink2); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; transition: border-color .2s, box-shadow .2s; }
+    .invoice-card:hover { border-color: var(--border-g); box-shadow: 0 8px 32px rgba(0,0,0,0.3); }
+    .invoice-card-header { padding: 20px 24px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); background: var(--ink3); }
+    .inv-num { font-size: .95rem; font-weight: 700; color: var(--gold); }
+    .inv-date { font-size: .75rem; color: var(--text-d); margin-top: 3px; }
+    .paid-badge { display: flex; align-items: center; gap: 6px; padding: 5px 12px; background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.3); border-radius: 100px; font-size: .7rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--green); }
+    .paid-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); }
+    .invoice-body { padding: 24px; }
+    .inv-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px 24px; margin-bottom: 20px; }
+    .inv-field label { font-size: .65rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--text-d); display: block; margin-bottom: 4px; }
+    .inv-field span { font-size: .88rem; color: var(--text); font-weight: 500; word-break: break-all; }
+    .inv-product { background: var(--gold-pale); border: 1px solid var(--border-g); border-radius: 10px; padding: 16px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+    .inv-product-name { font-size: .9rem; font-weight: 600; color: var(--text); }
+    .inv-product-type { font-size: .72rem; color: var(--text-d); margin-top: 2px; }
+    .inv-product-amount { font-size: 1.3rem; font-weight: 800; color: var(--gold); }
+    .inv-product-currency { font-size: .7rem; color: var(--text-d); text-align: right; }
+    .inv-footer { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+    .inv-ids { font-size: .7rem; color: var(--text-m); line-height: 1.8; }
+    .inv-ids strong { color: var(--text-d); }
+    .print-btn { padding: 10px 22px; background: transparent; border: 1px solid var(--border-g); border-radius: 10px; color: var(--gold); font-size: .82rem; font-weight: 600; cursor: pointer; transition: all .2s; display: flex; align-items: center; gap: 7px; font-family: var(--sans); }
+    .print-btn:hover { background: var(--gold-pale); box-shadow: 0 4px 16px rgba(212,175,100,0.15); }
+
+    /* No @media print needed — printing handled via popup window */
+
+    @media (max-width: 600px) {
+      .app-header { padding: 14px 16px; }
+      .search-section, .status-msg, #results-area { padding-left: 16px; padding-right: 16px; }
+      .inv-grid { grid-template-columns: 1fr; }
+      .search-row { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- AUTH GATE -->
+<div id="auth-gate">
+  <div class="auth-card">
+    <div class="auth-logo">✦ NumVeda</div>
+    <div class="auth-sub">Admin Invoice Generator</div>
+    <label class="auth-label" for="pass-input">Admin Password</label>
+    <input id="pass-input" class="auth-input" type="password" placeholder="Enter password" autocomplete="current-password" />
+    <button class="auth-btn" onclick="checkAuth()">Unlock Dashboard &rarr;</button>
+    <div class="auth-err" id="auth-err">Incorrect password. Try again.</div>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div id="app">
+  <header class="app-header">
+    <div class="header-brand">
+      <span class="header-logo">✦ NumVeda</span>
+      <span class="header-tag">Invoice Generator</span>
+    </div>
+    <button class="logout-btn" onclick="logout()">&#x238B; Logout</button>
+  </header>
+
+  <div class="search-section">
+    <h1 class="search-title">Generate <span>Customer Invoice</span></h1>
+    <p class="search-desc">Enter the customer's 10-digit mobile number to fetch all paid orders and generate a printable invoice.</p>
+    <div class="search-row">
+      <div class="phone-input-wrap">
+        <span class="phone-flag">&#127470;&#127475; +91</span>
+        <input id="phone-input" class="search-input" type="tel" maxlength="10" placeholder="98XXXXXXXX" onkeydown="if(event.key==='Enter') fetchInvoices()" />
+      </div>
+      <button class="search-btn" id="search-btn" onclick="fetchInvoices()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        Find Orders
+      </button>
+    </div>
+  </div>
+
+  <div class="status-msg">
+    <div class="msg-box error" id="msg-error">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+      <span id="msg-error-text">No paid orders found for this number.</span>
+    </div>
+    <div class="msg-box info" id="msg-loading">
+      <div class="loader"></div>
+      <span>Looking up orders in database&hellip;</span>
+    </div>
+  </div>
+
+  <div id="results-area"></div>
+</div>
+
+
+<script>
+  const ADMIN_PASS = 'numveda2026'; // Change this
+
+  function checkAuth() {
+    if (document.getElementById('pass-input').value === ADMIN_PASS) {
+      document.getElementById('auth-gate').classList.add('hidden');
+      document.getElementById('app').classList.add('show');
+      document.getElementById('phone-input').focus();
+    } else {
+      document.getElementById('auth-err').style.display = 'block';
+      document.getElementById('pass-input').value = '';
+    }
+  }
+  document.getElementById('pass-input').addEventListener('keydown', function(e) { if (e.key === 'Enter') checkAuth(); });
+
+  function logout() {
+    document.getElementById('auth-gate').classList.remove('hidden');
+    document.getElementById('app').classList.remove('show');
+    document.getElementById('pass-input').value = '';
+    document.getElementById('results-area').innerHTML = '';
+    hideAllMsg();
+  }
+
+  async function fetchInvoices() {
+    const phone = document.getElementById('phone-input').value.trim().replace(/\D/g, '');
+    if (!phone || phone.length < 10) { showError('Please enter a valid 10-digit mobile number.'); return; }
+    hideAllMsg();
+    document.getElementById('results-area').innerHTML = '';
+    showLoading(true);
+    document.getElementById('search-btn').disabled = true;
+    try {
+      const res = await fetch('/api/get-invoice', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phone })
+      });
+      const data = await res.json();
+      showLoading(false);
+      document.getElementById('search-btn').disabled = false;
+      if (!data.success || !data.invoices || data.invoices.length === 0) {
+        showError(data.message || 'No paid orders found for this number.');
+        return;
+      }
+      renderInvoices(data.invoices, phone);
+    } catch (e) {
+      showLoading(false);
+      document.getElementById('search-btn').disabled = false;
+      showError('Server error. Please check your connection.');
+    }
+  }
+
+  function renderInvoices(invoices, phone) {
+    const area = document.getElementById('results-area');
+    area.innerHTML = '';
+    const hdr = document.createElement('div');
+    hdr.className = 'result-header';
+    hdr.innerHTML = '<div><div style="font-size:.95rem;font-weight:700;">Results for +91 ' + phone + '</div><div class="result-count">Found <strong>' + invoices.length + '</strong> paid order' + (invoices.length > 1 ? 's' : '') + '</div></div>';
+    area.appendChild(hdr);
+
+    invoices.forEach(function(inv, idx) {
+      const card = document.createElement('div');
+      card.className = 'invoice-card';
+      const dateStr = inv.date ? new Date(inv.date).toLocaleDateString('en-IN', { day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : 'N/A';
+      const amtFormatted = '\u20b9' + Number(inv.amount).toLocaleString('en-IN');
+      card.innerHTML =
+        '<div class="invoice-card-header">' +
+          '<div><div class="inv-num">' + inv.invoice_number + '</div><div class="inv-date">' + dateStr + '</div></div>' +
+          '<div class="paid-badge"><div class="paid-dot"></div>PAID</div>' +
+        '</div>' +
+        '<div class="invoice-body">' +
+          '<div class="inv-grid">' +
+            '<div class="inv-field"><label>Customer Name</label><span>' + inv.customer_name + '</span></div>' +
+            '<div class="inv-field"><label>Mobile Number</label><span>+91 ' + inv.customer_phone + '</span></div>' +
+            '<div class="inv-field"><label>Date of Birth</label><span>' + inv.customer_dob + '</span></div>' +
+            '<div class="inv-field"><label>Gender</label><span>' + (inv.customer_gender || 'N/A') + '</span></div>' +
+          '</div>' +
+          '<div class="inv-product">' +
+            '<div><div class="inv-product-name">\uD83D\uDCDC ' + inv.report_type + '</div><div class="inv-product-type">Digital Numerology Report &middot; Instant Delivery &middot; One-Time Purchase</div></div>' +
+            '<div style="text-align:right"><div class="inv-product-amount">' + amtFormatted + '</div><div class="inv-product-currency">INR &middot; Incl. all taxes</div></div>' +
+          '</div>' +
+          '<div class="inv-footer">' +
+            '<div class="inv-ids"><strong>Razorpay Order ID:</strong> ' + (inv.order_id || 'N/A') + '<br/><strong>Payment ID:</strong> ' + (inv.payment_id || 'N/A') + '</div>' +
+            '<button class="print-btn" onclick="printInvoice(' + idx + ')">' +
+              '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>' +
+              'Print / Download PDF' +
+            '</button>' +
+          '</div>' +
+        '</div>';
+      area.appendChild(card);
+    });
+    window._invoiceData = invoices;
+  }
+
+  function printInvoice(idx) {
+    var inv = window._invoiceData[idx];
+    if (!inv) return;
+    var dateStr = inv.date ? new Date(inv.date).toLocaleDateString('en-IN', { day: '2-digit', month: 'long', year: 'numeric' }) : 'N/A';
+    var timeStr = inv.date ? new Date(inv.date).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true }) : '';
+    var amtNum = Number(inv.amount);
+    var amtFormatted = '\u20b9' + amtNum.toLocaleString('en-IN');
+    var amtWords = numberToWords(amtNum);
+
+    var html = '<!DOCTYPE html><html><head>' +
+      '<meta charset="UTF-8"/>' +
+      '<title>Invoice ' + inv.invoice_number + ' - NumVeda</title>' +
+      '<style>' +
+        '* { box-sizing: border-box; margin: 0; padding: 0; }' +
+        'body { font-family: Arial, sans-serif; color: #111; font-size: 13px; padding: 50px 60px; background: #fff; }' +
+        '.pi-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 36px; }' +
+        '.pi-brand-name { font-size: 22px; font-weight: 800; color: #b8860b; }' +
+        '.pi-brand-tagline, .pi-brand-url { font-size: 11px; color: #888; margin-top: 3px; }' +
+        '.pi-invoice-label { text-align: right; }' +
+        '.pi-invoice-title { font-size: 26px; font-weight: 800; color: #1a1a2e; }' +
+        '.pi-invoice-num, .pi-invoice-date { font-size: 12px; color: #555; margin-top: 3px; }' +
+        '.pi-divider { border: none; border-top: 2px solid #b8860b; margin: 24px 0; }' +
+        '.pi-light-divider { border: none; border-top: 1px solid #e5e7eb; margin: 16px 0; }' +
+        '.pi-section-title { font-size: 9px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: #b8860b; margin-bottom: 10px; }' +
+        '.pi-two-col { display: flex; gap: 40px; margin-bottom: 28px; }' +
+        '.pi-col { flex: 1; }' +
+        '.pi-field { margin-bottom: 8px; }' +
+        '.pi-field-label { font-size: 9px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #aaa; display: block; margin-bottom: 2px; }' +
+        '.pi-field-value { font-size: 13px; font-weight: 600; color: #111; }' +
+        '.pi-product-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }' +
+        '.pi-product-table th { background: #1a1a2e; color: #fff; font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; padding: 10px 14px; text-align: left; }' +
+        '.pi-product-table td { padding: 14px; border-bottom: 1px solid #e5e7eb; font-size: 13px; }' +
+        '.pi-product-table td:last-child { text-align: right; font-weight: 700; }' +
+        '.pi-total-row { display: flex; justify-content: flex-end; margin-bottom: 24px; }' +
+        '.pi-total-box { background: #fef9ec; border: 1px solid #b8860b; border-radius: 8px; padding: 14px 20px; text-align: right; min-width: 200px; }' +
+        '.pi-total-label { font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #888; }' +
+        '.pi-total-amount { font-size: 24px; font-weight: 800; color: #b8860b; margin-top: 4px; }' +
+        '.pi-total-words { font-size: 10px; color: #888; margin-top: 2px; }' +
+        '.pi-stamp { margin: 16px 0; }' +
+        '.pi-paid-stamp { display: inline-block; border: 3px solid #22c55e; color: #22c55e; font-size: 18px; font-weight: 900; letter-spacing: .3em; padding: 6px 20px; border-radius: 6px; transform: rotate(-8deg); text-transform: uppercase; opacity: .85; }' +
+        '.pi-note { font-size: 10px; color: #888; font-style: italic; margin-bottom: 8px; }' +
+        '.pi-ids { font-size: 10px; color: #aaa; line-height: 2; }' +
+        '.pi-ids strong { color: #555; }' +
+        '.pi-footer { margin-top: 32px; font-size: 10px; color: #aaa; text-align: center; line-height: 1.8; border-top: 1px solid #e5e7eb; padding-top: 16px; }' +
+        '@media print { body { padding: 30px 40px; } }' +
+      '</style>' +
+      '</head><body>' +
+      '<div class="pi-header">' +
+        '<div>' +
+          '<div class="pi-brand-name">&#10022; NumVeda</div>' +
+          '<div class="pi-brand-tagline">Personalised Numerology Reports</div>' +
+          '<div class="pi-brand-url">numveda.com &middot; numvedasupport@gmail.com</div>' +
+        '</div>' +
+        '<div class="pi-invoice-label">' +
+          '<div class="pi-invoice-title">INVOICE</div>' +
+          '<div class="pi-invoice-num"># ' + inv.invoice_number + '</div>' +
+          '<div class="pi-invoice-date">' + dateStr + ' &middot; ' + timeStr + '</div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="pi-divider"></div>' +
+      '<div class="pi-two-col">' +
+        '<div class="pi-col">' +
+          '<div class="pi-section-title">Billed To</div>' +
+          '<div class="pi-field"><span class="pi-field-label">Customer Name</span><span class="pi-field-value">' + inv.customer_name + '</span></div>' +
+          '<div class="pi-field"><span class="pi-field-label">Mobile Number</span><span class="pi-field-value">+91 ' + inv.customer_phone + '</span></div>' +
+          '<div class="pi-field"><span class="pi-field-label">Date of Birth</span><span class="pi-field-value">' + inv.customer_dob + '</span></div>' +
+          '<div class="pi-field"><span class="pi-field-label">Gender</span><span class="pi-field-value">' + (inv.customer_gender || 'N/A') + '</span></div>' +
+        '</div>' +
+        '<div class="pi-col">' +
+          '<div class="pi-section-title">Invoice From</div>' +
+          '<div class="pi-field"><span class="pi-field-label">Business Name</span><span class="pi-field-value">NumVeda</span></div>' +
+          '<div class="pi-field"><span class="pi-field-label">Website</span><span class="pi-field-value">numveda.com</span></div>' +
+          '<div class="pi-field"><span class="pi-field-label">Support Email</span><span class="pi-field-value">numvedasupport@gmail.com</span></div>' +
+          '<div class="pi-field"><span class="pi-field-label">Invoice Date</span><span class="pi-field-value">' + dateStr + '</span></div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="pi-section-title">Products / Services</div>' +
+      '<table class="pi-product-table">' +
+        '<thead><tr><th>#</th><th>Description</th><th>Type</th><th>Qty</th><th>Amount</th></tr></thead>' +
+        '<tbody><tr>' +
+          '<td>1</td>' +
+          '<td>' + inv.report_type + '<br/><span style="font-size:11px;color:#888">Instant digital delivery &middot; One-time purchase &middot; Non-refundable</span></td>' +
+          '<td>Digital Service</td>' +
+          '<td>1</td>' +
+          '<td>' + amtFormatted + '</td>' +
+        '</tr></tbody>' +
+      '</table>' +
+      '<div class="pi-total-row">' +
+        '<div class="pi-total-box">' +
+          '<div class="pi-total-label">Total Amount Paid</div>' +
+          '<div class="pi-total-amount">' + amtFormatted + '</div>' +
+          '<div class="pi-total-words">' + amtWords + ' Rupees Only</div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="pi-stamp"><div class="pi-paid-stamp">&#10003; Paid</div></div>' +
+      '<div class="pi-light-divider"></div>' +
+      '<div class="pi-note">This is a computer-generated invoice and does not require a physical signature.</div>' +
+      '<div class="pi-ids"><strong>Razorpay Order ID:</strong> ' + (inv.order_id || 'N/A') + ' &nbsp;|&nbsp; <strong>Payment ID:</strong> ' + (inv.payment_id || 'N/A') + ' &nbsp;|&nbsp; <strong>Status:</strong> PAID</div>' +
+      '<div class="pi-footer">Thank you for choosing NumVeda! Your personalized numerology report has been delivered digitally.<br/>For any queries, contact us at numvedasupport@gmail.com &middot; numveda.com</div>' +
+      '</body></html>';
+
+    var popup = window.open('', '_blank', 'width=900,height=700');
+    popup.document.open();
+    popup.document.write(html);
+    popup.document.close();
+    popup.onload = function() {
+      popup.focus();
+      popup.print();
+    };
+  }
+
+  function showError(msg) {
+    document.getElementById('msg-error-text').textContent = msg;
+    document.getElementById('msg-error').classList.add('show');
+    document.getElementById('msg-loading').classList.remove('show');
+  }
+  function showLoading(on) {
+    document.getElementById('msg-loading').classList.toggle('show', on);
+    document.getElementById('msg-error').classList.remove('show');
+  }
+  function hideAllMsg() {
+    document.getElementById('msg-error').classList.remove('show');
+    document.getElementById('msg-loading').classList.remove('show');
+  }
+
+  function numberToWords(num) {
+    var ones = ['','One','Two','Three','Four','Five','Six','Seven','Eight','Nine','Ten','Eleven','Twelve','Thirteen','Fourteen','Fifteen','Sixteen','Seventeen','Eighteen','Nineteen'];
+    var tens = ['','','Twenty','Thirty','Forty','Fifty','Sixty','Seventy','Eighty','Ninety'];
+    if (num === 0) return 'Zero';
+    if (num < 20) return ones[num];
+    if (num < 100) return tens[Math.floor(num/10)] + (num%10 ? ' '+ones[num%10] : '');
+    if (num < 1000) return ones[Math.floor(num/100)] + ' Hundred' + (num%100 ? ' '+numberToWords(num%100) : '');
+    if (num < 100000) return numberToWords(Math.floor(num/1000)) + ' Thousand' + (num%1000 ? ' '+numberToWords(num%1000) : '');
+    return num.toString();
+  }
+</script>
+</body>
+</html>
